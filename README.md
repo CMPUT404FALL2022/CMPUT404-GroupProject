@@ -12,4 +12,4 @@ Our project is about Django web development, and our group members are
 | Kexun Niu   | kexun  |
 | Ning Sun    | ning2  |
 | mengju Liao | mengju |
-| Mia         | Mia    |
+| Xuantong Ma         | xuantong    |
