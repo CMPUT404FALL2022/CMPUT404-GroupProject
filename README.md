@@ -11,5 +11,5 @@ Our project is about Django web development, and our group members are
 | Wenhao Cao  | wcao4  |
 | Kexun Niu   | kexun  |
 | Ning Sun    | ning2  |
-| mengju Liao | Mengju |
+| Mengju Liao | mengju |
 | Xuantong Ma         | xuantong    |
