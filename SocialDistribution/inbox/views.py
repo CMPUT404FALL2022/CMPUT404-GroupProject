@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+#from django.http import HttpResponse
+
+def create(request):
+    return render(request,'index.html')
+    #return HttpResponse("You're looking at question.")
