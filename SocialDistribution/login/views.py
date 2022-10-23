@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from .models import users
 
 # Create your views here.
 def log_in(request):
@@ -6,3 +7,4 @@ def log_in(request):
 
 def sign_up(request):
     return render(request,"login/signup.html")
+

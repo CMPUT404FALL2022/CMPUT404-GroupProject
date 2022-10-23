@@ -11,6 +11,7 @@ class users(models.Model):
     # create a unique id for each new user
     # def generate_unique_id(self):
     #     unique_id = uuid.uuid4()
+    
     def __str__(self):
         return {"username":self.username,"pass":self.password,"uid":self.uid,"user_type":self.user_type}
         
