@@ -1,13 +1,12 @@
-{% extends 'base.html' %} {%block title%} My Post {%endblock%} 
+{% extends 'base.html' %} {%block title%} My Post {%endblock%} {% block header%}
+<div class="container-fluid" style="height: 200px; background-color: pink">
+  This is header
+</div>
+{% endblock %} {% block content %}
+<div class="container">
+  <h1>Sign Up Page</h1>
+</div>
 
-
-{% block header %}
-    <div class="container-fluid" style="height: 200px;background-color: pink">This is header</div>
-{% endblock %}
-
-{% block content %}
-    <div class="container">
-        <h1>Sign Up Page</h1>
-    </div>
+<div class="container-fluid"></div>
 
 {% endblock %}
