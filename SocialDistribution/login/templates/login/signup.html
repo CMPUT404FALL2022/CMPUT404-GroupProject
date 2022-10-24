@@ -16,7 +16,7 @@
             <div class="card-body p-5">
               <h2 class="text-uppercase text-center mb-5">Create an account</h2>
 
-              <form method="get">
+              <form method="POST">
                 {%csrf_token%}
                 <div class="d-flex justify-content-center">
                   <input name = "username" type="text" class="btn-success btn-block btn-lg gradient-custom-4 text-body">Username</input>
