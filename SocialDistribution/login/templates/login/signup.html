@@ -18,6 +18,9 @@
 
               <form method="POST">
                 {%csrf_token%}
+                {% if has_error %}
+                  <h5>Please enter a invalid username or password!</h5>
+                {%endif%}
                 <div class="d-flex justify-content-center">
                   <input name = "username" type="text" class="btn-success btn-block btn-lg gradient-custom-4 text-body">Username</input>
                 </div>

@@ -28,9 +28,15 @@ def sign_up(request):
     if request.method == "POST":
         entered_username = request.POST['username']
         entered_password = request.POST['password']
+
+        #check if entered_username and entered_password are null
+        if entered_username == '' or entered_password == '':
+            return render(request,"login/signup.html",{
+                'has_error': True
+            })
         print({'username':entered_username,'password':entered_password})
         #HTTPResponseRedirect back to log in page
-
+        
         return HttpResponseRedirect('/login')
 
     
