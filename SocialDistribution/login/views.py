@@ -1,3 +1,4 @@
+from urllib.robotparser import RequestRate
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from rest_framework.response import Response
@@ -22,6 +23,17 @@ def sign_up(request):
     #     form = SignUpForm()
     #     if 'submittted' in request.GET:
     #         submittted = True
+
+    #if is a POST request
+    if request.method == "POST":
+        entered_username = request.POST['username']
+        entered_password = request.POST['password']
+        print({'username':entered_username,'password':entered_password})
+        #HTTPResponseRedirect back to log in page
+
+        return HttpResponseRedirect('/login')
+
+    
     return render(request,"login/signup.html")
 
 @api_view(['POST'])
