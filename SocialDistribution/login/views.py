@@ -1,8 +1,34 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from authors.models import single_author
+from django.shortcuts import redirect
+from .forms import SignUpForm
 
 # Create your views here.
 def log_in(request):
     return render(request,"login/login.html")
 
 def sign_up(request):
+    # submittted = False
+    
+    # if request.method == "post":
+    #     form = SignUpForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+
+    # else:
+    #     form = SignUpForm()
+    #     if 'submittted' in request.GET:
+    #         submittted = True
     return render(request,"login/signup.html")
+
+@api_view(['POST'])
+def create_new_user(request):
+    #Create a new object from single_author
+    pass
+
+
+
+
