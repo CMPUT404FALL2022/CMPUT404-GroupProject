@@ -6,7 +6,7 @@ from django.core.validators import MinLengthValidator
 class single_author(models.Model):
     type = "author"
     username = models.CharField(primary_key=True,unique=True,max_length=255)
-    password = models.CharField(validators=[MinLengthValidator],max_length=255)
+    password = models.CharField(validators=[MinLengthValidator(6)],max_length=255)
     id = models.CharField(unique=True,max_length=255,blank=True)
     host = models.CharField(max_length=255,default='',blank=True)
     display_name = models.CharField(max_length=255,blank=True)
@@ -19,4 +19,4 @@ class single_author(models.Model):
     #     unique_id = uuid.uuid4()
     
     def __str__(self):
-        return {'type': self.type, 'id': self.id,'host': self.host,'display_name': self.display_name,'url': self.url,'github': self.github,'profileImage': self.profileImage}
+        return 'type:'+self.type+ 'id:'+ self.id+'host:'+ self.host+'display_name'+ self.display_name+'url'+ self.url+'github'+ self.github
