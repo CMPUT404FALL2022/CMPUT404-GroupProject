@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from authors.models import single_author
-from django.shortcuts import redirect
+import uuid
 from .forms import SignUpForm
 
 # Create your views here.
@@ -25,22 +25,37 @@ def sign_up(request):
     #         submittted = True
 
     #if is a POST request
-    if request.method == "POST":
-        entered_username = request.POST['username']
-        entered_password = request.POST['password']
+    # if request.method == "POST":
+    #     entered_username = request.POST['username']
+    #     entered_password = request.POST['password']
 
-        #check if entered_username and entered_password are null
-        if entered_username == '' or entered_password == '':
-            return render(request,"login/signup.html",{
-                'has_error': True
-            })
-        print({'username':entered_username,'password':entered_password})
-        #HTTPResponseRedirect back to log in page
+    #     #check if entered_username and entered_password are null
+    #     if entered_username == '' or entered_password == '':
+    #         return render(request,"login/signup.html",{
+    #             'has_error': True
+    #         })
+    #     print({'username':entered_username,'password':entered_password})
+    #     #HTTPResponseRedirect back to log in page
         
-        return HttpResponseRedirect('/login')
+    #     return HttpResponseRedirect('/login')
 
-    
-    return render(request,"login/signup.html")
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+
+        if form.is_valid():
+            authorId = uuid.uuid4()
+            print(form.cleaned_data)
+            new_author = single_author(username = form.cleaned_data['username'],
+                                        password = form.cleaned_data['password'],
+                                        id = authorId)
+            new_author.save()
+            return HttpResponseRedirect('/login')
+    else:
+        form = SignUpForm()
+
+    return render(request,"login/signup.html",{
+        'form':form
+    })
 
 @api_view(['POST'])
 def create_new_user(request):
