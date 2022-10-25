@@ -11,41 +11,86 @@
 
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button
+          type="button"
+          class="navbar-toggle collapsed"
+          data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
         </button>
-      
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Dropdown
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
-          </ul>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
-        </div>
-      </nav>
+        <a class="navbar-brand" href="#">Brand</a>
+      </div>
+  
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="#">Link <span class="sr-only">(current)</span></a>
+          </li>
+          <li><a href="#">Link</a></li>
+          <li class="dropdown">
+            <a
+              href="#"
+              class="dropdown-toggle"
+              data-toggle="dropdown"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              >Dropdown <span class="caret"></span
+            ></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">One more separated link</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-form navbar-left">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search" />
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">Link</a></li>
+          <li class="dropdown">
+            <a
+              href="#"
+              class="dropdown-toggle"
+              data-toggle="dropdown"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              >Dropdown <span class="caret"></span
+            ></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+  </nav>
+  
       
 
           <!DOCTYPE html>
@@ -64,43 +109,34 @@
         
           <div class="container">
             <div class="row">
+              
             
             <div class="list-group">
               <h2>New Post from friends</h2>
-              <a href="#" class="list-group-item list-group-item-action">First item</a>
-              <a href="#" class="list-group-item list-group-item-action">Second item</a>
-              <a href="#" class="list-group-item list-group-item-action">Third item</a>
-              <a href="#" class="list-group-item list-group-item-action">forth item</a>
-              <a href="#" class="list-group-item list-group-item-action">fifth item</a>
-              <a href="#" class="list-group-item list-group-item-action">sixth item</a>
-              <a href="#" class="list-group-item list-group-item-action">seventh item</a>
-              <a href="#" class="list-group-item list-group-item-action">eighth item</a>
+              <!-- <div class="pre-scrollable"> -->
+              <div style="overflow:scroll; width:600px; height:600px;">
+
+                
+
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">First item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">Second item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">Third item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">forth item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">fifth item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">sixth item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">seventh item</a>
+              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">eighth item</a>
             </div>
+          </div>
+          <div class="col-md-2 col-md-offset-1"></div>
 
-          <div class="col">
-                 
-            <div>
-
-
-                <div class="col">
-                 
-                    <div>
-
-
-                        <div class="col">
-                 
-                            <div>
-
-                                <div class="col">
-                 
-                                    <div>
-
-
-    
-          <div class="list-group">
+  
+              
+           <div class="list-group">
             <h2>Friends You May Know</h2>
+            <div style="overflow:scroll; width:350px; height:350px;">
 
-          
+
           
             <a href="#" li class="list-group-item list-group-item-action list-group-item-primary">new friend 1</a>
 
@@ -113,6 +149,9 @@
             <a href="#" li class="list-group-item list-group-item-action list-group-item-light">new friend 7</a>
             <a href="#" li class="list-group-item list-group-item-action list-group-item-dark">new friend 8</a>
           </div>
+        </div>
+      
+  
 
 
-  {% endblock %}
+
