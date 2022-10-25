@@ -7,8 +7,8 @@ class Post(models.Model):
     type = models.CharField(default='post', max_length=200)
     title = models.CharField(max_length=200,null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    source = models.CharField(max_length=200)
-    origin = models.CharField(max_length=200)
+    # source = models.CharField(max_length=200)
+    # origin = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     content = models.CharField(max_length=256, null=True, blank=True)
     # CONTENT_CHOICES = [("text/plain", "Plaintext"),
@@ -23,7 +23,7 @@ class Post(models.Model):
     published = models.DateTimeField(auto_now_add=True, null=True)
     # post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     def __str__(self):
-        return f"{self.title} + {self.uuid}"
+        return f"{self.title} + {self.uuid} + {self.description} + {self.contentType} + {self.published}"
 
 class Like(models.Model):
     pass
