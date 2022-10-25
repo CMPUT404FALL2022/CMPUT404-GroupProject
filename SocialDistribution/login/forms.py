@@ -7,3 +7,8 @@ class SignUpForm(forms.ModelForm):
     class Meta:
         model = single_author
         fields = ['username', 'password','display_name']
+
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = single_author
+        fields = ['username', 'password']
