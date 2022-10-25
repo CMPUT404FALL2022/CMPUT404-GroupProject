@@ -1,16 +1,37 @@
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from authors.models import single_author
 from .forms import SignUpForm
+from .forms import LoginForm
 
 import uuid
-
 # Create your views here.
 def log_in(request):
-    return render(request,"login/login.html")
+    #login by username and password
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        
+        if single_author.objects.filter(username=username).exists():
+            password = request.POST.get('password')
+            storedUser = single_author.objects.get(username=username)
+            storedUserPassword = storedUser.password
+            if storedUserPassword == password:
+                #redirect this for now
+                return HttpResponse("Username and Password Match!\nLogin successful.")
+                # return HttpResponseRedirect("")
+            else:
+                return HttpResponse("Username and Password don't Match!\nLogin Failed")
+        else:
+            form = LoginForm()
+    else:
+        form = LoginForm()
+
+    return render(request,"login/login.html",{
+        "form":form
+    })
 
 def sign_up(request):
     if request.method == 'POST':
