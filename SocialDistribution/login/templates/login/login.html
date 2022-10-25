@@ -1,4 +1,4 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% load static %} 
 
 {%block title%} Log In {%endblock%} 
@@ -21,6 +21,14 @@
       
                     <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                     <p class="text-white-50 mb-5">Please enter your username and password!</p>
+
+                    {% if isNotUsernameExist %}
+                    <p>Username does not exist! Please SignUp first</p>
+                    {% endif %}
+
+                    {% if isNotPasswordMatch %}
+                    <p>Password does not match!</p>
+                    {% endif %}
                     
                     <form method="post">
                         {%csrf_token%}

@@ -11,6 +11,9 @@ import uuid
 # Create your views here.
 def log_in(request):
     #login by username and password
+    isNotPasswordMatch = False
+    isNotUsernameExist = False
+
     if request.method == 'POST':
         username = request.POST.get('username')
         
@@ -23,14 +26,26 @@ def log_in(request):
                 return HttpResponse("Username and Password Match!\nLogin successful.")
                 # return HttpResponseRedirect("")
             else:
-                return HttpResponse("Username and Password don't Match!\nLogin Failed")
+                form = LoginForm()
+                isNotPasswordMatch = True
+                return render(request, 'login/login.html',{
+                    "form":form,
+                    'isNotPasswordMatch':isNotPasswordMatch
+                })
         else:
             form = LoginForm()
+            isNotUsernameExist = True
+            return render(request, 'login/login.html',{
+                "form":form,
+                'isNotUsernameExist':isNotUsernameExist
+            })
     else:
         form = LoginForm()
 
     return render(request,"login/login.html",{
-        "form":form
+        "form":form,
+        "isNotUsernameExist":isNotUsernameExist,
+        "isNotPasswordMatch":isNotPasswordMatch
     })
 
 def sign_up(request):
