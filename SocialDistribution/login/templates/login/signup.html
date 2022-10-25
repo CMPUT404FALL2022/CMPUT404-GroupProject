@@ -1,12 +1,30 @@
-{% extends 'base.html' %} {%block title%} My Post {%endblock%} {% block header%}
+{% extends 'base.html' %} 
+{% load static %} 
+
+{%block title%} Sign Up {%endblock%} 
+{%block css_files%}<link rel="stylesheet" href="{% static "login/signup.css"%}">{%endblock%}
+
+{% block header%}
 <div class="container-fluid" style="height: 200px; background-color: pink">
-  This is header
-</div>
-{% endblock %} {% block content %}
-<div class="container">
   <h1>Sign Up Page</h1>
 </div>
+{% endblock %} {% block content %}
 
-<div class="container-fluid"></div>
+<section class="background">
+  <h2 class="">Create an account</h2>
+
+    <form method="POST">
+      {%csrf_token%}
+      <div>
+        {{ form }}
+      </div>
+
+      <div>
+        <button type="submit" class="">Register</button>
+      </div>
+
+    </form>
+
+</section>
 
 {% endblock %}
