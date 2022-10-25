@@ -11,10 +11,10 @@ import uuid
 
 def home_page(request):
     posts = Post.objects.all()
-    for i in posts:
-        print(i)
+    
     return render(request, 'post/index.html',{
         'posts': Post.objects.all()
+        
     })
 
 # def posts(request):
@@ -24,16 +24,16 @@ def home_page(request):
 
 def create_post(request):
     if request.method == 'POST':
-        form = post_forms(request.POST)
+        form = post_form(request.POST)
         if form.is_valid():
             new_post = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'])
             new_post.save()
     
-            return HttpResponseRedirect('post/index.html')
+            return HttpResponseRedirect('../home')
 
 
     else:
-        form = post_forms()
+        form = post_form()
         return render(request,"post/create_new_post.html",{
             'form':form
             

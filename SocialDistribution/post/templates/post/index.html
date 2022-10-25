@@ -49,11 +49,14 @@
       "
     >
       <p>这一段是广场帖子.</p>
-      <ul>
+       <ul>
         {% for post in posts %}
-            <li>{{ athlete.name }}</li>
+            <li>{{ post.title }}</li>
+            
+            </br>
+            </br>
         {% endfor %}
-        </ul>
+        </ul> 
       
     </div>
     <div

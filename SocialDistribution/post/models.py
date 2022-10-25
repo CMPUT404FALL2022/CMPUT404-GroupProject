@@ -21,7 +21,7 @@ class Post(models.Model):
 
     # author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     published = models.DateTimeField(auto_now_add=True, null=True)
-    # post_image = models.ImageField(null=True, blank=True, upload_to='images/')
+    post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     def __str__(self):
         return f"{self.title} + {self.uuid} + {self.description} + {self.contentType} + {self.published}"
 
