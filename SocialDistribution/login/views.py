@@ -1,4 +1,4 @@
-from urllib.robotparser import RequestRate
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from rest_framework.response import Response
