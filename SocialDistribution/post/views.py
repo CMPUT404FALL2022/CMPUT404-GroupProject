@@ -8,5 +8,5 @@ def home_page(request):
 def posts(request):
     pass
 
-def post_detail(request):
-    pass
+def create_post(request):
+    return render(request, "post/create_new_post.html")
