@@ -24,7 +24,4 @@ urlpatterns = [
     path('login/',include("login.urls")),
     path('authors/',include("authors.urls")),
     path('post/',include("post.urls")),
-    path('MyProfile/',include('MyProfile.urls')),
-
-    
 ]
