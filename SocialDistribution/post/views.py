@@ -9,13 +9,9 @@ import uuid
 
 # Create your views here.
 
-def home_page(request):
-    posts = Post.objects.all()
-    
-    return render(request, 'post/index.html',{
-        'posts': Post.objects.all()
-        
-    })
+def home_page(request,userId):
+    print(userId)
+    return render(request,"post/index.html"~~)
 
 # def posts(request):
 #     return render(request, 'post/post_in_div.html', {
