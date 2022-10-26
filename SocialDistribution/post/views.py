@@ -28,9 +28,14 @@ def create_post(request,userId):
     if request.method == 'POST':
         form = post_form(request.POST)
         if form.is_valid():
-            new_post = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'])
+            newPost = form.save(commit=False)
+            newPost.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newPost.uuid)}"
+            newPost.source = newPost.id
+            newPost.origin = newPost.id
+            
+            new_post = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
             new_post.save()
-    
+            print(new_post.__str__())
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
