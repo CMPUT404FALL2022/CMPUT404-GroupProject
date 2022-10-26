@@ -12,21 +12,26 @@ import uuid
 
 def home_page(request,userId):
     print(userId)
-    return render(request,"post/index.html")
+    all_posts = Post.objects.all()
+    # all_posts = Posts.object.get(visibility = 'public')
 
+    return render(request,"post/index.html",{
+        "all_posts": all_posts
+    })
+    
 # def posts(request):
 #     return render(request, 'post/post_in_div.html', {
 #         'posts': Post.objects.all()
 #     })
 
-def create_post(request):
+def create_post(request,userId):
     if request.method == 'POST':
         form = post_form(request.POST)
         if form.is_valid():
             new_post = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'])
             new_post.save()
     
-            return HttpResponseRedirect(reverse("create-page"))
+            return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
     else:
