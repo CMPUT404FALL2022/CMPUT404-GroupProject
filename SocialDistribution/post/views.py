@@ -11,7 +11,7 @@ import uuid
 
 def home_page(request,userId):
     print(userId)
-    return render(request,"post/index.html"~~)
+    return render(request,"post/index.html")
 
 # def posts(request):
 #     return render(request, 'post/post_in_div.html', {

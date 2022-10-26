@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from authors.models import single_author
+from authors.models import authors
 from django.shortcuts import redirect
 from django.urls import reverse
 from .forms import SignUpForm
@@ -72,7 +73,6 @@ def sign_up(request):
                                         display_name=form.cleaned_data['display_name'],
                                         url = authorUrl)
             new_author.save()
-            
             return HttpResponseRedirect('/login')
     else:
         form = SignUpForm()

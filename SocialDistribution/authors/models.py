@@ -20,3 +20,7 @@ class single_author(models.Model):
     
     def __str__(self):
         return 'type:'+self.type+ 'id:'+ self.id+'host:'+ self.host+'display_name'+ self.display_name+'url'+ self.url+'github'+ self.github
+
+def authors(models.Model):
+    type = "authors"
+    items = models.ManyToManyField(single_author)
