@@ -1,9 +1,12 @@
 
+import argparse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from authors.models import single_author
+from django.shortcuts import redirect
+from django.urls import reverse
 from .forms import SignUpForm
 from .forms import LoginForm
 
@@ -21,10 +24,14 @@ def log_in(request):
             password = request.POST.get('password')
             storedUser = single_author.objects.get(username=username)
             storedUserPassword = storedUser.password
+            userId = storedUser.id
             if storedUserPassword == password:
                 #redirect this for now
-                return HttpResponse("Username and Password Match!\nLogin successful.")
+                # return HttpResponseRedirect("post/index.html",{
+                #     'username':storedUser
+                # })
                 # return HttpResponseRedirect("")
+                return HttpResponseRedirect(reverse("home-page",args=[userId]))
             else:
                 form = LoginForm()
                 isNotPasswordMatch = True
