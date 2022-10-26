@@ -1,0 +1,19 @@
+.background {
+    height:100vh;
+    background-color: antiquewhite;
+    /* everything at the center of sreen */
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+}
+
+form {
+    display: flex;
+}
+
+form button {
+    /* let the button at the center of the screen */
+    flex: 1 1 auto;
+    margin-left: 10px;
+}
