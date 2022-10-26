@@ -24,4 +24,7 @@ urlpatterns = [
     path('login/',include("login.urls")),
     path('post/',include("post.urls")),
     path('authors/',include("authors.urls")),
+    path('authors/<int:authorId>/posts/create_post', include('Create_Post.urls')),
+    path('', include('me.urls')),
+    path('', include('inbox.urls')),
 ]
