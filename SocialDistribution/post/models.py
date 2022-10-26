@@ -8,9 +8,9 @@ class Post(models.Model):
     type = models.CharField(default='post', max_length=200)
     title = models.CharField(max_length=200,null=True, blank=True)
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    id = models.CharField(max_length=200,default = '')
-    source = models.CharField(max_length=200,default = '')
-    origin = models.CharField(max_length=200,default = '')
+    id = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
+    origin = models.CharField(max_length=200)
     # url = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     content = models.CharField(max_length=256, null=True, blank=True)
@@ -37,7 +37,7 @@ class Post(models.Model):
     # post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     # image_b64 = models.BinaryField(blank=True, null=True)
     def __str__(self):
-        return f"{self.title} + {self.uuid} + {self.description} + {self.contentType} + {self.published} + {self.visibility} + {self.Categories}"
+        return f"{self.title} + {self.uuid} + {self.description} + {self.contentType} + {self.published} + {self.visibility} + {self.Categories} + {self.id} + {self.source} + {self.origin}"
     def to_dict(self):
         return {
             "title": self.title,
