@@ -17,9 +17,7 @@
     <form method="POST" enctype="multipart/form-data">
       {%csrf_token%}
       <div>
-        {% if isImageValid %}
-          <p>Please keep the filename consist with Username</p>
-        {% endif %}
+        {{ newUser }}
         {{ form }}
       </div>
 
