@@ -37,7 +37,7 @@ class Post(models.Model):
                                   choices=VISIBILITY_CHOICES,
                                   default="PUBLIC")
     #likes = models.IntegerField(default=0)
-    # post_image = models.ImageField(null=True, blank=True, upload_to='images/')
+    post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     # image_b64 = models.BinaryField(blank=True, null=True)
     def __str__(self):
         return f"{self.author}"
