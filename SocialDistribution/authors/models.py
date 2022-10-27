@@ -12,7 +12,7 @@ class single_author(models.Model):
     display_name = models.CharField(max_length=255,blank=True)
     url = models.URLField(blank=True)
     github = models.URLField(blank=True)
-    profileImage = models.ImageField(blank=True)
+    profileImage = models.ImageField(upload_to='avatars/', blank=True)
 
     # create a unique id for each new user
     # def generate_unique_id(self):
