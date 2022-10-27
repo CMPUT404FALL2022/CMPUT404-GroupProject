@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block header%} {% include "navbar.html" %}
 {%endblock %} {% block content %}
 <h1>Create new post</h1>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
   {%csrf_token%}
   <div class="form-outline form-white mb-4">{{ form }}</div>
   {% comment %}

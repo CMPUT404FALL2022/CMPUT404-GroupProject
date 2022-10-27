@@ -28,7 +28,7 @@ def home_page(request,userId):
 
 def create_post(request,userId):
     if request.method == 'POST':
-        form = post_form(request.POST)
+        form = post_form(request.POST,request.FILES)
         if form.is_valid():
             newPost = form.save(commit=False)
             newPost.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newPost.uuid)}"
