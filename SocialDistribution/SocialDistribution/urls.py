@@ -22,18 +22,9 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-<<<<<<< HEAD
-
-=======
->>>>>>> main
     path('service',include("service.urls")),
     path('',include("login.urls")),
     path('',include("authors.urls")),
     path('',include("post.urls")),
     path('',include('MyProfile.urls')),
-<<<<<<< HEAD
-
-
-=======
->>>>>>> main
 ]
