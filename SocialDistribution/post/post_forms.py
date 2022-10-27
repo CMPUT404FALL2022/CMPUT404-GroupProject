@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 
 
 class post_form(forms.ModelForm):
@@ -36,3 +36,21 @@ class post_form(forms.ModelForm):
         model = Post
         fields = ['title', 'description', 'textType', 'content','Categories','visibility']
         
+
+class Comment_form(forms.ModelForm):
+    comment = forms.CharField(label='comment', 
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Type in your comment here...',
+        
+        })
+    )
+
+    class Meta:
+        model = Comment
+        fields = ['comment', 'contentType']
+
+
+# class Like_form(forms.ModelForm):
+#     class Meta:
+#         model = Like
+#         fields = ['like']
