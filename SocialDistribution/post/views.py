@@ -12,7 +12,7 @@ import uuid
 
 def home_page(request,userId):
     #这里要加判定
-
+    print(f"11111111111111111111{request.user}")
     all_posts = Post.objects.all()
     # all_posts = Posts.object.get(visibility = 'public')
 

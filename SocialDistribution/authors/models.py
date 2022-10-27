@@ -1,9 +1,10 @@
 from email.policy import default
 from django.db import models
 from django.core.validators import MinLengthValidator
+from django.contrib.auth.models import AbstractBaseUser
 
 # Create your models here.
-class single_author(models.Model):
+class single_author(AbstractBaseUser):
     type = "author"
     username = models.CharField(primary_key=True,unique=True,max_length=255)
     password = models.CharField(validators=[MinLengthValidator(6)],max_length=255)
@@ -13,6 +14,8 @@ class single_author(models.Model):
     url = models.URLField(blank=True)
     github = models.URLField(blank=True)
     profileImage = models.ImageField(upload_to='avatars/', blank=True)
+
+    USERNAME_FIELD = 'username'
 
     # create a unique id for each new user
     # def generate_unique_id(self):
