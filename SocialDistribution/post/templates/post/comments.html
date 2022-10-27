@@ -1,36 +1,41 @@
-{% extends 'base.html' %} {% block header%} {% include "navbar.html" %} {%endblock %} {% block content %}
+{% extends 'base.html' %} {% block header%} {% include "navbar.html" %}
+{%endblock %} {% block content %}
+<h1>Comment area</h1>
+<form method="post">
+  {%csrf_token%}
+  <div class="form-outline form-white mb-4">{{ form }}</div>
+  {% comment %}
+  <div class="create_post">
+    <label for="create_post">Write you new post</label>
+    <textarea
+      class="form-control"
+      required="required"
 
-<div class="small d-flex justify-content-start">
-     <a href="#!" class="d-flex align-items-center me-3">
-         <i class="far fa-thumbs-up me-2"></i>
-           <p class="mb-0">Like</p>
-            </a>
-    <a href="#!" class="d-flex align-items-center me-3">
-      <i class="far fa-comment-dots me-2"></i>
-      <p class="mb-0">Comment</p>
-     </a>
-    <a href="#!" class="d-flex align-items-center me-3">
-    <i class="fas fa-share me-2"></i>
-    <p class="mb-0">Share</p>
-     </a>
-    </div>
-    </div>
-    <div class="card-footer py-3 border-0" >
-    <div class="d-flex flex-start w-100">
-    <img class="rounded-circle shadow-1-strong me-3" height="40" /> 
-    <div class="form-outline w-100">
-    <textarea class="form-control" id="textAreaExample" rows="4"></textarea><label class="form-label" for="textAreaExample">Message</label>
-    </div>
-    </div>
-    <div class="float-end mt-2 pt-1">
-    <button type="button" class="btn btn-primary btn-sm">Post comment</button>
-    <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
-    </div>
-   </div>
-    </div>
-    </div>
-    </div>
-    </div>
-  </section>
+      id="create_post"
+      rows="8"
+      cols="28"
+    ></textarea>
+  </div>
 
-  {% endblock %}
+
+  <button
+    type="back"
+    class="btn btn-primary"
+    style="background-color: rgb(243, 182, 97)"
+  >
+    Back
+  </button>
+  {% endcomment %}
+
+  <button
+
+
+    type="submit"
+    class="btn btn-primary"
+    style="background-color: rgb(243, 182, 97)"
+  >
+    Post
+  </button>
+</form>
+
+{% endblock %}
