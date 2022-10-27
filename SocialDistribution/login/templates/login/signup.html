@@ -13,9 +13,12 @@
 <section class="background">
   <h2 class="">Create an account</h2>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
       {%csrf_token%}
       <div>
+        {% if isImageValid %}
+          <p>Please keep the filename consist with Username</p>
+        {% endif %}
         {{ form }}
       </div>
 

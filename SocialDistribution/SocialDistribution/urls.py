@@ -16,16 +16,24 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
     path('service',include("service.urls")),
     path('',include("login.urls")),
     path('',include("authors.urls")),
     path('',include("post.urls")),
     path('',include('MyProfile.urls')),
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> main
 ]
