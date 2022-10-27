@@ -38,16 +38,16 @@ class post_form(forms.ModelForm):
         
 
 class Comment_form(forms.ModelForm):
-    Comment = forms.CharField(label='content', 
-        required = False,
+    comment = forms.CharField(label='comment', 
         widget=forms.Textarea(attrs={
-            'placeholder': 'If you want to comment something',
-
+            'placeholder': 'Type in your comment here...',
+        
         })
     )
+
     class Meta:
         model = Comment
-        fields = ['contentType','comment']
+        fields = ['comment', 'contentType']
 
 
 # class Like_form(forms.ModelForm):

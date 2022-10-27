@@ -17,7 +17,8 @@ def home_page(request,userId):
     # all_posts = Posts.object.get(visibility = 'public')
 
     return render(request,"post/index.html",{
-        "all_posts": all_posts
+        "all_posts": all_posts,
+        "userId": userId
     })
     
 # def posts(request):
@@ -59,12 +60,10 @@ def create_comment(request,userId):
         form = Comment_form(request.POST)
         if form.is_valid():
             newComment = form.save(commit=False)
-            
-            
-            # newPost.title = form.cleaned_data['title']
-            # newPost.content = form.cleaned_data['content']
-            # newPost.description = form.cleaned_data['description']
-            # newPost = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
+            newComment.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newComment.uuid)}"
+            currentAuthor = single_author.objects.get(id = userId)
+            newComment.author = currentAuthor
+
             
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")
@@ -74,6 +73,6 @@ def create_comment(request,userId):
     else:
         form = Comment_form()
         return render(request,"post/create_new_post.html",{
-            'Comform':form
+            'form':form
             
         })

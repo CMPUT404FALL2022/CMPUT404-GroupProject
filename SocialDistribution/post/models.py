@@ -1,4 +1,5 @@
 
+from enum import unique
 from django.db import models
 from authors.models import single_author
 
@@ -9,7 +10,7 @@ class Post(models.Model):
 
     type = models.CharField(default='post', max_length=200)
     title = models.CharField(max_length=200,null=True, blank=True)
-    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False,unique=True)
     id = models.CharField(max_length=200, null=True)
     source = models.CharField(max_length=200,null=True)
     origin = models.CharField(max_length=200,null=True)
@@ -35,7 +36,7 @@ class Post(models.Model):
     visibility = models.CharField(max_length=7,
                                   choices=VISIBILITY_CHOICES,
                                   default="PUBLIC")
-    likes = models.IntegerField(default=0)
+    #likes = models.IntegerField(default=0)
     # post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     # image_b64 = models.BinaryField(blank=True, null=True)
     def __str__(self):
@@ -65,16 +66,16 @@ class Post(models.Model):
 
 class Comment(models.Model):
     type = "comment"
-    uuid = models.UUIDField(default=uuid.uuid4,
-                            editable=False,
-                            unique=True,
-                            primary_key=True)
-    id = models.CharField(max_length=200)
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False, unique=True)
+    id = models.CharField(max_length=200, null=True)
+    
+    author = models.ForeignKey(single_author,related_name='comment',on_delete=models.CASCADE,blank=True, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, null=True)
     comment = models.TextField(max_length=256, null=True, blank=True)
     CONTENT_CHOICES = [("text/plain", "Plaintext"),
                        ("text/markdown", "Markdown")]
-    contentType = models.CharField(max_length=30, choices=CONTENT_CHOICES)
+    contentType = models.CharField(max_length=30, choices=CONTENT_CHOICES,default = ("text/plain", "Plaintext"))
     published = models.DateTimeField(auto_now_add=True, null=True)
-   
+    def __str__(self):
+        return f"{self.comment} + {self.contentType} + {self.id}"
 
