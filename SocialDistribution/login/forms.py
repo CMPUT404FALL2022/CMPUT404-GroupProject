@@ -6,7 +6,7 @@ class SignUpForm(forms.ModelForm):
     # password = forms.CharField(max_length=255)
     class Meta:
         model = single_author
-        fields = ['username', 'password','display_name']
+        fields = ['username', 'password','display_name','profileImage']
 
 class LoginForm(forms.ModelForm):
     class Meta:
