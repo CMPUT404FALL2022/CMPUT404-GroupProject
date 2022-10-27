@@ -26,5 +26,5 @@ urlpatterns = [
     path('',include("login.urls")),
     path('',include("authors.urls")),
     path('',include("post.urls")),
-    path('',include('MyProfile.urls')),
+    path('',include('me.urls')),
 ]
