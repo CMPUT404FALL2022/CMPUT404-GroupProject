@@ -25,7 +25,7 @@ class Post(models.Model):
                        ("text/markdown", "Markdown")]
     textType = models.CharField(max_length=30, choices=TEXT_CHOICES, null=True, blank=True)
 
-    # author = models.ForeignKey(to="authors.single_author", on_delete=models.CASCADE)
+    author = models.ForeignKey(to="authors.single_author",on_delete=models.CASCADE )
     count = models.IntegerField(default=0)
     published = models.DateTimeField(auto_now_add=True, null=True)
     VISIBILITY_CHOICES = [("PUBLIC", "Public"), ("FRIENDS", "Friends"),
@@ -37,7 +37,7 @@ class Post(models.Model):
     # post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     # image_b64 = models.BinaryField(blank=True, null=True)
     def __str__(self):
-        return f"{self.title} + {self.uuid} + {self.description} + {self.contentType} + {self.published} + {self.visibility} + {self.Categories} + {self.id} + {self.source} + {self.origin}"
+        return f"{self.author}"
     def to_dict(self):
         return {
             "title": self.title,
@@ -54,13 +54,24 @@ class Post(models.Model):
         }
 
 class Like(models.Model):
+    # type = models.CharField(default='like', max_length=200)
+    # summary = models.TextField()
+    # author = models.ForeignKey(to="authors.Author", on_delete=models.CASCADE)
+    # object = models.CharField(max_length=200)
     pass
 
 class Comment(models.Model):
-    type = "comment"
-    comment = models.TextField(null=True, blank=True)
-    contentType = "text/markdown"
-    published = models.DateTimeField(auto_now_add=True, null=True)
-    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-
+    # type = "comment"
+    # uuid = models.UUIDField(default=uuid.uuid4,
+    #                         editable=False,
+    #                         unique=True,
+    #                         primary_key=True)
+    # id = models.CharField(max_length=200)
+    # post = models.ForeignKey(to=Post, on_delete=models.CASCADE, null=True)
+    # comment = models.TextField()
+    # CONTENT_CHOICES = [("text/plain", "Plaintext"),
+    #                    ("text/markdown", "Markdown")]
+    # contentType = models.CharField(max_length=30, choices=CONTENT_CHOICES)
+    # published = models.DateTimeField(auto_now_add=True, null=True)
+    pass
 
