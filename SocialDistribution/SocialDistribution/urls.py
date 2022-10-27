@@ -25,4 +25,5 @@ urlpatterns = [
     path('authors/',include("authors.urls")),
     path('post/',include("post.urls")),
     path('me/',include("me.urls")),
+    path('inbox/',include("inbox.urls"))
 ]
