@@ -24,10 +24,8 @@
                   Please enter your username and password!
                 </p>
 
-                {% if isNotUsernameExist %}
-                <p>Username does not exist! Please SignUp first</p>
-                {% endif %} {% if isNotPasswordMatch %}
-                <p>Password does not match!</p>
+                {% if display %}
+                <p>This account is not approved to be activated, please contact admin.</p>
                 {% endif %}
 
                 <form method="post">

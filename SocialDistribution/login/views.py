@@ -13,12 +13,21 @@ import uuid
 # Create your views here.
 def log_in(request):
     #login by username and password
-
+    displayConfirmMsg = False
     if request.method == 'POST':
-        user = User.objects.all()
         form = LoginForm()
         username = request.POST['username']
         password = request.POST['password']
+
+        userLogin = User.objects.get(username = username)
+
+        if userLogin.is_active == False:
+            displayConfirmMsg = True
+            return render(request,"login/login.html",{
+                "form":form,
+                "display":displayConfirmMsg
+                }) 
+
 
         user = authenticate(request, username=username, password=password)
 
@@ -29,12 +38,12 @@ def log_in(request):
             
             return HttpResponseRedirect(reverse("home-page",args=[current_authorId]))
         else:
-            messages.error(request,("Username or Password wrong, please try again."))
-            
             return render(request,"login/login.html",{
                 "username":None,
                 "password":None,
-                "form":form
+                "form":form,
+                "display":displayConfirmMsg
+    
             })
         # if single_author.objects.filter(username=username).exists():
         #     password = request.POST.get('password')
@@ -66,7 +75,8 @@ def log_in(request):
         form = LoginForm()
 
     return render(request,"login/login.html",{
-        "form":form
+        "form":form,
+        "display":displayConfirmMsg
     })
 
 def sign_up(request):
@@ -80,7 +90,8 @@ def sign_up(request):
             authorUrl = 'http://'+authorHost+'/authors/'+authorId
             new_author = form.save(commit=False)
             new_user = userForm.save(commit=False)
-            new_user.is_active = True
+            #### Needs Admin Permission to activate this new account ####
+            new_user.is_active = False
             
             #######################
             new_author.username = userForm.cleaned_data['username']
