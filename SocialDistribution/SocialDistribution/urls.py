@@ -26,4 +26,7 @@ urlpatterns = [
     path('',include("login.urls")),
     path('',include("authors.urls")),
     path('',include("post.urls")),
+    path('',include('me.urls')), 
+    path('',include('inbox.urls')),
+
 ]
