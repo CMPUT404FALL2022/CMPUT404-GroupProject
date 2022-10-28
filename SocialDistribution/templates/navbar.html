@@ -24,7 +24,7 @@
           <a href="#">Home<span class="sr-only">(current)</span></a>
         </li>
 
-        <li><a href="#">Post</a></li>
+        <li><a href={% url "create-page" userId %}>Post</a></li>
         <li><a href="http://127.0.0.1:8000/inbox/">Inbox</a></li>
         <li><a href={% url "profile-page" userId %}>My Account</a></li>
         <li><a href={% url "information-page" userId %}>My information</a></li>
