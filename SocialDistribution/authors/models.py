@@ -29,7 +29,11 @@ class followRequest(models.Model):
     actor = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_sender')
     object = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_receiver')
 
+# class followPerson(models.Model):
+#     username = models.CharField(max_length=255, blank=True,default='')
+#     authorId = models.CharField(max_length=255, blank=True,default='')
+
 class Followers(models.Model):
     type = 'Followers'
-    user = models.OneToOneField(to=single_author,on_delete=models.CASCADE,related_name='user')
-    items = models.ManyToManyField(to=single_author, related_name='items', blank=True)
+    author = models.CharField(primary_key=True, max_length=255,default='')
+    items = models.ManyToManyField(single_author)

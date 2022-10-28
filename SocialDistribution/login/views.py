@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from authors.models import single_author
+from authors.models import single_author,Followers
 from django.urls import reverse
 from .forms import SignUpForm
 from .forms import LoginForm
@@ -99,6 +99,8 @@ def sign_up(request):
             new_author.id = authorId
             new_author.host = authorHost
             new_author.url = authorUrl
+            followerList = Followers(author=new_author.username)
+            followerList.save()
             new_author.save()
             new_user.save()
             #######################

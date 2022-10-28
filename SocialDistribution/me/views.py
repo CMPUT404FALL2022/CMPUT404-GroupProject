@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from authors.models import single_author
 from post.models import Post
+from .forms import followRequestForm
+from authors.models import Followers
 # Create your views here.
 
 # def my_page(request, userId):
@@ -10,9 +12,23 @@ from post.models import Post
 #     return render(request,'my_post.html')
 
 def my_profile(request, userId):
-    all_posts = Post.objects.all()
+    if request.method == "POST":
+        # currentUser = request.user
+        # form = followRequestForm(request.POST)
+        # receiver = single_author.objects.filter(username = form.cleaned_data['object'])
+        # currentAuthor = single_author.objects.filter(username = currentUser)
+         
+        # if form.is_valid():
+        #     if receiver.exists():
+        #         getFollowerList = Followers.objects.get(author = receiver)
+        #         getFollowerList.items.add(newFollower)
+        #         getFollowerList.save()
+        pass
+    else:
+        requestForm = followRequestForm()
 
     return render(request,'my_profile.html',{
         "all_posts": all_posts,
-        "userId": userId
+        "userId": userId,
+        "requestForm":requestForm
     })
