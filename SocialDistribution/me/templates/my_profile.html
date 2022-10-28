@@ -1,0 +1,81 @@
+{% extends 'base.html' %} 
+{%block title%} My Profile {%endblock%} 
+{% block header%}
+{% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
+  <!-- Navbar content -->
+  <div class="container-fluid" style="margin-top: 7px">
+    <form
+      class="form-inline my-2 my-lg-0 col-xs-2 col-sm-3 col-md-3 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+
+    <div class="col-xs-6 col-sm-6 col-md-1 col-md-offset-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    
+</nav> {% endcomment %}
+{% include "navbar.html" %}
+{% endblock %} {% block content %}
+<div class="container I_followed">
+  <div class="row">
+    <div
+      class="col-xs-6 col-sm-6 col-md-7 border-3"
+      style="
+        background-color: #ffe5d9;
+        box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;
+        margin-top: 25px;
+        border: 2px solid grey;
+        border-style: outset;
+        border-radius: 10px;
+      "
+    >
+      <p>这一段是广场帖子.</p>
+       <ul>
+        {% for post in all_posts %}
+            <li>{{ post.title }}</li>
+            {% comment %} <div class = "container">{% include "post/button.html" %}</div> {% endcomment %}
+            </br>
+            </br>
+        {% endfor %}
+        </ul> 
+      
+    </div>
+    <div
+      class="col-xs-2 col-sm-2 col-md-3 col-md-offset-2 col-sm-offset-2 col-xs-offset-2"
+      style="
+        background-color: #fec5bb;
+        box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;
+        margin-top: 25px;
+        border: 2px solid grey;
+        border-style: outset;
+        border-radius: 10px;
+      "
+    >
+      <p>这一段是谁关注了我.</p>
+      <p>{% lorem 9 b random %}</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
