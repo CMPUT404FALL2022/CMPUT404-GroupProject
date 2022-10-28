@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{%block title%} My homepage modification {%endblock%} 
+
+{%block css_files%}<link rel="stylesheet" href="xxx.css">{%endblock%}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="text-right" style="font-weight: bold; text-align: center;">My Profile Settings</h1>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label class="labels">Username</label>
+                        <input type="text" class="form-control" placeholder="Enter new username" value="">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Password</label>
+                        <input type="text" class="form-control" placeholder="Enter new password" value="">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Display Name</label>
+                        <input type="text" class="form-control" placeholder="Enter new display name" value="">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">GitHub Account</label>
+                        <input type="text" class="form-control" placeholder="Enter new Github account" value="">
+                    </div>
+                </div>
+                <div class="mt-5 text-center">
+                    <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -25,3 +25,11 @@ def myinfo(request, userId):
         "userId": userId
 
     })
+
+def myinfoedit(request, userId):
+    all_info = single_author.objects.get()
+    return render(request, 'editmyinfo.html',{
+        "all_info": all_info,
+        "userId": userId
+
+    })
