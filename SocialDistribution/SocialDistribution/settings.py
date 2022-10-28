@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'inbox',
     'login',
     'post',
-    'Create_Post',
     'service',
     'me',
     'django.contrib.admin',
