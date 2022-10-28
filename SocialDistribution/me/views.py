@@ -20,7 +20,7 @@ def my_profile(request, userId):
 
 
 def myinfo(request, userId):
-    all_info = single_author.objects.get()
+    all_info = single_author.objects.get(id = userId)
     return render(request, 'myinfo.html',{
         "all_info": all_info,
         "userId": userId
@@ -28,7 +28,7 @@ def myinfo(request, userId):
     })
 
 def myinfoedit(request, userId):
-    all_info = single_author.objects.get()
+    all_info = single_author.objects.get(id = userId)
     if request.method == "POST":
         form = EditForm(request.POST)
         if form.is_valid():
