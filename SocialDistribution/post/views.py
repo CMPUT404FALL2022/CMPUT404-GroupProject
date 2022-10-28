@@ -49,8 +49,8 @@ def create_post(request,userId):
     else:
         form = post_form()
         return render(request,"post/create_new_post.html",{
-            'form':form
-            
+            'form':form,
+            'userId':userId
         })
 
 
@@ -73,6 +73,6 @@ def create_comment(request,userId):
     else:
         form = Comment_form()
         return render(request,"post/create_new_post.html",{
-            'form':form
-            
+            'form':form,
+            'userId':userId
         })

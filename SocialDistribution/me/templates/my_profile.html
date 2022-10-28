@@ -1,5 +1,5 @@
 {% extends 'base.html' %} 
-{%block title%} My Post {%endblock%} 
+{%block title%} My Profile {%endblock%} 
 {% block header%}
 {% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
   <!-- Navbar content -->
@@ -54,14 +54,14 @@
        <ul>
         {% for post in all_posts %}
             <li>{{ post.title }}</li>
-            <div class = "container">{% include "post/button.html" %}</div>
+            {% comment %} <div class = "container">{% include "post/button.html" %}</div> {% endcomment %}
             </br>
             </br>
         {% endfor %}
         </ul> 
       
     </div>
-    {% comment %} <div
+    <div
       class="col-xs-2 col-sm-2 col-md-3 col-md-offset-2 col-sm-offset-2 col-xs-offset-2"
       style="
         background-color: #fec5bb;
@@ -76,6 +76,6 @@
       <p>{% lorem 9 b random %}</p>
     </div>
   </div>
-</div> {% endcomment %}
+</div>
 
 {% endblock %}
