@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from authors.models import single_author
 from post.models import Post
+from .forms import EditForm
 # Create your views here.
 
 # def my_page(request, userId):
@@ -28,8 +29,19 @@ def myinfo(request, userId):
 
 def myinfoedit(request, userId):
     all_info = single_author.objects.get()
+    if request.method == "POST":
+        form = EditForm(request.POST)
+        if form.is_valid():
+            info = form.save(commit=False)
+            info.user = request.user
+            info.save()
+            password = form.cleaned_data['password']
+            print("@@@@@@@@@@@"+password)
+    form = EditForm()
+
     return render(request, 'editmyinfo.html',{
         "all_info": all_info,
-        "userId": userId
+        "userId": userId,
+        "form": form
 
     })
