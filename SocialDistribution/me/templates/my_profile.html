@@ -54,7 +54,7 @@
        <ul>
         {% for post in all_posts %}
             <li>{{ post.title }}</li>
-            {% comment %} <div class = "container">{% include "post/button.html" %}</div> {% endcomment %}
+            <div class = "container"><a href={% url "modify-post-page" userId post.uuid%} >modify</a></div>
             </br>
             </br>
         {% endfor %}
