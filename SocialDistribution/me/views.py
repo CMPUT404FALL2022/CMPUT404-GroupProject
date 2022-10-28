@@ -84,14 +84,16 @@ def myinfoedit(request, userId):
     if request.method == "POST":
         form = EditForm(request.POST)
         if form.is_valid():
-            password = form.cleaned_data['password']
+            # conflict with login
+            #password = form.cleaned_data['password']
             display_name = form.cleaned_data['display_name']
             github = form.cleaned_data['github']
             
             #--------------sql query to update the database----------------
             conn = sqlite3.connect('./db.sqlite3')
             c = conn.cursor()
-            c.execute('UPDATE authors_single_author SET password = ?, display_name = ? , github = ? WHERE id = ?;',(password,display_name,github,userId))
+            #c.execute('UPDATE authors_single_author SET password = ?, display_name = ? , github = ? WHERE id = ?;',(password,display_name,github,userId))
+            c.execute('UPDATE authors_single_author SET display_name = ? , github = ? WHERE id = ?;',(display_name,github,userId))
             conn.commit()
             conn.close()
     form = EditForm()
