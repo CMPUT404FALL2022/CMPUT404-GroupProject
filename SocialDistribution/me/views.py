@@ -16,3 +16,20 @@ def my_profile(request, userId):
         "all_posts": all_posts,
         "userId": userId
     })
+
+
+def myinfo(request, userId):
+    all_info = single_author.objects.get()
+    return render(request, 'myinfo.html',{
+        "all_info": all_info,
+        "userId": userId
+
+    })
+
+def myinfoedit(request, userId):
+    all_info = single_author.objects.get()
+    return render(request, 'editmyinfo.html',{
+        "all_info": all_info,
+        "userId": userId
+
+    })
