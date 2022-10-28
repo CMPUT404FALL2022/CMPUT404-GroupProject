@@ -2,6 +2,7 @@ from django.shortcuts import render
 from authors.models import single_author
 from post.models import Post
 from .forms import EditForm
+import sqlite3
 # Create your views here.
 
 # def my_page(request, userId):
@@ -24,7 +25,6 @@ def myinfo(request, userId):
     return render(request, 'myinfo.html',{
         "all_info": all_info,
         "userId": userId
-
     })
 
 def myinfoedit(request, userId):
@@ -32,13 +32,17 @@ def myinfoedit(request, userId):
     if request.method == "POST":
         form = EditForm(request.POST)
         if form.is_valid():
-            info = form.save(commit=False)
-            info.user = request.user
-            info.save()
             password = form.cleaned_data['password']
-            print("@@@@@@@@@@@"+password)
+            display_name = form.cleaned_data['display_name']
+            github = form.cleaned_data['github']
+            
+            #--------------sql query to update the database----------------
+            conn = sqlite3.connect('./db.sqlite3')
+            c = conn.cursor()
+            c.execute('UPDATE authors_single_author SET password = ?, display_name = ? , github = ? WHERE id = ?;',(password,display_name,github,userId))
+            conn.commit()
+            conn.close()
     form = EditForm()
-
     return render(request, 'editmyinfo.html',{
         "all_info": all_info,
         "userId": userId,
