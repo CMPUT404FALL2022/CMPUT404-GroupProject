@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from authors.models import single_author
+from post.models import Post
 
 # Create your views here.
 
