@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{%block title%} My homepage modification {%endblock%} 
+
+{%block css_files%}<link rel="stylesheet">{%endblock%}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="block">
+    <div class="block">
+        <h2 class="title is-2">Edit your profile</p>
+    </div>
+    <div class="block">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button is-success is-fullwidth is-medium mt-5"
+                    type="submit">Save
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
