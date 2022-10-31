@@ -16,4 +16,4 @@ class EditForm(forms.ModelForm):
 
     class Meta:
         model = single_author
-        fields=['password','display_name','github']
+        fields=['display_name','github']
