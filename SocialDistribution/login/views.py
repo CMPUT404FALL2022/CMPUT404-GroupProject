@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -19,7 +20,10 @@ def log_in(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        userLogin = User.objects.get(username = username)
+        try:
+            userLogin = User.objects.get(username = username)
+        except:
+            return HttpResponse("Username does not exist")
 
         if userLogin.is_active == False:
             displayConfirmMsg = True
