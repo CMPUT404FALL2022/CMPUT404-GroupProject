@@ -50,11 +50,12 @@
         border-radius: 10px;
       "
     >
-      <p>这一段是广场帖子.</p>
        <ul>
         {% for post in all_posts %}
             <li>{{ post.title }}</li>
+            
             <div class = "container"><a href={% url "modify-post-page" userId post.uuid%} >modify</a></div>
+            
             </br>
             </br>
         {% endfor %}
@@ -79,7 +80,6 @@
       <button>Send</button>
     </form>
     <!-- ############################ -->
-      <p>这一段是谁关注了我.</p>
       <p>{% lorem 9 b random %}</p>
     </div>
   </div>

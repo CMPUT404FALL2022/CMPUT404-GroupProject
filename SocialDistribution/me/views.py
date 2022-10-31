@@ -18,6 +18,7 @@ import sqlite3
 #     return render(request,'my_post.html')
 
 def my_profile(request, userId):
+    all_posts = Post.objects.filter(author__id = userId)
     if request.method == "POST":
         # currentUser = request.user
         # form = followRequestForm(request.POST)
@@ -34,7 +35,7 @@ def my_profile(request, userId):
         requestForm = followRequestForm()
 
     return render(request,'my_profile.html',{
-        # "all_posts": all_posts,
+        "all_posts": all_posts,
         "userId": userId
     })
 
