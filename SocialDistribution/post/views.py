@@ -6,10 +6,12 @@ from .post_forms import post_form, Comment_form
 from .models import Post
 from authors.models import single_author
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 import uuid
 
 # Create your views here.
 
+@login_required(login_url='/login/')
 def home_page(request,userId):
     #这里要加判定
     print(f"11111111111111111111{request.user}")
@@ -26,6 +28,7 @@ def home_page(request,userId):
 #         'posts': Post.objects.all()
 #     })
 
+@login_required(login_url='/login/')
 def create_post(request,userId):
     if request.method == 'POST':
         form = post_form(request.POST,request.FILES)
@@ -54,7 +57,7 @@ def create_post(request,userId):
         })
 
 
-
+@login_required(login_url='/login/')
 def create_comment(request,userId):
     if request.method == 'POST':
         form = Comment_form(request.POST)
