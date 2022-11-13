@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %} {% load static %}
 {%block title%} My Post {%endblock%} 
 {% block header%}
 {% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
@@ -50,10 +50,16 @@
         border-radius: 10px;
       "
     >
-      <p>这一段是广场帖子.</p>
-       <ul>
+    
+       <ul class = "list-unstyled">
         {% for post in all_posts %}
             <li>{{ post.title }}</li>
+            <li>{{ post.content }}</li>
+            <li>{{ post.description }}</li>
+            {% if post.post_image.url is not None %}
+              <img src="{{post.post_image.url }}" width="600px">
+            {% endif %}
+            
             <div class = "container">{% include "post/button.html" %}</div>
             </br>
             </br>
@@ -72,7 +78,7 @@
         border-radius: 10px;
       "
     >
-      <p>这一段是谁关注了我.</p>
+      
       <p>{% lorem 9 b random %}</p>
     </div>
   </div>
