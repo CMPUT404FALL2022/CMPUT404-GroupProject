@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+
 from .post_forms import post_form, Comment_form
 from .models import Post
 from authors.models import single_author
