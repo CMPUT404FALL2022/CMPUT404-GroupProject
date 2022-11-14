@@ -8,6 +8,7 @@ from django.urls import reverse
 from .forms import followRequestForm
 from authors.models import Followers
 from .forms import EditForm
+from django.contrib.auth.decorators import login_required
 import sqlite3
 # Create your views here.
 
@@ -17,6 +18,7 @@ import sqlite3
 # def my_post_page(request, userId):
 #     return render(request,'my_post.html')
 
+@login_required(login_url='/login/')
 def my_profile(request, userId):
     all_posts = Post.objects.filter(author__id = userId)
     if request.method == "POST":
@@ -40,7 +42,7 @@ def my_profile(request, userId):
     })
 
 
-
+@login_required(login_url='/login/')
 def my_profile_modify(request, userId, postId):
     
     if request.method == 'POST' and 'mod' in request.POST:
@@ -73,6 +75,8 @@ def my_profile_modify(request, userId, postId):
             'form':form,
             'userId':userId
     })
+
+@login_required(login_url='/login/')
 def myinfo(request, userId):
     all_info = single_author.objects.get(id = userId)
     return render(request, 'myinfo.html',{
@@ -80,15 +84,16 @@ def myinfo(request, userId):
         "userId": userId
     })
 
-# def myinfoedit(request, userId):
-#     all_info = single_author.objects.get(id = userId)
-#     if request.method == "POST":
-#         form = EditForm(request.POST)
-#         if form.is_valid():
-#             # conflict with login
-#             #password = form.cleaned_data['password']
-#             display_name = form.cleaned_data['display_name']
-#             github = form.cleaned_data['github']
+@login_required(login_url='/login/')
+def myinfoedit(request, userId):
+    all_info = single_author.objects.get(id = userId)
+    if request.method == "POST":
+        form = EditForm(request.POST)
+        if form.is_valid():
+            # conflict with login
+            #password = form.cleaned_data['password']
+            display_name = form.cleaned_data['display_name']
+            github = form.cleaned_data['github']
             
 #             #--------------sql query to update the database----------------
 #             conn = sqlite3.connect('./db.sqlite3')
