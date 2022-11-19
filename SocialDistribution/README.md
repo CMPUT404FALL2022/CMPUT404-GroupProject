@@ -1,6 +1,7 @@
 # Project setup
 
-## Create a virtual environment to isolate our package dependencies locally
+## Setting up a new environment
+Before we do anything else we'll create a new virtual environment, using venv. This will make sure our package configuration is kept nicely isolated from any other projects we're working on.
 ```
 python3 -m venv env
 source env/bin/activate  # On Windows use `env\Scripts\activate`
