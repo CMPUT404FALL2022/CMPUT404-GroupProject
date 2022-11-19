@@ -20,7 +20,9 @@ python manage.py runserver
 go to `http://127.0.0.1:8000/` if working on local host
 
 # Learn more
-## Django REST framework https://www.django-rest-framework.org/tutorial/quickstart/
-## Uploading image https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj
+## Django REST framework 
+https://www.django-rest-framework.org/tutorial/quickstart/
+## Uploading image 
+https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj
 
 
