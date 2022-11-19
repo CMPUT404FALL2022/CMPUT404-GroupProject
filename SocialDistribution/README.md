@@ -12,12 +12,13 @@ Now that we're inside a virtual environment, we can install our package requirem
 pip install -r requirements.txt
 ```
 ## Run app
+We're now ready to test the API we've built. Let's fire up the server from the command line.
 ```
 cd SocialDistribution
 python manage.py runserver
 ```
-##
-go to `http://127.0.0.1:8000/docs` if working on local host
+
+go to `http://127.0.0.1:8000/` if working on local host
 
 
 
