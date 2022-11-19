@@ -13,5 +13,11 @@ pip install -r requirements.txt
 ```
 ## Run app
 ```
+cd SocialDistribution
 python manage.py runserver
 ```
+##
+go to `http://127.0.0.1:8000/docs` if working on local host
+
+
+
