@@ -6,11 +6,12 @@ Before we do anything else we'll create a new virtual environment, using venv. T
 python3 -m venv env
 source env/bin/activate
 ```
-## Install Django and Django REST framework into the virtual environment
+## Install package requirements
+Now that we're inside a virtual environment, we can install our package requirements.
 ```
-pip install django
-pip install djangorestframework
+pip install -r requirements.txt
 ```
 ## Run app
+```
 python manage.py runserver
-
+```
