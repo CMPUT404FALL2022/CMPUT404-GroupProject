@@ -28,7 +28,7 @@ python manage.py runserver
 go to `http://127.0.0.1:8000/` if working on local host
 
 # Learn more
-To learn Django REST framework, checkout https://www.django-rest-framework.org/tutorial/quickstart//n
+To learn Django REST framework, checkout https://www.django-rest-framework.org/tutorial/quickstart/\
 To learn Uploading image, checkout https://dev.to/thomz/uploading-images-to-django-rest-framework-from-forms-in-react-3jhj
 To learn bootstrap, checkout https://getbootstrap.com/docs/5.2/getting-started/introduction/
 To learn HTML, checkout https://developer.mozilla.org/en-US/docs/Web/HTML
