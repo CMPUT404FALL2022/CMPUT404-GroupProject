@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 from .post_forms import post_form, Comment_form
-from .models import Post
+from .models import Post,Comment
 from authors.models import single_author
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -13,12 +13,21 @@ import uuid
 @login_required(login_url='/login/')
 def home_page(request,userId):
     #这里要加判定
-    print(f"11111111111111111111{request.user}")
-    all_posts = Post.objects.all()
-    # all_posts = Posts.object.get(visibility = 'public')
+    # print(f"11111111111111111111{request.user}")
+    # all_posts = Post.objects.all()
+    all_posts = Post.objects.filter(unlisted=False, visibility="PUBLIC")
+    post_comments_dict = {}
+    
+    #get comments
+    for post in all_posts:
+        oneListComment = Comment.objects.filter(post__uuid = post.uuid)
+
+        post_comments_dict[post] = oneListComment
+        
 
     return render(request,"post/index.html",{
-        "all_posts": all_posts,
+        "post_comments_dict": post_comments_dict,
+        "all_posts" : all_posts,
         "userId": userId
     })
     
@@ -42,9 +51,9 @@ def create_post(request,userId):
             # newPost.content = form.cleaned_data['content']
             # newPost.description = form.cleaned_data['description']
             # newPost = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
-
+            
             newPost.save()
-            print(f"This is hehahahahaa{newPost.__str__()}")
+            # print(f"This is hehahahahaa{newPost.__str__()}")
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
@@ -57,15 +66,18 @@ def create_post(request,userId):
 
 
 @login_required(login_url='/login/')
-def create_comment(request,userId):
+def create_comment(request,userId,postId):
     if request.method == 'POST':
         form = Comment_form(request.POST)
         if form.is_valid():
             newComment = form.save(commit=False)
+            
             newComment.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newComment.uuid)}"
             currentAuthor = single_author.objects.get(id = userId)
             newComment.author = currentAuthor
-
+            
+            currentPost = Post.objects.get(uuid = postId)
+            newComment.post = currentPost
             
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")
@@ -78,3 +90,4 @@ def create_comment(request,userId):
             'form':form,
             'userId':userId
         })
+

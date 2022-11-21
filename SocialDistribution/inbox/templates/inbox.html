@@ -38,58 +38,15 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
-
-            
-          <div class="container">
-              <div class="row">
-            
-              
-            
-            <div class="form-group">
-              <h2>Inbox</h2>
-              <div style="overflow:scroll; width:600px; height:600px;">
-
-                
-
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">First item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">Second item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">Third item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">forth item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">fifth item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">sixth item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">seventh item</a>
-              <a href="#" class="list-group-item list-group-item-action"style="width:600px;height: 200px;">eighth item</a>
-            </div>
-          </div>
-          
-          <div class="col-1"></div> 
-
-  
-              
-           <div class="form-group">
-            <h2>Friends You May Know</h2>
-
-            <div style="overflow:scroll; width:350px; height:250px;">
-
-
-          
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 1</a>
-
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 2</a>
-
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 3</a>
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 4</a>
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 5</a>
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 6</a>
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 7</a>
-            <a href="#" li class="list-group-item list-group-item-action ">new friend 8</a>
-          </div>
-        </div>
-      </div>
-    </div> 
+{% for item in currentAuthorInbox %}
+  <p>
+    <li>{{ item.item }}</li>
+  </p>
+{% endfor %}
+        
 
  
-        {% endblock %}
+  {% endblock %}
   
 
 
