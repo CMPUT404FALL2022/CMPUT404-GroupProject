@@ -45,7 +45,7 @@ def create_post(request,userId):
             newPost.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newPost.uuid)}"
             newPost.source = newPost.id
             newPost.origin = newPost.id
-            currentAuthor = single_author.objects.get(id = userId)
+            currentAuthor = single_author.objects.get(uuid = userId)
             newPost.author = currentAuthor
             # newPost.title = form.cleaned_data['title']
             # newPost.content = form.cleaned_data['content']
@@ -73,7 +73,7 @@ def create_comment(request,userId,postId):
             newComment = form.save(commit=False)
             
             newComment.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newComment.uuid)}"
-            currentAuthor = single_author.objects.get(id = userId)
+            currentAuthor = single_author.objects.get(uuid = userId)
             newComment.author = currentAuthor
             
             currentPost = Post.objects.get(uuid = postId)
