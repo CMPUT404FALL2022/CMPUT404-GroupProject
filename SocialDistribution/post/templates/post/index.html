@@ -37,6 +37,13 @@
 </nav> {% endcomment %}
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 <div class="container I_followed">
   <div class="row">
     <div
@@ -50,7 +57,7 @@
         border-radius: 10px;
       "
     >
-    
+      
        <ul class = "list-unstyled">
         {% for post,comment in post_comments_dict.items %}
             <li>{{ post.title }}</li>

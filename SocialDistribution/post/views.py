@@ -1,17 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
+from django.contrib import messages
 from .post_forms import post_form, Comment_form
 from .models import Post,Comment
-from authors.models import single_author
+from authors.models import single_author,Followers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
+
 
 # Create your views here.
 
 @login_required(login_url='/login/')
 def home_page(request,userId):
+    
     #这里要加判定
     # print(f"11111111111111111111{request.user}")
     # all_posts = Post.objects.all()
@@ -24,7 +26,19 @@ def home_page(request,userId):
 
         post_comments_dict[post] = oneListComment
         
-
+    if request.method == 'POST' and 'searched' in request.POST:
+        searched = request.POST['searched']
+        myself = single_author.objects.get(id=userId)
+        followed = single_author.objects.filter(username=searched)
+        
+        if followed.count() == 0:
+            messages.info(request, "No this user")
+        follower = Followers.objects.filter(author = myself)
+        # if follower.count() == 0:
+        #     #create a new follower
+        # else:
+            
+            
     return render(request,"post/index.html",{
         "post_comments_dict": post_comments_dict,
         "all_posts" : all_posts,
@@ -90,4 +104,3 @@ def create_comment(request,userId,postId):
             'form':form,
             'userId':userId
         })
-
