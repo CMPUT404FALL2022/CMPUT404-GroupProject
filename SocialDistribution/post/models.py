@@ -6,10 +6,6 @@ import uuid
 
 
 
-
-
-
-
 # Create your models here.
 class Post(models.Model):
 
