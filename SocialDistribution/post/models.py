@@ -1,5 +1,4 @@
 
-from enum import unique
 from django.db import models
 from authors.models import single_author
 
@@ -32,7 +31,7 @@ class Post(models.Model):
     contentType = models.CharField(max_length=30, choices=CONTENT_CHOICES,default = ("text/plain", "Plaintext"))
     TEXT_CHOICES = [("text/plain", "Plaintext"),
                        ("text/markdown", "Markdown")]
-    textType = models.CharField(max_length=30, choices=TEXT_CHOICES, null=True, blank=True)
+    textType = models.CharField(max_length=30, choices=TEXT_CHOICES, default = ("text/plain", "Plaintext"))
 
     author = models.ForeignKey(single_author,related_name='posts',on_delete=models.CASCADE,blank=True, null=True)
     count = models.IntegerField(default=0)
