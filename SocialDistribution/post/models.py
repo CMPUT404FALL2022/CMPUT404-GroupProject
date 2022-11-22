@@ -1,5 +1,4 @@
 
-from enum import unique
 from django.db import models
 from authors.models import single_author
 
@@ -28,7 +27,7 @@ class Post(models.Model):
     contentType = models.CharField(max_length=30, choices=CONTENT_CHOICES,default = ("text/plain", "Plaintext"))
     TEXT_CHOICES = [("text/plain", "Plaintext"),
                        ("text/markdown", "Markdown")]
-    textType = models.CharField(max_length=30, choices=TEXT_CHOICES, null=True, blank=True)
+    textType = models.CharField(max_length=30, choices=TEXT_CHOICES, default = ("text/plain", "Plaintext"))
 
     author = models.ForeignKey(single_author,related_name='posts',on_delete=models.CASCADE,blank=True, null=True)
     count = models.IntegerField(default=0)
@@ -39,7 +38,6 @@ class Post(models.Model):
                                   choices=VISIBILITY_CHOICES,
                                   default="PUBLIC")
     #likes = models.IntegerField(default=0)
-    unlisted = models.BooleanField(default=False)
     post_image = models.ImageField(null=True, blank=True, upload_to='images/')
     # comments = models.ForeignKey(Comment,related_name='comment',on_delete=models.CASCADE,blank=True, null=True)
     # image_b64 = models.BinaryField(blank=True, null=True)
@@ -81,10 +79,3 @@ class Comment(models.Model):
     published = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f"{self.comment} + {self.contentType} + {self.id}"
-
-# class Like(models.Model):
-#     summary = models.CharField(('summary'), max_length=200, blank=True)
-#     type = "Like"
-#     author = models.ForeignKey(single_author, related_name='likes', on_delete=models.CASCADE, db_constraint=False)
-#     post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE)
-    

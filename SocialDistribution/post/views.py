@@ -40,8 +40,7 @@ def home_page(request,userId):
             
             
     return render(request,"post/index.html",{
-        "post_comments_dict": post_comments_dict,
-        "all_posts" : all_posts,
+        "all_posts": all_posts,
         "userId": userId
     })
     
@@ -59,15 +58,15 @@ def create_post(request,userId):
             newPost.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newPost.uuid)}"
             newPost.source = newPost.id
             newPost.origin = newPost.id
-            currentAuthor = single_author.objects.get(id = userId)
+            currentAuthor = single_author.objects.get(uuid = userId)
             newPost.author = currentAuthor
             # newPost.title = form.cleaned_data['title']
             # newPost.content = form.cleaned_data['content']
             # newPost.description = form.cleaned_data['description']
             # newPost = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
-            
+
             newPost.save()
-            # print(f"This is hehahahahaa{newPost.__str__()}")
+            print(f"This is hehahahahaa{newPost.__str__()}")
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
@@ -80,18 +79,15 @@ def create_post(request,userId):
 
 
 @login_required(login_url='/login/')
-def create_comment(request,userId,postId):
+def create_comment(request,userId):
     if request.method == 'POST':
         form = Comment_form(request.POST)
         if form.is_valid():
             newComment = form.save(commit=False)
-            
             newComment.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newComment.uuid)}"
-            currentAuthor = single_author.objects.get(id = userId)
+            currentAuthor = single_author.objects.get(uuid = userId)
             newComment.author = currentAuthor
-            
-            currentPost = Post.objects.get(uuid = postId)
-            newComment.post = currentPost
+
             
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")

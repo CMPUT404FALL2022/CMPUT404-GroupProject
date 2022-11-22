@@ -59,7 +59,7 @@
     >
       
        <ul class = "list-unstyled">
-        {% for post,comment in post_comments_dict.items %}
+        {% for post in all_posts %}
             <li>{{ post.title }}</li>
             <li>{{ post.content }}</li>
             <li>{{ post.description }}</li>
@@ -68,11 +68,6 @@
             {% endif %}
             
             <div class = "container">{% include "post/button.html" %}</div>
-            </br>
-            </br>
-            {% for each_comment in comment %}
-              <li>{{ each_comment.comment}}</li>
-            {% endfor %}
             </br>
             </br>
         {% endfor %}

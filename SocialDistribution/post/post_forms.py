@@ -34,7 +34,7 @@ class post_form(forms.ModelForm):
     )
     class Meta:
         model = Post
-        fields = ['title', 'description', 'textType', 'content','Categories','visibility',"post_image"]
+        fields = ['title', 'description', 'textType', 'content','contentType','Categories','visibility',"post_image"]
         
 
 class Comment_form(forms.ModelForm):
@@ -51,7 +51,6 @@ class Comment_form(forms.ModelForm):
 
 
 # class Like_form(forms.ModelForm):
-    
 #     class Meta:
 #         model = Like
 #         fields = ['like']

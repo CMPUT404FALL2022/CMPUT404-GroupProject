@@ -1,12 +1,14 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser
+import uuid
 
 # Create your models here.
 class single_author(AbstractBaseUser):
     type = "author"
     username = models.CharField(primary_key=True,unique=True,max_length=255,default='')
     password = models.CharField(validators=[MinLengthValidator(6)],max_length=255,default='')
+    uuid= models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     id = models.CharField(unique=True,max_length=255,blank=True,null=True)
     host = models.CharField(max_length=255,default='',blank=True)
     display_name = models.CharField(max_length=255,blank=True,default='')
