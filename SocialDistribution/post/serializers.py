@@ -13,7 +13,6 @@ class CommentSerializer(ModelSerializer):
         fields = "__all__"
 
 # class LikeSerializer(ModelSerializer):
-    
 #     class Meta:
 #         model = Like
 #         fields = "__all__"

@@ -19,7 +19,7 @@ def authorsList(request):
     serializer = AuthorSerializer(authors, many=True)
     return Response(serializer.data)
 
-@api_view(['GET','PUT'])
+@api_view(['GET','POST'])
 def singleAuthor(request,pk):
 
     if request.method == 'GET':
@@ -27,7 +27,7 @@ def singleAuthor(request,pk):
         serializer = AuthorSerializer(author, many=False)
 
     #Update
-    if request.method == 'PUT':
+    if request.method == 'POST':
         author = single_author.objects.get(id = pk)
         serializer = AuthorSerializer(instance = author, data=request.data, partial=True)
 

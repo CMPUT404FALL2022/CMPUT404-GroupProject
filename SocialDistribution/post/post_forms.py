@@ -51,7 +51,6 @@ class Comment_form(forms.ModelForm):
 
 
 # class Like_form(forms.ModelForm):
-    
 #     class Meta:
 #         model = Like
 #         fields = ['like']
