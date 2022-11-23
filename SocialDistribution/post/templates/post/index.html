@@ -37,6 +37,8 @@
 </nav> {% endcomment %}
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
+
+
 <div class="container I_followed">
   <div class="row">
     <div
@@ -50,21 +52,26 @@
         border-radius: 10px;
       "
     >
-    
-       <ul class = "list-unstyled">
-        {% for post in all_posts %}
-            <li>{{ post.title }}</li>
-            <li>{{ post.content }}</li>
-            <li>{{ post.description }}</li>
-            {% if post.post_image.url is not None %}
-              <img src="{{post.post_image.url }}" width="600px">
-            {% endif %}
-            
-            <div class = "container">{% include "post/button.html" %}</div>
-            </br>
-            </br>
-        {% endfor %}
-        </ul> 
+      
+    <ul class = "list-unstyled">
+      {% for post,comment in post_comments_dict.items %}
+          <li>{{ post.title }}</li>
+          <li>{{ post.content }}</li>
+          <li>{{ post.description }}</li>
+          {% if post.post_image.url is not None %}
+            <img src="{{post.post_image.url }}" width="600px">
+          {% endif %}
+          
+          <div class = "container">{% include "post/button.html" %}</div>
+          </br>
+          </br>
+          {% for each_comment in comment %}
+            <li>{{ each_comment.comment}}</li>
+          {% endfor %}
+          </br>
+          </br>
+      {% endfor %}
+      </ul> 
       
     </div>
     {% comment %} <div

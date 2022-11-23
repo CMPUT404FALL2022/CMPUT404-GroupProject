@@ -25,11 +25,11 @@ class single_author(AbstractBaseUser):
     def __str__(self):
         return 'type:'+self.type+ 'id:'+ self.id+'host:'+ self.host+'display_name'+ self.display_name+'url'+ self.url+'github'+ self.github
 
-class followRequest(models.Model):
-    type = "Follow"
-    summary = models.TextField(max_length=25, blank=True,default='')
-    actor = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_sender')
-    object = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_receiver')
+# class followRequest(models.Model):
+#     type = "Follow"
+#     summary = models.TextField(max_length=25, blank=True,default='')
+#     actor = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_sender')
+#     object = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_receiver')
 
 # class followPerson(models.Model):
 #     username = models.CharField(max_length=255, blank=True,default='')
@@ -39,3 +39,4 @@ class Followers(models.Model):
     type = 'Followers'
     author = models.CharField(primary_key=True, max_length=255,default='')
     items = models.ManyToManyField(single_author)
+    

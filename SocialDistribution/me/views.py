@@ -5,7 +5,7 @@ from post.models import Post
 from post.post_forms import post_form
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from .forms import followRequestForm
+# from .forms import followRequestForm
 from authors.models import Followers
 from .forms import EditForm
 from django.contrib.auth.decorators import login_required
@@ -20,7 +20,7 @@ import sqlite3
 
 @login_required(login_url='/login/')
 def my_profile(request, userId):
-    all_posts = Post.objects.filter(author__id = userId)
+    all_posts = Post.objects.filter(author__uuid = userId)
     if request.method == "POST":
         # currentUser = request.user
         # form = followRequestForm(request.POST)
@@ -34,7 +34,7 @@ def my_profile(request, userId):
         #         getFollowerList.save()
         pass
     else:
-        requestForm = followRequestForm()
+        pass
 
     return render(request,'my_profile.html',{
         "all_posts": all_posts,

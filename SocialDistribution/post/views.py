@@ -1,23 +1,46 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
+from django.contrib import messages
 from .post_forms import post_form, Comment_form
-from .models import Post
-from authors.models import single_author
+from .models import Post,Comment
+from authors.models import single_author,Followers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
+
 
 # Create your views here.
 
 @login_required(login_url='/login/')
 def home_page(request,userId):
+    
     #这里要加判定
-    print(f"11111111111111111111{request.user}")
-    all_posts = Post.objects.all()
-    # all_posts = Posts.object.get(visibility = 'public')
+    # print(f"11111111111111111111{request.user}")
+    # all_posts = Post.objects.all()
+    all_posts = Post.objects.filter(unlisted=False, visibility="PUBLIC")
+    post_comments_dict = {}
+    
+    #get comments
+    for post in all_posts:
+        oneListComment = Comment.objects.filter(post__uuid = post.uuid)
 
+        post_comments_dict[post] = oneListComment
+        
+    if request.method == 'POST' and 'searched' in request.POST:
+        searched = request.POST['searched']
+        myself = single_author.objects.get(uuid=userId)
+        followed = single_author.objects.filter(username=searched)
+        
+        if followed.count() == 0:
+            messages.info(request, "No this user")
+        follower = Followers.objects.filter(author = myself)
+        # if follower.count() == 0:
+        #     #create a new follower
+        # else:
+            
+            
     return render(request,"post/index.html",{
+        "post_comments_dict": post_comments_dict,
         "all_posts": all_posts,
         "userId": userId
     })
@@ -57,7 +80,7 @@ def create_post(request,userId):
 
 
 @login_required(login_url='/login/')
-def create_comment(request,userId):
+def create_comment(request,userId,postId):
     if request.method == 'POST':
         form = Comment_form(request.POST)
         if form.is_valid():
@@ -66,7 +89,8 @@ def create_comment(request,userId):
             currentAuthor = single_author.objects.get(uuid = userId)
             newComment.author = currentAuthor
 
-            
+            currentPost = Post.objects.get(uuid = postId)
+            newComment.post = currentPost
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
