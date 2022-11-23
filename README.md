@@ -118,5 +118,12 @@ Project and Information are represent in WiKi
 ```
 
 
+## Image Posts
+
+**GET** URL: //service/authors/{author_uuid}/posts/{post_uuid}/image
+```image_posts
+  To get image of a post {post_uuid}. If no image file associate with, return 404. If so, display the image
+```
+
 
 
