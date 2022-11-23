@@ -1,19 +1,14 @@
+from django.http import HttpResponseRedirect,FileResponse
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
 
-from .serializers import AuthorSerializer, PostsSerializer
+from .serializers import AuthorSerializer, PostsSerializer, ImagePostsSerializer
 from authors.models import single_author
 from post.models import Post
 from django.db.models import Q
-
-import uuid
-
 """
 Authors and Single Author
 """
@@ -103,7 +98,6 @@ def Posts(request,pk):
     #Create new posts
     if request.method == 'POST':
         serializer = PostsSerializer(data=request.data)
-
         if serializer.is_valid():
             serializer.save()
 
@@ -158,6 +152,24 @@ def getPost(request,pk,postsId):
 
             return Response(serializer.data,status=200)
 
+"""
+Image Posts
+"""
+@api_view(['GET'])
+def getImage(request,pk,postsId):
+    """
+    This is in order to display the image post or the image in the post
+    """
+
+    if request.method == 'GET':
+        try:
+            imagePath = '.'+Post.objects.get(uuid = postsId).post_image.url
+        except:
+            return Response(status=404)
+        
+        img = open(imagePath, 'rb')
+
+    return FileResponse(img)
 
 
 

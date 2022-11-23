@@ -7,5 +7,6 @@ urlpatterns = [
     path('authors/',views.authorsList, name="authors-list"),
     path('authors/<str:pk>/',views.singleAuthor,name="singleAuthor"),
     path('authors/<str:pk>/posts/',views.Posts,name="onesPosts"),
-    path('authors/<str:pk>/posts/<str:postsId>/',views.getPost,name="getPosts")
+    path('authors/<str:pk>/posts/<str:postsId>/',views.getPost,name="getPosts"),
+    path('authors/<str:pk>/posts/<str:postsId>/image',views.getImage,name="getImagePosts")
 ]
