@@ -20,7 +20,7 @@ import sqlite3
 
 @login_required(login_url='/login/')
 def my_profile(request, userId):
-    all_posts = Post.objects.filter(author__id = userId)
+    all_posts = Post.objects.filter(author__uuid = userId)
     if request.method == "POST":
         # currentUser = request.user
         # form = followRequestForm(request.POST)

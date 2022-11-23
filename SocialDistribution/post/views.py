@@ -28,7 +28,7 @@ def home_page(request,userId):
         
     if request.method == 'POST' and 'searched' in request.POST:
         searched = request.POST['searched']
-        myself = single_author.objects.get(id=userId)
+        myself = single_author.objects.get(uuid=userId)
         followed = single_author.objects.filter(username=searched)
         
         if followed.count() == 0:
@@ -40,6 +40,7 @@ def home_page(request,userId):
             
             
     return render(request,"post/index.html",{
+        "post_comments_dict": post_comments_dict,
         "all_posts": all_posts,
         "userId": userId
     })
@@ -79,7 +80,7 @@ def create_post(request,userId):
 
 
 @login_required(login_url='/login/')
-def create_comment(request,userId):
+def create_comment(request,userId,postId):
     if request.method == 'POST':
         form = Comment_form(request.POST)
         if form.is_valid():
@@ -88,7 +89,8 @@ def create_comment(request,userId):
             currentAuthor = single_author.objects.get(uuid = userId)
             newComment.author = currentAuthor
 
-            
+            currentPost = Post.objects.get(uuid = postId)
+            newComment.post = currentPost
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")
             return HttpResponseRedirect(reverse("home-page",args=[userId]))

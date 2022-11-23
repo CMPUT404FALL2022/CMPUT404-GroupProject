@@ -39,6 +39,7 @@ class Post(models.Model):
                                   default="PUBLIC")
     #likes = models.IntegerField(default=0)
     post_image = models.ImageField(null=True, blank=True, upload_to='images/')
+    unlisted = models.BooleanField(default=False)
     # comments = models.ForeignKey(Comment,related_name='comment',on_delete=models.CASCADE,blank=True, null=True)
     # image_b64 = models.BinaryField(blank=True, null=True)
     def __str__(self):
