@@ -11,6 +11,7 @@ from authors.models import single_author
 from post.models import Post, Comment
 from django.db.models import Q
 
+
 def pagination(request,object):
     """
     This function is hand write pagination method, to get the page and size of user want,
@@ -226,10 +227,3 @@ def getComments(request,pk,postsId):
             return Response(status=400)
 
         return Response(serializer.data,status=200)
-
-
-
-
-
-    
-
