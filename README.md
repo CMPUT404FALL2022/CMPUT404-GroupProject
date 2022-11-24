@@ -138,8 +138,8 @@ Project and Information are represent in WiKi
   
                           Eg. {
                                         "type": "comment",
-                                        "author": "username",
                                         "comment": "comment content",
+                                        "author": "username",
                                         "contentType":"text/plain"
                                     }
 ```
