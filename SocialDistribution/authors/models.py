@@ -36,7 +36,6 @@ class single_author(AbstractBaseUser):
 #     authorId = models.CharField(max_length=255, blank=True,default='')
 
 class Followers(models.Model):
-    type = 'Followers'
-    author = models.CharField(primary_key=True, max_length=255,default='')
-    items = models.ManyToManyField(single_author)
-    
+
+    author = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="all_authors")
+    follower = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="all_followers")
