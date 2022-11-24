@@ -125,5 +125,23 @@ Project and Information are represent in WiKi
   To get image of a post {post_uuid}. If no image file associate with, return 404. If so, display the image
 ```
 
+## Comments
+
+**GET** URL: //service/authors/{author_uuid}/posts/{post_uuid}/comments
+```comments
+  To get comments of a post {post_uuid}. If no comments associate with, return 404.
+```
+
+**POST** URL: //service/authors/{author_uuid}/posts/{post_uuid}/comments
+```comments
+  To create comments of a post {post_uuid}.
+  
+                          Eg. {
+                                        "type": "comment",
+                                        "author": "username",
+                                        "comment": "comment content",
+                                        "contentType":"text/plain"
+                                    }
+```
 
 
