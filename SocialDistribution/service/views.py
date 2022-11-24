@@ -6,9 +6,27 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 from .serializers import AuthorSerializer, PostsSerializer, ImagePostsSerializer
+from .serializers import commentSerializer
 from authors.models import single_author
-from post.models import Post
+from post.models import Post, Comment
 from django.db.models import Q
+
+def pagination(request,object):
+    """
+    This function is hand write pagination method, to get the page and size of user want,
+    that returns the range of objects to them
+    """
+    absURL = request.build_absolute_uri()
+    value = absURL.split('?')[1].split('&')
+    page = int(value[0].split('=')[1])
+    size = int(value[1].split('=')[1])
+    fromNum = page * size - size
+    toNum = page * size
+
+    object = object[fromNum:toNum]
+
+    return object
+
 """
 Authors and Single Author
 """
@@ -23,14 +41,10 @@ def authorsList(request):
     #Hand write pagination
     #Get page and size
     try:
-        absURL = request.build_absolute_uri()
-        value = absURL.split('?')[1].split('&')
-        page = int(value[0].split('=')[1])
-        size = int(value[1].split('=')[1])
-        fromNum = page * size - size
-        toNum = page * size
+        authors = pagination(request,authors)
 
-        authors = authors[fromNum:toNum]
+        if not authors.exists():
+            return Response(status=404)
 
         for item in authors:
             serializer = AuthorSerializer(item)
@@ -91,10 +105,19 @@ def Posts(request,pk):
     """
 
     if request.method == 'GET':
-        author = single_author.objects.get(uuid = pk)
-        posts = Post.objects.filter(author = author)
-        serializer = PostsSerializer(posts, many=True)
-    
+        try:
+            author = single_author.objects.get(uuid = pk)
+            posts = Post.objects.filter(author = author)
+
+            posts = pagination(request,posts)
+
+            if not posts.exists():
+                return Response(status=404)
+        except: 
+            serializer = PostsSerializer(posts, many=True)
+        finally:
+            serializer = PostsSerializer(posts, many=True)
+
     #Create new posts
     if request.method == 'POST':
         serializer = PostsSerializer(data=request.data)
@@ -171,6 +194,38 @@ def getImage(request,pk,postsId):
 
     return FileResponse(img)
 
+@api_view(['GET','POST'])
+def getComments(request,pk,postsId):
+    """
+    Get comments for a post and paginated
+    """
+    if request.method == 'GET':
+    
+        comments = Comment.objects.filter(post__uuid = postsId)
+
+        try:
+            comments = pagination(request,comments)
+        
+        except:
+            serializer = commentSerializer(comments, many=True)
+
+        finally:
+            serializer = commentSerializer(comments, many=True)
+
+        return Response(serializer.data,status=200)
+
+    elif request.method == 'POST':
+
+        serializer = commentSerializer(data=request.data)
+
+        if serializer.is_valid():
+            post = Post.objects.get(uuid=postsId)
+            serializer.save(post=post)
+
+        else:
+            return Response(status=400)
+
+        return Response(serializer.data,status=200)
 
 
 
