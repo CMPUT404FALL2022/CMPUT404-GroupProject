@@ -10,6 +10,7 @@ from authors.models import Followers
 from .forms import EditForm
 from django.contrib.auth.decorators import login_required
 import sqlite3
+from django.db.models import Q
 # Create your views here.
 
 # def my_page(request, userId):
@@ -20,25 +21,35 @@ import sqlite3
 
 @login_required(login_url='/login/')
 def my_profile(request, userId):
+    if request.method == 'POST' and 'delete' in request.POST:
+        user_id = request.POST['delete']
+        Followers.objects.get(Q(author__uuid = userId)&Q(follower__uuid = user_id)).delete()
+        return HttpResponseRedirect(reverse("profile-page",args=[userId]))
+    
+
+    
     all_posts = Post.objects.filter(author__uuid = userId)
-    if request.method == "POST":
-        # currentUser = request.user
-        # form = followRequestForm(request.POST)
-        # receiver = single_author.objects.filter(username = form.cleaned_data['object'])
-        # currentAuthor = single_author.objects.filter(username = currentUser)
-         
-        # if form.is_valid():
-        #     if receiver.exists():
-        #         getFollowerList = Followers.objects.get(author = receiver)
-        #         getFollowerList.items.add(newFollower)
-        #         getFollowerList.save()
-        pass
-    else:
-        pass
+    befriend_list = Followers.objects.filter(author__uuid = userId)
+    
+    true_friend_list = []
+    true_friend_list_id_name = {}
+    for befriend in befriend_list:
+        # if befriend.follower.uuid != userId:
+        who_followed_me = Followers.objects.filter(Q(author__uuid = befriend.follower.uuid)& Q(follower__uuid = userId))
+        
+        
+        if who_followed_me.count() > 0:
+            true_friend_list.append(who_followed_me)
+    
+    for friend in true_friend_list:
+        
+        true_friend_list_id_name[friend[0].author.uuid] = friend[0].author.username
 
     return render(request,'my_profile.html',{
         "all_posts": all_posts,
-        "userId": userId
+        "userId": userId,
+        "befriend_list":befriend_list,
+        "true_friend_list_id_name":true_friend_list_id_name
     })
 
 
