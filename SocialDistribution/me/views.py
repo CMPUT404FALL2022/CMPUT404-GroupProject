@@ -89,7 +89,7 @@ def my_profile_modify(request, userId, postId):
 
 @login_required(login_url='/login/')
 def myinfo(request, userId):
-    all_info = single_author.objects.get(id = userId)
+    all_info = single_author.objects.get(uuid = userId)
     return render(request, 'myinfo.html',{
         "all_info": all_info,
         "userId": userId
@@ -97,22 +97,24 @@ def myinfo(request, userId):
 
 @login_required(login_url='/login/')
 def myinfoedit(request, userId):
-    all_info = single_author.objects.get(id = userId)
-    if request.method == "POST":
-        form = EditForm(request.POST)
-        if form.is_valid():
-            # conflict with login
-            #password = form.cleaned_data['password']
-            display_name = form.cleaned_data['display_name']
-            github = form.cleaned_data['github']
+    # all_info = single_author.objects.get(uuid = userId)
+#     if request.method == "POST":
+#         form = EditForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('')
+#             # conflict with login
+#             #password = form.cleaned_data['password']
+#             #display_name = form.cleaned_data['display_name']
+#             #github = form.cleaned_data['github']
             
-#             #--------------sql query to update the database----------------
-#             conn = sqlite3.connect('./db.sqlite3')
-#             c = conn.cursor()
-#             #c.execute('UPDATE authors_single_author SET password = ?, display_name = ? , github = ? WHERE id = ?;',(password,display_name,github,userId))
-#             c.execute('UPDATE authors_single_author SET display_name = ? , github = ? WHERE id = ?;',(display_name,github,userId))
-#             conn.commit()
-#             conn.close()
+# #             #--------------sql query to update the database----------------
+#     #         conn = sqlite3.connect('./db.sqlite3')
+#     #         c = conn.cursor()
+#     #         #c.execute('UPDATE authors_single_author SET password = ?, display_name = ? , github = ? WHERE id = ?;',(password,display_name,github,userId))
+#     #         c.execute('UPDATE authors_single_author SET display_name = ? , github = ? WHERE id = ?;',(display_name,github,userId))
+#     #         conn.commit()
+#     #         conn.close()
 #     form = EditForm()
 #     return render(request, 'editmyinfo.html',{
 #         "all_info": all_info,
@@ -120,3 +122,13 @@ def myinfoedit(request, userId):
 #         "form": form
 
 #     })
+    author = single_author.objects.get(uuid = userId)
+    form = EditForm(request.POST or None, instance=author)
+    if form.is_valid():
+        form.save()
+    return render(request, 'editmyinfo.html',{
+        "all_info": author,
+        "userId": userId,
+        "form": form
+    })
+
