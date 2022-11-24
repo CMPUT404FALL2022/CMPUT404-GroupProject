@@ -14,3 +14,13 @@ def my_inbox(request,userId):
         "userId": userId
     })
 
+@login_required(login_url='/login/')
+def search_result(request,userId):
+    if request.method == "POST":
+        result = request.POST['searched']
+        find_user = single_author.objects.filter(username = result)
+        return render(request, 'search_result.html',{'userId':userId,
+                                                    'searched':result, 
+                                                    'searchResult':find_user})
+    else:
+        return render(request, 'search_result.html',{})
