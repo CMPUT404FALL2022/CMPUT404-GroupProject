@@ -44,8 +44,11 @@ def home_page(request,userId):
                 my_follower.author = single_author.objects.get(uuid=userId)
                 my_follower.follower = single_author.objects.get(username=searched)
                 my_follower.save()
+            return HttpResponseRedirect(reverse("search-result",args=[userId,searched]))
         else:
             booleanOfalert == True
+
+        
             
     return render(request,"post/index.html",{
         "booleanOfalert":booleanOfalert,
