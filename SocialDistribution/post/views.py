@@ -7,13 +7,14 @@ from authors.models import single_author,Followers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
+from django.db.models import Q
 
 
 # Create your views here.
 
 @login_required(login_url='/login/')
 def home_page(request,userId):
-    
+    booleanOfalert = False
     #这里要加判定
     # print(f"11111111111111111111{request.user}")
     # all_posts = Post.objects.all()
@@ -28,18 +29,29 @@ def home_page(request,userId):
         
     if request.method == 'POST' and 'searched' in request.POST:
         searched = request.POST['searched']
+        #two para in the followers model
         myself = single_author.objects.get(uuid=userId)
         followed = single_author.objects.filter(username=searched)
+        #checkout if searched user exists
+        if followed.count()!= 0:
+            booleanOfalert == False
+            #checkout if myself exists in the followers model
+            exist_myself = Followers.objects.filter(Q(author__uuid=userId) & Q(follower__username=searched))
+            #not exist in the followers model
+            if exist_myself.count() == 0:
+                # if myself["uuid"] != followed.uuid:
+                my_follower = Followers()
+                my_follower.author = single_author.objects.get(uuid=userId)
+                my_follower.follower = single_author.objects.get(username=searched)
+                my_follower.save()
+            return HttpResponseRedirect(reverse("search-result",args=[userId,searched]))
+        else:
+            booleanOfalert == True
+
         
-        if followed.count() == 0:
-            messages.info(request, "No this user")
-        follower = Followers.objects.filter(author = myself)
-        # if follower.count() == 0:
-        #     #create a new follower
-        # else:
-            
             
     return render(request,"post/index.html",{
+        "booleanOfalert":booleanOfalert,
         "post_comments_dict": post_comments_dict,
         "all_posts": all_posts,
         "userId": userId

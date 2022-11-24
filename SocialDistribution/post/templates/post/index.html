@@ -38,7 +38,13 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
-
+{%if booleanOfalert%}
+<script>
+  
+    alert("User does not exist")
+  
+</script>
+{%endif%}
 <div class="container I_followed">
   <div class="row">
     <div

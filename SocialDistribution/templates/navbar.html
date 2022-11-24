@@ -48,7 +48,7 @@
         </li>
       </ul>
 
-      <form class="navbar-form navbar-left" method="POST" action={% url 'search-result' userId%}>
+      <form class="navbar-form navbar-left" method="POST" action={% url 'home-page' userId%}>
         {% csrf_token %}
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search Username" name="searched"/>
