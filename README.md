@@ -76,6 +76,11 @@ Project and Information are represent in WiKi
 
 ## Posts
 
+**GET** URL: //service/posts/
+```posts
+  To get all public posts
+```
+
 **GET** URL: //service/authors/{author_uuid}/posts/
 ```posts
   To get all posts of the author {author_uuid}.
