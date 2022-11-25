@@ -50,13 +50,20 @@
         border-radius: 10px;
       "
     >
-      <p>这一段是广场帖子.</p>
-       <ul>
+       <ul class = "list-unstyled">
         {% for post in all_posts %}
             <li>{{ post.title }}</li>
+            <li>{{ post.content }}</li>
+            <li>{{ post.description }}</li>
+            {% if post.post_image.url is not None %}
+              <img src="{{post.post_image.url }}" width="600px">
+            {% endif %}
             <div class = "container"><a href={% url "modify-post-page" userId post.uuid%} >modify</a></div>
+            
             </br>
             </br>
+            </br> 
+
         {% endfor %}
         </ul> 
       
@@ -74,13 +81,43 @@
     >
     <!-- This form is used for sending follow request to another user -->
 
-    <form mdthod = "POST">
-      {{ requestForm }}
-      <button>Send</button>
-    </form>
-    <!-- ############################ -->
-      <p>这一段是谁关注了我.</p>
-      <p>{% lorem 9 b random %}</p>
+    <p>Befriends</p>
+    <ul class = "list-unstyled">
+      {% for user in befriend_list %}
+         
+          <li>{{ user.follower.username }}</li>
+          <form method="post">
+            {%csrf_token%}
+            <button
+              type="submit"
+              class="btn btn-primary"
+              style="background-color: rgb(243, 182, 97)"
+              name = "delete"
+              value={{ user.follower.uuid }}
+            >
+              Delete
+            </button>
+          </form>
+          </br>
+          </br> 
+
+      {% endfor %}
+      </ul> 
+    </br>
+    </br> 
+    </br>
+    <p>True Friends</p>
+    <ul class = "list-unstyled">
+      {% for id,username in true_friend_list_id_name.items %}
+         
+          <li>{{ username }}</li> 
+          
+          </br>
+          </br> 
+
+      {% endfor %}
+      </ul>  
+ 
     </div>
   </div>
 </div>

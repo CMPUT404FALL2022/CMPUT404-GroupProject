@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -19,7 +20,10 @@ def log_in(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        userLogin = User.objects.get(username = username)
+        try:
+            userLogin = User.objects.get(username = username)
+        except:
+            return HttpResponse("Username does not exist")
 
         if userLogin.is_active == False:
             displayConfirmMsg = True
@@ -34,7 +38,7 @@ def log_in(request):
         if user is not None:
             login(request,user)
             current_user = request.user
-            current_authorId = single_author.objects.get(username=current_user).id
+            current_authorId = single_author.objects.get(username=current_user).uuid
             
             return HttpResponseRedirect(reverse("home-page",args=[current_authorId]))
         else:
@@ -84,11 +88,11 @@ def sign_up(request):
         form = SignUpForm(request.POST,request.FILES)
         userForm = newUserForm(request.POST)
         if form.is_valid() and userForm.is_valid():
+            new_author = form.save(commit=False)
             # generate something
             authorHost = request.META.get('HTTP_HOST')
-            authorId = str(uuid.uuid4())
-            authorUrl = 'http://'+authorHost+'/authors/'+authorId
-            new_author = form.save(commit=False)
+            authorId = f"{request.build_absolute_uri('/')}authors/{new_author.uuid}"
+            authorUrl = f"{request.build_absolute_uri('/')}authors/{new_author.uuid}"
             new_user = userForm.save(commit=False)
             #### Needs Admin Permission to activate this new account ####
             new_user.is_active = False
@@ -99,8 +103,6 @@ def sign_up(request):
             new_author.id = authorId
             new_author.host = authorHost
             new_author.url = authorUrl
-            followerList = Followers(author=new_author.username)
-            followerList.save()
             new_author.save()
             new_user.save()
             #######################

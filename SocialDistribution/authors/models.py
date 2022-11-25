@@ -1,12 +1,14 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import AbstractBaseUser
+import uuid
 
 # Create your models here.
 class single_author(AbstractBaseUser):
     type = "author"
     username = models.CharField(primary_key=True,unique=True,max_length=255,default='')
     password = models.CharField(validators=[MinLengthValidator(6)],max_length=255,default='')
+    uuid= models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     id = models.CharField(unique=True,max_length=255,blank=True,null=True)
     host = models.CharField(max_length=255,default='',blank=True)
     display_name = models.CharField(max_length=255,blank=True,default='')
@@ -23,17 +25,17 @@ class single_author(AbstractBaseUser):
     def __str__(self):
         return 'type:'+self.type+ 'id:'+ self.id+'host:'+ self.host+'display_name'+ self.display_name+'url'+ self.url+'github'+ self.github
 
-class followRequest(models.Model):
-    type = "Follow"
-    summary = models.TextField(max_length=25, blank=True,default='')
-    actor = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_sender')
-    object = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_receiver')
+# class followRequest(models.Model):
+#     type = "Follow"
+#     summary = models.TextField(max_length=25, blank=True,default='')
+#     actor = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_sender')
+#     object = models.ForeignKey(to=single_author,on_delete=models.CASCADE,related_name='request_receiver')
 
 # class followPerson(models.Model):
 #     username = models.CharField(max_length=255, blank=True,default='')
 #     authorId = models.CharField(max_length=255, blank=True,default='')
 
 class Followers(models.Model):
-    type = 'Followers'
-    author = models.CharField(primary_key=True, max_length=255,default='')
-    items = models.ManyToManyField(single_author)
+
+    author = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="all_authors")
+    follower = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="all_followers")
