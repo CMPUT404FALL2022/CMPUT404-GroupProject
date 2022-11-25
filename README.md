@@ -144,4 +144,28 @@ Project and Information are represent in WiKi
                                     }
 ```
 
+<hr>
+
+## Followers
+
+**GET** URL: //service/authors/{author_uuid}/followers
+```followers
+  get a list of authors who are {author_uuid}’s followers
+```
+
+**DELETE** URL: //service/authors/{author_uuid}/followers/{FOREIGN_author_uuid}
+```followers
+    Unfollow the author{author_uuid} on behalf of {FOREIGN_author_uuid}
+```
+
+**PUT** URL: //service/authors/{author_uuid}/followers/{FOREIGN_author_uuid}
+```followers
+    simple click on PUT button(no input required), then Follow the author{author_uuid} on behalf of {FOREIGN_author_uuid}
+```
+
+**GET** URL: //service/authors/{author_uuid}/followers/{FOREIGN_author_uuid}
+```followers
+    check if a user{FOREIGN_author_uuid} followed author{author_uuid}.
+```
+
 
