@@ -7,9 +7,10 @@ from rest_framework.decorators import api_view
 
 from .serializers import AuthorSerializer, PostsSerializer, ImagePostsSerializer
 from .serializers import commentSerializer
-from authors.models import single_author
+from authors.models import single_author, Followers
 from post.models import Post, Comment
 from django.db.models import Q
+
 
 def pagination(request,object):
     """
@@ -227,9 +228,77 @@ def getComments(request,pk,postsId):
 
         return Response(serializer.data,status=200)
 
+@api_view(['GET'])
+def getFollowers(request,pk):
+    """
+    Display a list of followers that followed by user<pk>
+    """
+    if request.method == 'GET':
+        oneFollowers = Followers.objects.filter(follower__uuid=pk)
+
+        followerList = []
+
+        for followers in oneFollowers:
+            serializer = AuthorSerializer(followers.author, many=False)
+            followerList.append(serializer.data)
+
+        data = {
+            "type": "followers",
+            "items":followerList,
+        }
+
+        return Response(data,status=200)
+
+@api_view(['DELETE','PUT','GET'])
+def oneFollower(request,pk,foreignPk):
+    """
+    Execute<br>
+    DELETE: delete the author<foreignPk> from author<pk>'s follower list<br>
+    PUT: add a new author<foreignPk> to the author<pk>'s follower list<br>
+    GET: if author<foreignPk> followed author<pk>, author details will be displayed
+
+    """
+
+    if request.method == 'DELETE':  
+        selectedFollowObject = Followers.objects.filter(Q(follower__uuid=pk)&Q(author__uuid = foreignPk))
+        selectedFollowObject.delete()
+        return Response(status=200)
+
+    elif request.method == 'PUT':
+        """
+        Followers author ---follows----> follwer
+                  author is a follower of follower
+
+        add foreignPk --> follower.author
+        add pk --> follower.follower
+        """
+        currentUserName = single_author.objects.get(uuid = foreignPk).username
+
+        if request.user.is_authenticated:
+            followedBy = single_author.objects.get(uuid = foreignPk)
+            followTo = single_author.objects.get(uuid = pk)
+            newFollow  = Followers(author = followedBy,follower = followTo)
+            newFollow.save()
+            return Response(status=200)
+
+        else:
+            return HttpResponseRedirect(reverse("login"),status=303)
 
 
+    elif request.method == 'GET':
+        
+        selectedFollowObject = Followers.objects.filter(Q(follower__uuid=pk)&Q(author__uuid = foreignPk))
 
+        if selectedFollowObject.exists():
+        
+            selectedFollower = single_author.objects.filter(uuid = foreignPk)
+            serializer = AuthorSerializer(selectedFollower,many=True)
+            data = {"isFollowed":True,
+                    "author":serializer.data}
 
-    
+            return Response(data,status = 200)
 
+        else:
+            return Response({
+                "isFollowed":False,
+            },status=404)
