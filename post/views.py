@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
 from django.db.models import Q
+from inbox.models import InboxItem
 
 
 # Create your views here.
@@ -114,3 +115,16 @@ def create_comment(request,userId,postId):
             'form':form,
             'userId':userId
         })
+
+
+@login_required(login_url='/login/')
+def create_like(request,userId,postId):
+    item_type = "like"
+    item_id = "1"
+    item = postId
+    currentAuthor = single_author.objects.get(uuid = userId)
+    inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
+    inboxitem.save()
+    response = HttpResponse('Like created')
+    response.status_code = 201
+    return response
