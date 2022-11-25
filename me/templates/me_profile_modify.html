@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block header%} {% include "navbar.html" %}
+{%endblock %} {% block content %}
+<h1>Modify post</h1>
+<form method="post" enctype="multipart/form-data">
+  {%csrf_token%}
+  <div class="form-outline form-white mb-4">{{ form }}</div>
+  {% comment %}
+  <div class="create_post">
+    <label for="create_post">Write you new post</label>
+    <textarea
+      class="form-control"
+      id="create_post"
+      rows="4"
+      required="required"
+      cols="10"
+    ></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="exampleFormControlFile1">Example file input</label>
+    <input type="file" class="form-control-file" id="exampleFormControlFile1" />
+  </div>
+  <button
+    type="back"
+    class="btn btn-primary"
+    style="background-color: rgb(243, 182, 97)"
+  >
+    Back
+  </button>
+  {% endcomment %}
+
+  <button
+    name="mod"
+    type="submit"
+    class="btn btn-primary"
+    style="background-color: rgb(243, 182, 97)"
+  >
+    Modify
+  </button>
+  <button
+    name="del"
+    type="submit"
+    class="btn btn-primary"
+    style="background-color: rgb(243, 182, 97)"
+  >
+    Delete
+  </button>
+</form>
+
+{% endblock %}

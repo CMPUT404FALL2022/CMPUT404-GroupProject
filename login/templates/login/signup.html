@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{%block title%} Sign Up {%endblock%} 
+{%block css_files%}<link rel="stylesheet" href="{% static "login/signup.css"%}">{%endblock%}
+
+<!-- {% block header%}
+<div class="container-fluid" style="height: 200px; background-color: pink">
+  <h1>Sign Up Page</h1>
+</div>
+{% endblock %} 
+{% block content %} -->
+
+<section class="background">
+  <h2 class="">Create an account</h2>
+
+    <p>Please note that if you are a new user, you will be waited to be approved by admins to activate your account</p>
+    <form method="POST" enctype="multipart/form-data">
+      {%csrf_token%}
+      <div>
+        {{ newUser }}
+        {{ form }}
+      </div>
+
+      <div>
+        <button type="submit" class="">Register</button>
+      </div>
+
+    </form>
+
+</section>
+
+{% endblock %}

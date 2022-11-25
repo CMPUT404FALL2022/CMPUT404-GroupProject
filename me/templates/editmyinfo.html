@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{%block title%} My homepage modification {%endblock%} 
+
+{%block css_files%}<link rel="stylesheet">{%endblock%}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<body style="background-color: rgb(185, 226, 246);">
+<div class="block">
+    <div class="block">
+        <h2 class="title is-2">Edit your profile</p>
+    </div>
+    <div class="block">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button is-success is-fullwidth is-medium mt-5"
+                    type="submit"
+                    onClick="alert('You new info is saved!');">
+                    Save
+            </button>
+            <button type="button" class="btn btn-primary" style="background-color: white;">
+                <a href= {% url 'information-page' userId%}>Back</a>
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+{% endblock %}

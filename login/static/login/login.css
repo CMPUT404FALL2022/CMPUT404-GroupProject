@@ -1,0 +1,36 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.gradient-custom {
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* back ground image
+    background-image: url(back.jpg);
+    background-size: cover;
+    */
+    background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
+}
+
+div.container{
+    /* center this div */
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    min-height:100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+h1{
+    font-family:"Lucida Console", "Courier New", monospace;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+p,label{
+    font-family:"Lucida Console", "Courier New", monospace;
+}
+
+
+
