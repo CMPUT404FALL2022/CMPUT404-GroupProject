@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     # path("", views.authors, name="authors"),
+    path('posts/',views.getAllPublicPosts,name="all-posts-list"),
     path('authors/',views.authorsList, name="authors-list"),
     path('authors/<str:pk>/',views.singleAuthor,name="singleAuthor"),
     path('authors/<str:pk>/posts/',views.Posts,name="onesPosts"),

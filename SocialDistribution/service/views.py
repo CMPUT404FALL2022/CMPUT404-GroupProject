@@ -99,6 +99,17 @@ def singleAuthor(request,pk):
 """
 Posts
 """
+@api_view(['GET'])
+def getAllPublicPosts(request):
+    """
+    This view will get all public posts
+    """
+    if request.method == 'GET':
+        posts = Post.objects.filter(unlisted = False, visibility = 'PUBLIC')
+        serializer = PostsSerializer(posts,many=True)
+    
+    return Response(serializer.data,status=200)
+
 @api_view(['GET','POST'])
 def Posts(request,pk):
     """
