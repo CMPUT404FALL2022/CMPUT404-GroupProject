@@ -132,7 +132,6 @@ def create_comment(request,userId,postId):
             print(f"This is hehahahahaa{newComment.__str__()}")
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
-
 @login_required(login_url='/login/')
 def create_like(request,userId,postId):
     item_type = "like"
