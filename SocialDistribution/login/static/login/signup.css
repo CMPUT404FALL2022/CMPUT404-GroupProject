@@ -1,6 +1,10 @@
+.backgroundcolor{
+    background-color: antiquewhite;
+
+}
 .background {
     height:100vh;
-    background-color: antiquewhite;
+    
     /* everything at the center of sreen */
     display: flex;
     /* justify-content: center; */
@@ -17,4 +21,12 @@ form button {
     flex: 1 1 auto;
     margin-left: 10px;
 }
-}
+.dark-mode {
+    background-color:black;
+    color: white;
+  }
+
+.light-mode {
+    background-color: white;
+    color: black;
+  }

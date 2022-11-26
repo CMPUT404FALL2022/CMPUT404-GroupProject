@@ -11,7 +11,8 @@
 {% endblock %} 
 {% block content %} -->
 
-<section class="background">
+<body class="backgroundcolor">
+  <section class="background">
   <h2 class="">Create an account</h2>
 
     <p>Please note that if you are a new user, you will be waited to be approved by admins to activate your account</p>
@@ -26,8 +27,27 @@
         <button type="submit" class="">Register</button>
       </div>
 
-    </form>
 
-</section>
+    </form>
+    <button onclick="darkMode()">Darkmode</button>
+    <button onclick="lightMode()">LightMode</button>
+
+
+  </section>
+</body>
+  <script>
+      function darkMode() {
+        var element = document.body;
+       
+        element.className = "dark-mode";
+       
+      }
+      function lightMode() {
+        var element = document.body;
+      
+        element.className = "backgroundcolor";
+        
+      }
+    </script>
 
 {% endblock %}
