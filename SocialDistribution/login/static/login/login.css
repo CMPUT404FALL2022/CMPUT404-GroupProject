@@ -32,5 +32,12 @@ p,label{
     font-family:"Lucida Console", "Courier New", monospace;
 }
 
+.dark-mode {
+    background-color:black;
+    color: white;
+  }
 
-
+.light-mode {
+    background-color: white;
+    color: black;
+  }
