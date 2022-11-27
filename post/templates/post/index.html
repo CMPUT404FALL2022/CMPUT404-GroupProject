@@ -38,13 +38,6 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
-{%if booleanOfalert%}
-<script>
-  
-    alert("User does not exist")
-  
-</script>
-{%endif%}
 <div class="container I_followed">
   <div class="row">
     <div
@@ -69,8 +62,7 @@
           {% endif %}
           
           <div class = "container">{% include "post/button.html" %}</div>
-          </br>
-          </br>
+
           {% for each_comment in comment %}
             <li>{{ each_comment.comment}}</li>
           {% endfor %}
@@ -78,6 +70,28 @@
           </br>
       {% endfor %}
       </ul> 
+
+
+      <ul class = "list-unstyled">
+        {% for post in others_posts %}
+          
+          
+          <li>{{ post.title }}</li>
+          <li>{{ post.content }}</li>
+          <li>{{ post.description }}</li>
+            {% comment %} {% if post.post_image.url is not None %}
+              <img src="{{post.post_image.url }}" width="600px">
+            {% endif %} {% endcomment %}
+          
+            </br>
+            </br>
+            {% comment %} {% for each_comment in comment %}
+              <li>{{ each_comment.comment}}</li>
+              
+            </br>
+            </br> {% endcomment %}
+        {% endfor %}
+        </ul> 
       
     </div>
     {% comment %} <div

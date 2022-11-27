@@ -111,10 +111,38 @@ def getAllPublicPosts(request):
     This view will get all public posts
     """
     if request.method == 'GET':
+        item_list = []
+
         posts = Post.objects.filter(unlisted = False, visibility = 'PUBLIC')
-        serializer = PostsSerializer(posts,many=True)
+        for item in posts:
+            dict = {}
+            serializer = PostsSerializer(item)
+            data = serializer.data
+            for k,v in data.items():
+                dict[k] = v
+                print(k,v)
+            
+            authorUsername = data['author']
+            author = single_author.objects.get(username=authorUsername)
+            serializeAuthor = AuthorSerializer(author)
+            categories = data['Categories']
+            catList = categories.split(' ')
+            postsId = data['uuid']
+            comment = Comment.objects.filter(post__uuid = postsId)
+            count = len(comment)
+            commentURL = request.build_absolute_uri()+postsId+'/comments'
+            dict['Categories'] = catList
+            dict['author'] = serializeAuthor.data
+            dict['comments'] = commentURL
+            dict['count'] = count
+            item_list.append(dict)
+
+        responseData = {
+        "type":"posts",
+        "items":item_list
+        }
     
-    return Response(serializer.data,status=200)
+    return Response(responseData,status=200)
 
 @api_view(['GET','POST'])
 @permission_classes([permissions.IsAuthenticated])
@@ -125,18 +153,70 @@ def Posts(request,pk):
     """
 
     if request.method == 'GET':
+        item_list = []
+
+        author = single_author.objects.get(uuid = pk)
+
+        serializeAuthor = AuthorSerializer(author)
         try:
-            author = single_author.objects.get(uuid = pk)
+            
             posts = Post.objects.filter(author = author)
 
             posts = pagination(request,posts)
 
             if not posts.exists():
                 return Response(status=404)
+            
+            for item in posts:
+                dict = {}
+                serializer = PostsSerializer(item)
+                data = serializer.data
+                for k,v in data.items():
+                    dict[k] = v
+                
+                categories = data['Categories']
+                catList = categories.split(' ')
+                postsId = data['uuid']
+                comment = Comment.objects.filter(post__uuid = postsId)
+                count = len(comment)
+                commentURL = request.build_absolute_uri()+postsId+'/comments'
+                dict['Categories'] = catList
+                dict['author'] = serializeAuthor.data
+                dict['comments'] = commentURL
+                dict['count'] = count
+                item_list.append(dict)
+
+            responseData = {
+            "type":"posts",
+            "items":item_list
+            }
+
         except: 
-            serializer = PostsSerializer(posts, many=True)
-        finally:
-            serializer = PostsSerializer(posts, many=True)
+            for item in posts:
+                dict = {}
+                serializer = PostsSerializer(item)
+                data = serializer.data
+                for k,v in data.items():
+                    dict[k] = v
+                
+                categories = data['Categories']
+                catList = categories.split(' ')
+                postsId = data['uuid']
+                comment = Comment.objects.filter(post__uuid = postsId)
+                count = len(comment)
+                commentURL = request.build_absolute_uri()+postsId+'/comments'
+                dict['Categories'] = catList
+                dict['author'] = serializeAuthor.data
+                dict['comments'] = commentURL
+                dict['count'] = count
+                item_list.append(dict)
+
+            responseData = {
+            "type":"posts",
+            "items":item_list
+            }
+        
+        return Response(responseData,status=200)
 
     #Create new posts
     if request.method == 'POST':
@@ -157,11 +237,31 @@ POST Manipulation
 @permission_classes([permissions.IsAuthenticated])
 @authentication_classes([authentication.BasicAuthentication])
 def getPost(request,pk,postsId):
+    """
+    Get a specific post details
+    """
     if request.method == 'GET':
         posts = Post.objects.filter(uuid = postsId)
-        serializer = PostsSerializer(posts, many=True)
+        serializer = PostsSerializer(posts[0])
+        author = single_author.objects.get(uuid = pk)
+        serializeAuthor = AuthorSerializer(author)
+        data = serializer.data
+        dict = {}
+        for k,v in data.items():
+            dict[k] = v
 
-        return Response(serializer.data)
+        categories = data['Categories']
+        catList = categories.split(' ')
+        postsId = data['uuid']
+        comment = Comment.objects.filter(post__uuid = postsId)
+        count = len(comment)
+        commentURL = request.build_absolute_uri()+postsId+'/comments'
+        dict['Categories'] = catList
+        dict['author'] = serializeAuthor.data
+        dict['comments'] = commentURL
+        dict['count'] = count
+        
+        return Response(dict,status=200)
     
     #Update existing post
     elif request.method == 'POST':
@@ -226,19 +326,50 @@ def getComments(request,pk,postsId):
     Get comments for a post and paginated
     """
     if request.method == 'GET':
-    
+        item_list = []
         comments = Comment.objects.filter(post__uuid = postsId)
 
         try:
             comments = pagination(request,comments)
-        
+
+            for item in comments:
+                serializer = commentSerializer(item)
+                data = serializer.data
+                dict = {}
+                for k,v in data.items():
+                    dict[k]=v
+                
+                author = single_author.objects.get(username = data['author'])
+                serializeAuthor = AuthorSerializer(author)
+                dict['author'] = serializeAuthor.data
+                item_list.append(dict)
+            
+            responseData = {
+            "type":'comments',
+            "items":item_list
+            }
+
+            return Response(responseData,status=200)
         except:
-            serializer = commentSerializer(comments, many=True)
+            for item in comments:
+                dict = {}
+                serializer = commentSerializer(item)
+                data = serializer.data
+                for k,v in data.items():
+                    dict[k]=v
+                
+                author = single_author.objects.get(username = data['author'])
+                serializeAuthor = AuthorSerializer(author)
+                dict['author'] = serializeAuthor.data
 
-        finally:
-            serializer = commentSerializer(comments, many=True)
+                item_list.append(dict)
+            
+            responseData = {
+            "type":'comments',
+            "items":item_list
+            }
 
-        return Response(serializer.data,status=200)
+            return Response(responseData,status=200)
 
     elif request.method == 'POST':
 
