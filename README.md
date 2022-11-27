@@ -19,6 +19,8 @@ Project and Information are represent in WiKi
 
 # API Reference
 
+[CLICK ME!](https://fallsocialuahank.herokuapp.com/swagger/)
+
 #### Library needed
 
 ```
