@@ -80,3 +80,12 @@ class Comment(models.Model):
     published = models.DateTimeField(auto_now_add=True, null=True)
     def __str__(self):
         return f"{self.comment} + {self.contentType} + {self.id}"
+
+
+
+class Like(models.Model):
+    type = models.CharField(default='like', max_length=200)
+    summary = models.TextField(max_length=256, null=True, blank=True)
+    # sender
+    author = models.ForeignKey(single_author, on_delete=models.CASCADE, blank=True, null=True)
+    object = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
