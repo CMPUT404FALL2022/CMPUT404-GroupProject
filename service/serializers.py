@@ -7,10 +7,10 @@ import uuid
 class AuthorSerializer(serializers.ModelSerializer):
 
     type = serializers.CharField(default='author', max_length=10)
-    
+
     class Meta:
         model = single_author
-        fields = ('type','id','url','host','display_name','github','profileImage','username')
+        fields = ('type','id','url','host','github','profileImage','username')
 
 class PostsSerializer(serializers.ModelSerializer):
 

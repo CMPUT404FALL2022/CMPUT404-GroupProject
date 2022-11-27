@@ -50,9 +50,17 @@ def authorsList(request):
             return Response(status=404)
 
         for item in authors:
+            print(item)
+            dict = {}
             serializer = AuthorSerializer(item)
             data = serializer.data
-            itemsList.append(data)
+
+            for k,v in data.items():
+                dict[k] = v
+
+            # dict['displayName'] = 
+
+            itemsList.append(dict)
 
         responseData = {
             "type":"authors",
@@ -61,9 +69,17 @@ def authorsList(request):
 
     except:
         for item in authors:
+            dict = {}
             serializer = AuthorSerializer(item)
             data = serializer.data
-            itemsList.append(data)
+
+            for k,v in data.items():
+                dict[k] = v
+
+            dict['displayName'] = data['username']
+            dict.pop('username')
+
+            itemsList.append(dict)
 
         responseData = {
             "type":"authors",
@@ -83,10 +99,25 @@ def singleAuthor(request,pk):
         #if this author exists, then serialize it, otherwise return 404 not found
         try:
             author = single_author.objects.get(uuid = pk)
+            serializeAuthor = AuthorSerializer(author)
+            data = serializeAuthor.data
+            dict = {}
+
+            for k,v in data.items():
+                dict[k] = v
+
+            dict['displayName'] = data['username']
+            dict.pop('username')
+
+            responseData = {
+                "type":"authors",
+                "items":dict
+            }
+
+            return Response(responseData,status=200)
+
         except:
             return Response(status=404)
-
-        serializer = AuthorSerializer(author, many=False)
 
     #Update
     if request.method == 'POST':
