@@ -10,7 +10,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = single_author
-        fields = ('type','id','url','host','display_name','github','profileImage','username')
+        fields = ('type','id','url','host','github','profileImage','username')
 
 class PostsSerializer(serializers.ModelSerializer):
 
