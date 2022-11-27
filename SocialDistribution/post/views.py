@@ -131,8 +131,11 @@ def create_like(request,userId,postId):
     summary = author_name + " Likes your post"
     #inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
     #inboxitem.save()
-    like = Like.objects.create(author=currentAuthor, summary=summary, object=object)
-    like.save()
-    response = HttpResponse('Like created')
-    response.status_code = 201
-    return response
+    if not Like.objects.filter(author=currentAuthor, summary=summary, object=object).exists():
+        like = Like.objects.create(author=currentAuthor, summary=summary, object=object)
+        like.save()
+    # count like might be done in part 3
+    like_count = Like.objects.filter(object=object).count()
+    #response = HttpResponse('Like created')
+    #response.status_code = 201
+    return HttpResponseRedirect(reverse("home-page",args=[userId]))
