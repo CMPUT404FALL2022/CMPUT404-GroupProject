@@ -116,21 +116,6 @@ def create_comment(request,userId,postId):
             'form':form,
             'userId':userId
         })
-@login_required(login_url='/login/')
-def create_comment(request,userId,postId):
-    if request.method == 'POST':
-        form = Comment_form(request.POST)
-        if form.is_valid():
-            newComment = form.save(commit=False)
-            newComment.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newComment.uuid)}"
-            currentAuthor = single_author.objects.get(uuid = userId)
-            newComment.author = currentAuthor
-
-            currentPost = Post.objects.get(uuid = postId)
-            newComment.post = currentPost
-            newComment.save()
-            print(f"This is hehahahahaa{newComment.__str__()}")
-            return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 @login_required(login_url='/login/')
 def create_like(request,userId,postId):
