@@ -1,9 +1,9 @@
 from django.http import HttpResponseRedirect,FileResponse
 from django.shortcuts import render
 from django.urls import reverse
-
+from rest_framework import permissions,authentication
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
 from .serializers import AuthorSerializer, PostsSerializer, ImagePostsSerializer
 from .serializers import commentSerializer
@@ -32,6 +32,8 @@ def pagination(request,object):
 Authors and Single Author
 """
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def authorsList(request):
     """
     This view is used to display all authors information
@@ -71,6 +73,8 @@ def authorsList(request):
     return Response(responseData,status=200)
 
 @api_view(['GET','POST'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def singleAuthor(request,pk):
     """
     This view is used to display and update one author information
@@ -100,6 +104,8 @@ def singleAuthor(request,pk):
 Posts
 """
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def getAllPublicPosts(request):
     """
     This view will get all public posts
@@ -111,6 +117,8 @@ def getAllPublicPosts(request):
     return Response(serializer.data,status=200)
 
 @api_view(['GET','POST'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def Posts(request,pk):
     """
     This view is used to display posts of a given author and create a new post
@@ -146,6 +154,8 @@ def Posts(request,pk):
 POST Manipulation
 """
 @api_view(['GET','DELETE','POST','PUT'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def getPost(request,pk,postsId):
     if request.method == 'GET':
         posts = Post.objects.filter(uuid = postsId)
@@ -191,6 +201,8 @@ def getPost(request,pk,postsId):
 Image Posts
 """
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def getImage(request,pk,postsId):
     """
     This is in order to display the image post or the image in the post
@@ -207,6 +219,8 @@ def getImage(request,pk,postsId):
     return FileResponse(img)
 
 @api_view(['GET','POST'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def getComments(request,pk,postsId):
     """
     Get comments for a post and paginated
@@ -240,6 +254,8 @@ def getComments(request,pk,postsId):
         return Response(serializer.data,status=200)
 
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def getFollowers(request,pk):
     """
     Display a list of followers that followed by user<pk>
@@ -261,6 +277,8 @@ def getFollowers(request,pk):
         return Response(data,status=200)
 
 @api_view(['DELETE','PUT','GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
 def oneFollower(request,pk,foreignPk):
     """
     Execute<br>
