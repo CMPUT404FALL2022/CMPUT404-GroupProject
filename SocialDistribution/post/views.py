@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from .post_forms import post_form, Comment_form
-from .models import Post,Comment
+from .models import Post,Comment,Like
 from authors.models import single_author,Followers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -119,12 +119,20 @@ def create_comment(request,userId,postId):
 
 @login_required(login_url='/login/')
 def create_like(request,userId,postId):
-    item_type = "like"
-    item_id = "1"
-    item = postId
+    #like = get_object_or_404(Like, id=request.POST.get("like_id"))
+    object = Post.objects.get(uuid = postId)
+    #all_likes = Like.objects.filter(object=object)
+    #author = single_author.objects.get(uuid = userId)
+    # item_type = "like"
+    # item_id = "1"
+    # item = postId
     currentAuthor = single_author.objects.get(uuid = userId)
-    inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
-    inboxitem.save()
+    author_name = currentAuthor.display_name
+    summary = author_name + " Likes your post"
+    #inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
+    #inboxitem.save()
+    like = Like.objects.create(author=currentAuthor, summary=summary, object=object)
+    like.save()
     response = HttpResponse('Like created')
     response.status_code = 201
     return response
