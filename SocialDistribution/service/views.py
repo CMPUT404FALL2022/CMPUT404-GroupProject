@@ -127,7 +127,7 @@ def getAllPublicPosts(request):
             commentURL = request.build_absolute_uri()+postsId+'/comments'
             dict['Categories'] = catList
             dict['author'] = serializeAuthor.data
-            dict['comment'] = commentURL
+            dict['comments'] = commentURL
             dict['count'] = count
             item_list.append(dict)
 
@@ -174,7 +174,7 @@ def Posts(request,pk):
                 commentURL = request.build_absolute_uri()+postsId+'/comments'
                 dict['Categories'] = catList
                 dict['author'] = serializeAuthor.data
-                dict['comment'] = commentURL
+                dict['comments'] = commentURL
                 dict['count'] = count
                 item_list.append(dict)
 
@@ -199,7 +199,7 @@ def Posts(request,pk):
                 commentURL = request.build_absolute_uri()+postsId+'/comments'
                 dict['Categories'] = catList
                 dict['author'] = serializeAuthor.data
-                dict['comment'] = commentURL
+                dict['comments'] = commentURL
                 dict['count'] = count
                 item_list.append(dict)
 
@@ -227,11 +227,31 @@ POST Manipulation
 """
 @api_view(['GET','DELETE','POST','PUT'])
 def getPost(request,pk,postsId):
+    """
+    Get a specific post details
+    """
     if request.method == 'GET':
         posts = Post.objects.filter(uuid = postsId)
-        serializer = PostsSerializer(posts, many=True)
+        serializer = PostsSerializer(posts[0])
+        author = single_author.objects.get(uuid = pk)
+        serializeAuthor = AuthorSerializer(author)
+        data = serializer.data
+        dict = {}
+        for k,v in data.items():
+            dict[k] = v
 
-        return Response(serializer.data)
+        categories = data['Categories']
+        catList = categories.split(' ')
+        postsId = data['uuid']
+        comment = Comment.objects.filter(post__uuid = postsId)
+        count = len(comment)
+        commentURL = request.build_absolute_uri()+postsId+'/comments'
+        dict['Categories'] = catList
+        dict['author'] = serializeAuthor.data
+        dict['comments'] = commentURL
+        dict['count'] = count
+        
+        return Response(dict,status=200)
     
     #Update existing post
     elif request.method == 'POST':
