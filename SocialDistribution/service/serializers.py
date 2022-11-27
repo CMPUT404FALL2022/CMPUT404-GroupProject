@@ -13,6 +13,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ('type','id','url','host','display_name','github','profileImage','username')
 
 class PostsSerializer(serializers.ModelSerializer):
+
+    type = serializers.CharField(max_length=10,default='posts')
     
     class Meta:
         model = Post
