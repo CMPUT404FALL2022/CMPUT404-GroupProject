@@ -204,9 +204,13 @@ def Posts(request,pk):
                 dict = {}
                 serializer = PostsSerializer(item)
                 data = serializer.data
+                author_dict = {}
                 for k,v in data.items():
                     dict[k] = v
-                
+                for k,v in serializeAuthor.data.items():
+                    author_dict[k] = v
+                author_dict['displayName'] = serializeAuthor.data['username']
+                author_dict.pop('username')
                 categories = data['Categories']
                 catList = categories.split(' ')
                 postsId = data['uuid']
@@ -215,7 +219,7 @@ def Posts(request,pk):
                 commentURL = request.build_absolute_uri()+postsId+'/comments'
                 dict.pop('Categories')
                 dict['categories'] = catList
-                dict['author'] = serializeAuthor.data
+                dict['author'] = author_dict
                 dict['comments'] = commentURL
                 dict['count'] = count
                 item_list.append(dict)
@@ -230,9 +234,13 @@ def Posts(request,pk):
                 dict = {}
                 serializer = PostsSerializer(item)
                 data = serializer.data
+                author_dict = {}
                 for k,v in data.items():
                     dict[k] = v
-                
+                for k,v in serializeAuthor.data.items():
+                    author_dict[k] = v
+                author_dict['displayName'] = serializeAuthor.data['username']
+                author_dict.pop('username')
                 categories = data['Categories']
                 catList = categories.split(' ')
                 postsId = data['uuid']
@@ -241,7 +249,7 @@ def Posts(request,pk):
                 commentURL = request.build_absolute_uri()+postsId+'/comments'
                 dict.pop('Categories')
                 dict['categories'] = catList
-                dict['author'] = serializeAuthor.data
+                dict['author'] = author_dict
                 dict['comments'] = commentURL
                 dict['count'] = count
                 item_list.append(dict)
@@ -284,7 +292,12 @@ def getPost(request,pk,postsId):
         dict = {}
         for k,v in data.items():
             dict[k] = v
-
+        author_dict = {}
+        author_data = serializeAuthor.data
+        for k,v in author_data.items():
+            author_dict[k] = v
+        author_dict['displayName'] = author_data['username']
+        author_dict.pop('username')
         categories = data['Categories']
         catList = categories.split(' ')
         postsId = data['uuid']
@@ -293,7 +306,7 @@ def getPost(request,pk,postsId):
         commentURL = request.build_absolute_uri()+postsId+'/comments'
         dict.pop('Categories')
         dict['categories'] = catList
-        dict['author'] = serializeAuthor.data
+        dict['author'] = author_dict
         dict['comments'] = commentURL
         dict['count'] = count
         
@@ -397,7 +410,14 @@ def getComments(request,pk,postsId):
                 author = single_author.objects.get(username = data['author'])
                 serializeAuthor = AuthorSerializer(author)
                 dict['author'] = serializeAuthor.data
-
+                data= serializeAuthor.data
+                author_dict = {}
+                for k,v in data.items():
+                    author_dict[k] = v
+                
+                author_dict['displayName'] = data['username']
+                author_dict.pop('username')
+                dict['author'] = author_dict
                 item_list.append(dict)
             
             responseData = {
