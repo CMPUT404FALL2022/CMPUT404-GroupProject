@@ -2,16 +2,28 @@ from django.shortcuts import render
 from authors.models import single_author
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .models import InboxItem, Inbox
+from .models import InboxItem
+from post.models import Liked, Like, Post
 
 
 @login_required(login_url='/login/')
 def my_inbox(request,userId):
     currentAuthor=single_author.objects.filter(uuid=userId).first()
     currentAuthorInbox = InboxItem.objects.filter(author__uuid=currentAuthor.uuid)
+
+    # get data from liked model --- M
+    my_posts = Post.objects.filter(author=currentAuthor)
+    likeds = Liked.objects.all()
+    text = []
+    for post in my_posts:
+        for liked in likeds:
+            if post.id == liked.post:
+                text.append(Like.objects.values('summary'))
+
     return render(request, 'inbox/inbox.html',{
         "currentAuthorInbox": currentAuthorInbox,
-        "userId": userId
+        "userId": userId,
+        "text": text
     })
 
 @login_required(login_url='/login/')

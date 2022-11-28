@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from .post_forms import post_form, Comment_form
-from .models import Post,Comment,Like
+from .models import Post,Comment,Like,Liked
 from authors.models import single_author,Followers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -120,7 +120,7 @@ def create_comment(request,userId,postId):
 @login_required(login_url='/login/')
 def create_like(request,userId,postId):
     #like = get_object_or_404(Like, id=request.POST.get("like_id"))
-    object = Post.objects.get(uuid = postId)
+    po = Post.objects.get(uuid = postId).id
     #all_likes = Like.objects.filter(object=object)
     #author = single_author.objects.get(uuid = userId)
     # item_type = "like"
@@ -131,11 +131,16 @@ def create_like(request,userId,postId):
     summary = author_name + " Likes your post"
     #inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
     #inboxitem.save()
-    if not Like.objects.filter(author=currentAuthor, summary=summary, object=object).exists():
-        like = Like.objects.create(author=currentAuthor, summary=summary, object=object)
+    if not Like.objects.filter(author=currentAuthor, summary=summary, object=po).exists():
+        like = Like.objects.create(author=currentAuthor, summary=summary, object=po)
         like.save()
+        if not Liked.objects.filter(post=po).exists():
+            print("fffffffffffffffffff")
+            receiver_liked = Liked.objects.create(post=po)       
+        receiver_liked = Liked.objects.get(post=po)
+        receiver_liked.items.add(like)
     # count like might be done in part 3
-    like_count = Like.objects.filter(object=object).count()
+    #like_count = Like.objects.filter(object=object).count()
     #response = HttpResponse('Like created')
     #response.status_code = 201
     return HttpResponseRedirect(reverse("home-page",args=[userId]))

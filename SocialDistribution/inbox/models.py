@@ -18,7 +18,7 @@ class InboxItem(models.Model):
     item_type = models.CharField(max_length=10, choices=ItemTypeEnum.choices)
     item = models.TextField() # This is the content of the item
 
-class Inbox(models.Model):
-    type = models.CharField(default='inbox', max_length=200)
-    author = models.ForeignKey(single_author, on_delete=models.CASCADE)
-    items = models.ForeignKey(Post, on_delete=models.CASCADE,null=True,blank=True)
+# class Inbox(models.Model):
+#     type = models.CharField(default='inbox', max_length=200)
+#     author = models.ForeignKey(single_author, on_delete=models.CASCADE)
+#     items = models.ForeignKey(Post, on_delete=models.CASCADE,null=True,blank=True)
