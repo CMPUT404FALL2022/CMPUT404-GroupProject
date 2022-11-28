@@ -1,8 +1,9 @@
 from django.http import HttpResponseRedirect,FileResponse
 from django.shortcuts import render
 from django.urls import reverse
-from rest_framework import permissions,authentication
+
 from rest_framework.response import Response
+from rest_framework import permissions,authentication
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
 from .serializers import AuthorSerializer, PostsSerializer, ImagePostsSerializer
@@ -57,7 +58,7 @@ def authorsList(request):
 
             for k,v in data.items():
                 dict[k] = v
-
+            
             # dict['displayName'] = 
 
             itemsList.append(dict)
@@ -75,7 +76,7 @@ def authorsList(request):
 
             for k,v in data.items():
                 dict[k] = v
-
+            
             dict['displayName'] = data['username']
             dict.pop('username')
 
@@ -105,7 +106,7 @@ def singleAuthor(request,pk):
 
             for k,v in data.items():
                 dict[k] = v
-
+            
             dict['displayName'] = data['username']
             dict.pop('username')
 
@@ -115,7 +116,7 @@ def singleAuthor(request,pk):
             }
 
             return Response(responseData,status=200)
-
+                
         except:
             return Response(status=404)
 
@@ -162,7 +163,8 @@ def getAllPublicPosts(request):
             comment = Comment.objects.filter(post__uuid = postsId)
             count = len(comment)
             commentURL = request.build_absolute_uri()+postsId+'/comments'
-            dict['Categories'] = catList
+            dict.pop('Categories')
+            dict['categories'] = catList
             dict['author'] = serializeAuthor.data
             dict['comments'] = commentURL
             dict['count'] = count
@@ -211,7 +213,8 @@ def Posts(request,pk):
                 comment = Comment.objects.filter(post__uuid = postsId)
                 count = len(comment)
                 commentURL = request.build_absolute_uri()+postsId+'/comments'
-                dict['Categories'] = catList
+                dict.pop('Categories')
+                dict['categories'] = catList
                 dict['author'] = serializeAuthor.data
                 dict['comments'] = commentURL
                 dict['count'] = count
@@ -236,7 +239,8 @@ def Posts(request,pk):
                 comment = Comment.objects.filter(post__uuid = postsId)
                 count = len(comment)
                 commentURL = request.build_absolute_uri()+postsId+'/comments'
-                dict['Categories'] = catList
+                dict.pop('Categories')
+                dict['categories'] = catList
                 dict['author'] = serializeAuthor.data
                 dict['comments'] = commentURL
                 dict['count'] = count
@@ -287,7 +291,8 @@ def getPost(request,pk,postsId):
         comment = Comment.objects.filter(post__uuid = postsId)
         count = len(comment)
         commentURL = request.build_absolute_uri()+postsId+'/comments'
-        dict['Categories'] = catList
+        dict.pop('Categories')
+        dict['categories'] = catList
         dict['author'] = serializeAuthor.data
         dict['comments'] = commentURL
         dict['count'] = count

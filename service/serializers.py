@@ -15,10 +15,10 @@ class AuthorSerializer(serializers.ModelSerializer):
 class PostsSerializer(serializers.ModelSerializer):
 
     type = serializers.CharField(max_length=10,default='posts')
-    
+
     class Meta:
         model = Post
-        fields = ('uuid','type','title','id','source','description','contentType','content','author','Categories','count','published','visibility','unlisted')
+        fields = ('uuid','type','title','id','source','description','contentType','content','author','Categories','count','origin','published','visibility','unlisted')
 
 class ImagePostsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,4 +33,4 @@ class commentSerializer(serializers.ModelSerializer):
 # class followSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Followers
-#         fields = '__all__'
+#         fields = 'all'
