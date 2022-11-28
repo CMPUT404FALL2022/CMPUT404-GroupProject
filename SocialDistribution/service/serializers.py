@@ -18,7 +18,7 @@ class PostsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Post
-        fields = ('uuid','type','title','id','source','description','contentType','content','author','Categories','count','published','visibility','unlisted')
+        fields = ('uuid','type','title','id','source','description','contentType','content','author','Categories','count','origin','published','visibility','unlisted')
 
 class ImagePostsSerializer(serializers.ModelSerializer):
     class Meta:
