@@ -88,4 +88,10 @@ class Like(models.Model):
     summary = models.TextField(max_length=256, null=True, blank=True)
     # sender
     author = models.ForeignKey(single_author, on_delete=models.CASCADE, blank=True, null=True)
-    object = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    object = models.CharField(max_length=200, null=True)
+
+
+class Liked(models.Model): 
+    type = models.CharField(default='liked', max_length=200)
+    items = models.ManyToManyField(Like,blank=True)
+    post = models.CharField(default='liked', max_length=200)
