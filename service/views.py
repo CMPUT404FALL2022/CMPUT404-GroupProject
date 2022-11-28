@@ -162,7 +162,7 @@ def getAllPublicPosts(request):
             postsId = data['uuid']
             comment = Comment.objects.filter(post__uuid = postsId)
             count = len(comment)
-            commentURL = request.build_absolute_uri()+postsId+'/comments'
+            commentURL = data['id']+'/comments'
             dict.pop('Categories')
             dict['categories'] = catList
             dict['author'] = serializeAuthor.data
@@ -216,7 +216,7 @@ def Posts(request,pk):
                 postsId = data['uuid']
                 comment = Comment.objects.filter(post__uuid = postsId)
                 count = len(comment)
-                commentURL = request.build_absolute_uri()+postsId+'/comments'
+                commentURL = data['id']+'/comments'
                 dict.pop('Categories')
                 dict['categories'] = catList
                 dict['author'] = author_dict
@@ -246,7 +246,7 @@ def Posts(request,pk):
                 postsId = data['uuid']
                 comment = Comment.objects.filter(post__uuid = postsId)
                 count = len(comment)
-                commentURL = request.build_absolute_uri()+postsId+'/comments'
+                commentURL = data['id']+'/comments'
                 dict.pop('Categories')
                 dict['categories'] = catList
                 dict['author'] = author_dict
@@ -303,7 +303,7 @@ def getPost(request,pk,postsId):
         postsId = data['uuid']
         comment = Comment.objects.filter(post__uuid = postsId)
         count = len(comment)
-        commentURL = request.build_absolute_uri()+postsId+'/comments'
+        commentURL = data['id']+'/comments'
         dict.pop('Categories')
         dict['categories'] = catList
         dict['author'] = author_dict

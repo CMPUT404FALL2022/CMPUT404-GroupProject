@@ -91,8 +91,8 @@ def sign_up(request):
             new_author = form.save(commit=False)
             # generate something
             authorHost = request.META.get('HTTP_HOST')
-            authorId = f"{request.build_absolute_uri('/')}authors/{new_author.uuid}"
-            authorUrl = f"{request.build_absolute_uri('/')}authors/{new_author.uuid}"
+            authorId = f"{request.build_absolute_uri('/')}service/authors/{new_author.uuid}"
+            authorUrl = f"{request.build_absolute_uri('/')}service/authors/{new_author.uuid}"
             new_user = userForm.save(commit=False)
             #### Needs Admin Permission to activate this new account ####
             new_user.is_active = False
