@@ -54,10 +54,15 @@ def home_page(request,userId):
     others_posts = []
     others_posts_dict = {}
     #this is for others databases for group T05
-    T05Url = "https://fallprojback.herokuapp.com/authors/ce20e705cbca4085955ff9f915854e43/posts"
+    T05Url = "https://fallprojback.herokuapp.com/authors/ce20e705cbca4085955ff9f915854e43/posts/27f4ff47-6d30-4927-ae99-48323a228a0c"
     res = requests.get(T05Url)
     others_users = res.json()
-    others_posts.append(others_users[0])
+    others_posts.append(others_users)
+
+    T05Url2 = "https://fallprojback.herokuapp.com/authors/4843b801d83e4a5bb0b08f8716d3cba2/posts/018d6704-7f2b-49c2-b140-49a0394dd8ae"
+    res = requests.get(T05Url2)
+    others_users = res.json()
+    others_posts.append(others_users)
     # T05Url = "https://fallprojback.herokuapp.com/authors/"
     # res = requests.get(T05Url)
 
