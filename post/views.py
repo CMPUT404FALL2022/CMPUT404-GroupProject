@@ -10,6 +10,7 @@ import uuid
 from django.db.models import Q
 from inbox.models import InboxItem
 import requests
+from requests.auth import HTTPBasicAuth
 
 
 # Create your views here.
@@ -53,28 +54,35 @@ def home_page(request,userId):
     others_posts = []
     others_posts_dict = {}
     #this is for others databases for group T05
+    T05Url = "https://fallprojback.herokuapp.com/authors/ce20e705cbca4085955ff9f915854e43/posts"
+    res = requests.get(T05Url)
+    others_users = res.json()
+    others_posts.append(others_users[0])
     # T05Url = "https://fallprojback.herokuapp.com/authors/"
     # res = requests.get(T05Url)
+
     # others_users = res.json().get("items")
     # for user in others_users:
-    #     postUrl = f"{user[id]}/posts"
+    #     postUrl = f"{user['id']}/posts"
     #     res = requests.get(postUrl)
     #     oneuser_post = res.json()
+    #     print(f"BBBBBBBBBBBBBBBBBBBB{oneuser_post}")
     #     for post in oneuser_post:
     #         others_posts.append(post)
 
     
     #this is for others databases for group T16
-    T16Url = "https://team-sixteen.herokuapp.com/posts/"
-    res = requests.get(T16Url)
-    T16_posts = res.json().get("items")
+    # T16Url = "https://team-sixteen.herokuapp.com/posts/"
+    # res = requests.get(T16Url,auth = HTTPBasicAuth('15sixteen', '15sixteen'))
+    # print(res)
+    # T16_posts = res.json().get("items")
     
-    for post in T16_posts:
-        if len(post['content']) <= 200:
-            others_posts.append(post)
-            # res = requests.get(post['comments'])
-            # others_comments = res.json().get("items")
-            # others_posts_dict[post] = others_comments
+    # for post in T16_posts:
+    #     if len(post['content']) <= 200:
+    #         others_posts.append(post)
+    #         # res = requests.get(post['comments'])
+    #         # others_comments = res.json().get("items")
+    #         # others_posts_dict[post] = others_comments
 
             
     return render(request,"post/index.html",{
