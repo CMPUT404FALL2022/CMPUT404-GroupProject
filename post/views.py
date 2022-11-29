@@ -77,17 +77,17 @@ def home_page(request,userId):
 
     
     #this is for others databases for group T16
-    # T16Url = "https://team-sixteen.herokuapp.com/posts/"
-    # res = requests.get(T16Url,auth = HTTPBasicAuth('15sixteen', '15sixteen'))
-    # print(res)
-    # T16_posts = res.json().get("items")
+    T16Url = "https://team-sixteen.herokuapp.com/posts/"
+    res = requests.get(T16Url)
+    print(res)
+    T16_posts = res.json().get("items")
     
-    # for post in T16_posts:
-    #     if len(post['content']) <= 200:
-    #         others_posts.append(post)
-    #         # res = requests.get(post['comments'])
-    #         # others_comments = res.json().get("items")
-    #         # others_posts_dict[post] = others_comments
+    for post in T16_posts:
+        if len(post['content']) <= 200:
+            others_posts.append(post)
+            # res = requests.get(post['comments'])
+            # others_comments = res.json().get("items")
+            # others_posts_dict[post] = others_comments
 
             
     return render(request,"post/index.html",{
