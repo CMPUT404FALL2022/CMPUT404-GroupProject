@@ -1,0 +1,93 @@
+{% extends 'base.html' %} 
+{%block title%} My Profile {%endblock%} 
+{% block header%}
+{% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
+  <!-- Navbar content -->
+  <div class="container-fluid" style="margin-top: 7px">
+    <form
+      class="form-inline my-2 my-lg-0 col-xs-2 col-sm-3 col-md-3 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+
+    <div class="col-xs-6 col-sm-6 col-md-1 col-md-offset-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    
+</nav> {% endcomment %}
+{% include "navbar.html" %}
+{% endblock %} {% block content %}
+
+
+            
+          <div class="container">
+              <div class="row">
+            
+              
+            
+                <div class="form-group">
+                  <h2>Inbox</h2>
+                  <div style="overflow:scroll; width:200px; height:300px;">
+                    
+                    {% for sum1 in text%}
+                      {% for sum2 in sum1%}
+                        <a href="#" class="list-group-item list-group-item-action"style="width:200px;height: 50px;">{{ sum2.summary }}</a>
+                      {% endfor %}
+                    {% endfor %}
+    
+                  
+                </div>
+              </div>
+          
+          <div class="col-1"></div> 
+
+  
+              
+           <div class="form-group">
+            <h2>New friends</h2>
+
+            <div style="overflow:scroll; width:350px; height:250px;">
+
+
+          
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 1</a>
+
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 2</a>
+
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 3</a>
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 4</a>
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 5</a>
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 6</a>
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 7</a>
+            <a href="#" li class="list-group-item list-group-item-action ">new friend 8</a>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+ 
+        {% endblock %}
+  
+
+
+

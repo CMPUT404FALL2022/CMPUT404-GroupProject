@@ -1,8 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from authors.models import single_author
+from authors.models import single_author,Followers
 from django.urls import reverse
 from .forms import SignUpForm
 from .forms import LoginForm
@@ -13,28 +14,40 @@ import uuid
 # Create your views here.
 def log_in(request):
     #login by username and password
-
+    displayConfirmMsg = False
     if request.method == 'POST':
-        user = User.objects.all()
         form = LoginForm()
         username = request.POST['username']
         password = request.POST['password']
+
+        try:
+            userLogin = User.objects.get(username = username)
+        except:
+            return HttpResponse("Username does not exist")
+
+        if userLogin.is_active == False:
+            displayConfirmMsg = True
+            return render(request,"login/login.html",{
+                "form":form,
+                "display":displayConfirmMsg
+                }) 
+
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request,user)
             current_user = request.user
-            current_authorId = single_author.objects.get(username=current_user).id
+            current_authorId = single_author.objects.get(username=current_user).uuid
             
             return HttpResponseRedirect(reverse("home-page",args=[current_authorId]))
         else:
-            messages.error(request,("Username or Password wrong, please try again."))
-            
             return render(request,"login/login.html",{
                 "username":None,
                 "password":None,
-                "form":form
+                "form":form,
+                "display":displayConfirmMsg
+    
             })
         # if single_author.objects.filter(username=username).exists():
         #     password = request.POST.get('password')
@@ -66,7 +79,8 @@ def log_in(request):
         form = LoginForm()
 
     return render(request,"login/login.html",{
-        "form":form
+        "form":form,
+        "display":displayConfirmMsg
     })
 
 def sign_up(request):
@@ -74,13 +88,14 @@ def sign_up(request):
         form = SignUpForm(request.POST,request.FILES)
         userForm = newUserForm(request.POST)
         if form.is_valid() and userForm.is_valid():
+            new_author = form.save(commit=False)
             # generate something
             authorHost = request.META.get('HTTP_HOST')
-            authorId = str(uuid.uuid4())
-            authorUrl = 'http://'+authorHost+'/authors/'+authorId
-            new_author = form.save(commit=False)
+            authorId = f"{request.build_absolute_uri('/')}authors/{new_author.uuid}"
+            authorUrl = f"{request.build_absolute_uri('/')}authors/{new_author.uuid}"
             new_user = userForm.save(commit=False)
-            new_user.is_active = True
+            #### Needs Admin Permission to activate this new account ####
+            new_user.is_active = False
             
             #######################
             new_author.username = userForm.cleaned_data['username']

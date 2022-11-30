@@ -2,7 +2,8 @@
 {%block css_files%} <link rel="stylesheet" href="{% static "login/login.css"%}">{%endblock%} {% block header %} {% endblock %}
 {% block content %}
 <div class="d-flex align-items-center justify-content-center">
-  <section class="vh-100 gradient-custom">
+  
+  <body class="vh-100 gradient-custom">
     <div class="container">
       <div
         class="row d-flex justify-content-center align-items-center h-100"
@@ -24,10 +25,8 @@
                   Please enter your username and password!
                 </p>
 
-                {% if isNotUsernameExist %}
-                <p>Username does not exist! Please SignUp first</p>
-                {% endif %} {% if isNotPasswordMatch %}
-                <p>Password does not match!</p>
+                {% if display %}
+                <p>This account is not approved to be activated, please contact admin.</p>
                 {% endif %}
 
                 <form method="post">
@@ -87,13 +86,32 @@
                   Don't have an account?
                   <a href={% url "signup" %} class="text-white-50 fw-bold"
                     >Sign Up Here</a>
+                  
                 </p>
               </div>
+              <button onclick="darkMode()">Darkmode</button>
+              <button onclick="lightMode()">LightMode</button>
+            
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </body>
+
+  <script>
+      function darkMode() {
+        var element = document.body;
+       
+        element.className = "dark-mode";
+       
+      }
+      function lightMode() {
+        var element = document.body;
+      
+        element.className = "gradient-custom";
+        
+      }
+    </script>
 </div>
 {% endblock %}

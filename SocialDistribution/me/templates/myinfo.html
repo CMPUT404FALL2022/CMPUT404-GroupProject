@@ -1,0 +1,84 @@
+{% extends 'base.html' %} 
+{%block title%} My Profile {%endblock%} 
+{% block header%}
+{% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
+  <!-- Navbar content -->
+  <div class="container-fluid" style="margin-top: 7px">
+    <form
+      class="form-inline my-2 my-lg-0 col-xs-2 col-sm-3 col-md-3 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+
+    <div class="col-xs-6 col-sm-6 col-md-1 col-md-offset-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    
+</nav> {% endcomment %}
+{% include "navbar.html" %}
+{% endblock %} {% block content %}
+
+
+<body  style="background-color:lavender">
+    <div class="My homepage py-4">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card shadow-sm">
+                  <h3>My infomation</h3>
+                <div class="card-body">
+                  <p class="mb-0"><strong class="pr-1">User ID: </strong> {{ all_info.uuid}}</p>
+                  <p class="mb-0"><strong class="pr-1">Username:</strong>{{ all_info.username }}</p>
+                  <p class="mb-0"><strong class="pr-1">Password:</strong>{{ all_info.password}}</p>
+                  <p class="mb-0"><strong class="pr-1">Display Name:</strong>{{ all_info.display_name }}</p>
+                  <p class="mb-0"><strong class="pr-1">GitHub Account:</strong>{{ all_info.github }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-8">
+              <div class="card shadow-sm">
+                <div class="card-header bg-transparent border-0">
+
+         <button type="button" class="btn btn-primary" style="background-color:white;border:0"> <a href= {% url 'informationedit-page' userId%}>Edit</a></button>
+                  <!-- <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
+                </div>
+                <div class="card-body pt-0">
+                  <table class="table table-bordered">
+                    <tr>
+                      <th width="30%">My Posts</th>
+                      <td width="30%">23</td>
+                    </tr>
+                    <tr>
+                      <th width="30%">My Followers	</th>
+                      <td width="30%">100000000</td>
+                    </tr>
+                  </table>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+
+{% endblock %}

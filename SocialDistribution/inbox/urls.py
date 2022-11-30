@@ -2,5 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-  path('inbox/', views.Inbox),
+  
+  path("authors/<str:userId>/inbox", views.my_inbox,name="inbox-page"),
+  path("authors/<str:userId>/search_result/<str:searched>",views.search_result,name="search-result"),
+  
 ]
