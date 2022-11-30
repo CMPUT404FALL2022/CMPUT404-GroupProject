@@ -26,7 +26,6 @@ def home_page(request,userId):
     #get comments
     for post in all_posts:
         oneListComment = Comment.objects.filter(post__uuid = post.uuid)
-
         post_comments_dict[post] = oneListComment
         
     if request.method == 'POST' and 'searched' in request.POST:
@@ -51,12 +50,12 @@ def home_page(request,userId):
             booleanOfalert == True
 
         
-            
+    currentAuthor = single_author.objects.filter(uuid=userId)     
     return render(request,"post/index.html",{
         "booleanOfalert":booleanOfalert,
         "post_comments_dict": post_comments_dict,
         "all_posts": all_posts,
-        "userId": userId
+        "userId": userId,
     })
     
 # def posts(request):
@@ -143,4 +142,42 @@ def create_like(request,userId,postId):
     #like_count = Like.objects.filter(object=object).count()
     #response = HttpResponse('Like created')
     #response.status_code = 201
+    return HttpResponseRedirect(reverse("home-page",args=[userId]))
+
+
+def share_post(request,userId,postId):
+    old_post = Post.objects.filter(uuid=postId).first()
+    currentAuthor = single_author.objects.filter(uuid = userId).first()
+    # my own post cannot shared by myself, but can share same post many times *
+    if old_post.author.uuid != currentAuthor.uuid:
+        new_title = old_post.title
+        new_postId = uuid.uuid4()
+        new_id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(new_postId)}"
+        new_source = id
+        new_origin = id
+        new_description = old_post.description
+        new_content_type = old_post.contentType
+        new_content = old_post.content
+        
+        new_author = currentAuthor
+        new_categories = old_post.Categories
+        new_count = 0
+        new_visibility = old_post.visibility
+        new_unlisted = old_post.unlisted
+        new_textType = old_post.textType
+        new_post_image = old_post.post_image
+        shared_post = Post.objects.create(title=new_title, uuid=new_postId, id=new_id, source=new_source, origin=new_origin,
+                                        description=new_description, contentType=new_content_type,
+                                        content=new_content, author=new_author, Categories=new_categories,
+                                        count=new_count, visibility=new_visibility, unlisted=new_unlisted,
+                                        textType=new_textType, post_image=new_post_image)
+        shared_post.save()   
+    # old_post.pk = None
+    # shared_post = old_post
+    # print(type(shared_post))
+    #shared_post = Post.objects.update(id=new_id, source=new_source,origin=new_origin,author=new_author,count=new_count)
+    # print(type(shared_post))
+    # shared_post.save()
+    # old_post = Post.objects.update(id=id, source=source,origin=origin,author=author)
+    # old_post.save()
     return HttpResponseRedirect(reverse("home-page",args=[userId]))

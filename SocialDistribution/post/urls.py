@@ -9,6 +9,7 @@ urlpatterns = [
     path("authors/<str:userId>/posts/<str:postId>/comment", views.create_comment,name="comment-page"),
     
     path("authors/<str:userId>/like/<str:postId>", views.create_like,name="like-page"),
+    path("authors/<str:userId>/share/<str:postId>",views.share_post,name="share-page"),
     
     
 ]
