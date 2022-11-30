@@ -24,7 +24,7 @@ Project and Information are represented in WiKi
 #### Library needed
 
 ```
-  pip -install -r requirements.txt [or pip3, depends on your environment]
+  pip install -r requirements.txt [or pip3, depends on your environment]
 ```
 
 <hr>
