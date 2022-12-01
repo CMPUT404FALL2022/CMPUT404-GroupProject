@@ -69,7 +69,7 @@ def create_post(request,userId):
         form = post_form(request.POST,request.FILES)
         if form.is_valid():
             newPost = form.save(commit=False)
-            newPost.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newPost.uuid)}"
+            newPost.id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(newPost.uuid)}"
             newPost.source = newPost.id
             newPost.origin = newPost.id
             currentAuthor = single_author.objects.get(uuid = userId)
@@ -98,7 +98,7 @@ def create_comment(request,userId,postId):
         form = Comment_form(request.POST)
         if form.is_valid():
             newComment = form.save(commit=False)
-            newComment.id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(newComment.uuid)}"
+            newComment.id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(postId)}/comments/{str(newComment.uuid)}"
             currentAuthor = single_author.objects.get(uuid = userId)
             newComment.author = currentAuthor
 
@@ -152,7 +152,7 @@ def share_post(request,userId,postId):
     if old_post.author.uuid != currentAuthor.uuid:
         new_title = old_post.title
         new_postId = uuid.uuid4()
-        new_id = f"{request.build_absolute_uri('/')}authors/{str(userId)}/posts/{str(new_postId)}"
+        new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
         new_source = id
         new_origin = id
         new_description = old_post.description
