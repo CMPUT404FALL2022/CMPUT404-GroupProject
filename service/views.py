@@ -6,12 +6,14 @@ from rest_framework.response import Response
 from rest_framework import permissions,authentication
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
-from .serializers import AuthorSerializer, PostsSerializer, ImagePostsSerializer
+from .serializers import AuthorSerializer, PostsSerializer, likedSerializer
 from .serializers import commentSerializer
 from authors.models import single_author, Followers
-from post.models import Post, Comment
+from post.models import Post, Comment, Like
 from django.db.models import Q
 
+def getURLId(url):
+    return url.split('/')[-1]
 
 def pagination(request,object):
     """
@@ -524,3 +526,86 @@ def oneFollower(request,pk,foreignPk):
             return Response({
                 "isFollowed":False,
             },status=404)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
+def getPostLikes(request,pk,postsId):
+    """
+    Get a list of likes of a post
+    """
+    if request.method == "GET":
+        
+        likeObjects = Like.objects.filter(postId = postsId)
+        itemList = []
+
+        for item in likeObjects:
+            likeDict = {"@context":"https://www.thisisacontext.com/"}
+            authorDict = {}
+
+            authorUUID = getURLId(item.author.id)
+            
+            author = single_author.objects.get(uuid = authorUUID)
+
+            serializer = likedSerializer(item)
+            serializeAuthor = AuthorSerializer(author)
+
+            for k,v in serializeAuthor.data.items():
+                authorDict[k] = v
+
+            authorDict["displayName"] = serializeAuthor.data["username"]
+            authorDict.pop("username")
+
+            for k,v in serializer.data.items():
+                likeDict[k] = v
+            
+            likeDict["author"] = authorDict
+            itemList.append(likeDict)
+
+        responseDict = {
+            "type":"likes",
+            "items":itemList,
+        }
+
+    return Response(responseDict,status=200)
+
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+@authentication_classes([authentication.BasicAuthentication])
+def getLiked(request,pk):
+    if request.method == "GET":
+        onesLiked = Like.objects.filter(author__uuid = pk)
+        itemsList = []
+
+        for item in onesLiked:
+            authorDict = {}
+            likedDict = {"@context":"https://eclass.srv.ualberta.ca/portal/"}
+            serializer = likedSerializer(item)
+
+            author = single_author.objects.get(uuid = pk)
+
+            serializeAuthor = AuthorSerializer(author)
+
+            for k,v in serializeAuthor.data.items():
+                authorDict[k] = v
+
+            authorDict["displayName"] = serializeAuthor.data["username"]
+            authorDict.pop("username")
+
+            for k,v in serializer.data.items():
+                likedDict[k] = v
+            
+            likedDict["author"] = authorDict
+            itemsList.append(likedDict)
+        
+        
+        responseDict = {
+            "type":"liked",
+            "items":itemsList,
+        }
+
+
+    return Response(responseDict, status=200)
