@@ -82,6 +82,10 @@ class Comment(models.Model):
         return f"{self.comment} + {self.contentType} + {self.id}"
 
 
+class Node(models.Model):
+    host = models.CharField(primary_key=True, max_length=255, null=False)
+    api = models.CharField(max_length=255, null=False)
+    authorization = models.CharField(max_length=255, null=False)
 
 class Like(models.Model):
     type = models.CharField(default='Like', max_length=200)
@@ -96,3 +100,5 @@ class Liked(models.Model):
     type = models.CharField(default='liked', max_length=200)
     items = models.ManyToManyField(Like,blank=True)
     post = models.CharField(default='liked', max_length=200)
+
+
