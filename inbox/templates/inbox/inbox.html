@@ -47,15 +47,26 @@
             
                 <div class="form-group">
                   <h2>Inbox</h2>
-                  <div style="overflow:scroll; width:200px; height:300px;">
+                  <div style="overflow:scroll; width:600px; height:600px;">
                     
                     {% for sum1 in text%}
                       {% for sum2 in sum1%}
-                        <a href="#" class="list-group-item list-group-item-action"style="width:200px;height: 50px;">{{ sum2.summary }}</a>
+                        <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 50px;">{{ sum2.summary }}</a>
                       {% endfor %}
                     {% endfor %}
-    
-                  
+                    
+
+                    {% for item in Inbox_new_post.all %}
+                        <h1>{{ item.author.display_name }}'s new post: </h1>
+                        <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 100px;">
+                                              Title: {{ item.title }}<br/>
+                                              Description: {{ item.description }}<br/>
+                                              content: {{ item.content }}<br/>
+                                              </a>
+                    {% endfor %}
+
+
+
                 </div>
               </div>
           
@@ -63,6 +74,7 @@
 
   
               
+              <!--
            <div class="form-group">
             <h2>New friends</h2>
 
@@ -82,6 +94,7 @@
             <a href="#" li class="list-group-item list-group-item-action ">new friend 8</a>
           </div>
         </div>
+      -->
       </div>
     </div> 
 
