@@ -14,20 +14,16 @@ Our project is about Django web development, and our group members are
 | Mengju Liao | mengju |
 | Xuantong Ma         | xuantong    |
 
-Project and Information are represented in WiKi
+Project and Information are represent in WiKi
 
 
 # API Reference
-
-[CLICK ME!](https://fallsocialuahank.herokuapp.com/swagger/)
 
 #### Library needed
 
 ```
   pip -install -r requirements.txt [or pip3, depends on your environment]
 ```
-
-<hr>
 
 ## Authors
 
@@ -42,8 +38,6 @@ Project and Information are represented in WiKi
 
   Eg. GET ://service/authors?page=10&size=5, Gets the 5 authors, authors 45 to 49.
 ```
-
-<hr>
 
 ## Single Author
 
@@ -74,14 +68,7 @@ Project and Information are represented in WiKi
 
 ```
 
-<hr>
-
 ## Posts
-
-**GET** URL: //service/posts/
-```posts
-  To get all public posts
-```
 
 **GET** URL: //service/authors/{author_uuid}/posts/
 ```posts
@@ -130,7 +117,6 @@ Project and Information are represented in WiKi
   create a post where its id is {post_uuid}
 ```
 
-<hr>
 
 ## Image Posts
 
@@ -138,9 +124,6 @@ Project and Information are represented in WiKi
 ```image_posts
   To get image of a post {post_uuid}. If no image file associate with, return 404. If so, display the image
 ```
-
-
-<hr>
 
 ## Comments
 
@@ -161,26 +144,4 @@ Project and Information are represented in WiKi
                                     }
 ```
 
-<hr>
 
-## Followers
-
-**GET** URL: //service/authors/{author_uuid}/followers
-```followers
-  get a list of authors who are {author_uuid}’s followers
-```
-
-**DELETE** URL: //service/authors/{author_uuid}/followers/{FOREIGN_author_uuid}
-```followers
-    Unfollow the author{author_uuid} on behalf of {FOREIGN_author_uuid}
-```
-
-**PUT** URL: //service/authors/{author_uuid}/followers/{FOREIGN_author_uuid}
-```followers
-    simple click on PUT button(no input required), then Follow the author{author_uuid} on behalf of {FOREIGN_author_uuid}
-```
-
-**GET** URL: //service/authors/{author_uuid}/followers/{FOREIGN_author_uuid}
-```followers
-    check if a user{FOREIGN_author_uuid} followed author{author_uuid}.
-```
