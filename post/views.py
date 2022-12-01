@@ -8,7 +8,9 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
 from django.db.models import Q
-from inbox.models import InboxItem
+#from inbox.models import InboxItem
+from inbox.models import Inbox
+
 
 
 
@@ -80,7 +82,18 @@ def create_post(request,userId):
             # newPost = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
 
             newPost.save()
-            print(f"This is hehahahahaa{newPost.__str__()}")
+            #print(f"This is hehahahahaa{newPost.__str__()}")
+
+            # I tell all my followers that I have a new post
+            current_author_followers = Followers.objects.filter(follower=currentAuthor)
+            #print(current_author_followers)
+            if current_author_followers.count() != 0:
+                for item in current_author_followers:
+                    follower = item.author
+                    follower_inbox = Inbox.objects.get(author=follower)
+
+                    follower_inbox.items.add(newPost)
+
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
