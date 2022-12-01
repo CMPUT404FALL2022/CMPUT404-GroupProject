@@ -9,6 +9,7 @@ from .forms import SignUpForm
 from .forms import LoginForm
 from .forms import newUserForm
 from django.contrib.auth.models import User
+from inbox.models import Inbox
 
 import uuid
 # Create your views here.
@@ -39,6 +40,13 @@ def log_in(request):
             login(request,user)
             current_user = request.user
             current_authorId = single_author.objects.get(username=current_user).uuid
+
+            # every account needs an inbox model
+            current_author = single_author.objects.get(uuid=current_authorId)
+            if not Inbox.objects.filter(author=current_author).exists():
+                Inbox.objects.create(author=current_author)
+
+
             
             return HttpResponseRedirect(reverse("home-page",args=[current_authorId]))
         else:
