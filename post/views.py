@@ -195,3 +195,15 @@ def share_post(request,userId,postId):
     # old_post = Post.objects.update(id=id, source=source,origin=origin,author=author)
     # old_post.save()
     return HttpResponseRedirect(reverse("home-page",args=[userId]))
+
+
+@login_required(login_url='/login/')
+def get_node(request,userId):
+    
+
+
+
+
+    return render(request,"post/node.html",{
+            'userId':userId
+        })
