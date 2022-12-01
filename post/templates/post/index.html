@@ -45,6 +45,8 @@
   
 </script>
 {%endif%}
+
+<body style = "background-color: lavenderblush;" >
 <div class="container I_followed">
   <div class="row">
     <div
@@ -61,22 +63,31 @@
       
     <ul class = "list-unstyled">
       {% for post,comment in post_comments_dict.items %}
-          <li>Title: </li>
-          <li>{{ post.title }}</li>
-          <li>Content: </li>
-          <li>{{ post.content }}</li>
-          <li>Description: </li>
-          <li>{{ post.description }}</li>
+      <div style = 'column-count:3;'>
+          <li style = 'font-size:25px;margin-left: 7px;'>Title: </li>
+          <li style = 'font-size:20px;'><i>{{ post.title }}</i></li>
+          <li style = 'margin-left: 70px;'>Posted by: {{ post.author.display_name }}</li>
+
+          
+      </div>
+      <div style = 'column-count:3;'>
+          <li style = 'font-size:20px;margin-left: 7px;'>Content: </li>
+          <li style = 'font-size:15px'><i>{{ post.content }}</i></li>
+      </div>
+      <div style = column-count:3;>
+          <li style = 'font-size:20px;margin-left: 7px;'>Description: </li>
+          <li style = 'font-size:15px'><i>{{ post.description }}</i></li>
+        </div>
           {% if post.post_image.url is not None %}
             <img src="{{post.post_image.url }}" width="600px">
           {% endif %}
-          <li>Posted by: {{ post.author.display_name }}</li>
+          
           <div class = "container">{% include "post/button.html" %}</div>
           </br>
           </br>
-          <li>comment: </li>
+          <li style = 'font-size:20px;margin-left: 7px;'><b>comment: </b></li>
           {% for each_comment in comment %}
-            <li>{{ each_comment.comment}}</li>
+            <li style = 'font-size:17px;margin-left: 7px;'>{{ each_comment.comment}}</li>
           {% endfor %}
           <br/>
           <hr style="height:2px;border-width:0;color:black;background-color:black">
@@ -100,6 +111,7 @@
       <p>{% lorem 9 b random %}</p>
     </div>
   </div>
-</div> {% endcomment %}
+</div> 
+</body>{% endcomment %}
 
 {% endblock %}

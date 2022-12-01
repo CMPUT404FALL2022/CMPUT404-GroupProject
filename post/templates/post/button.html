@@ -1,6 +1,45 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
     a{ background-color: transparent;}
+    .button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    .button1 {background-color: white; 
+        color: black; 
+        border: 2px solid #4CAF50;
+    } /* Green */
+    .button1:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .button2 {
+        background-color: white; 
+        color: black; 
+        border: 2px solid #008CBA;
+    }
+    .button2:hover {
+        background-color: #008CBA;
+        color: white;
+    }
+    .button3 {
+        background-color: white; 
+        color: black; 
+        border: 2px solid #ba7600;
+    }
+    .button3:hover {
+        background-color: #ba7600;
+        color: white;
+    }
 </style>
-<a href={% url "like-page" userId post.uuid %} class="button">LIKE</a>
-<a href={% url "share-page" userId post.uuid %} class="button">SHARE</button>
-<a href={% url "comment-page" userId post.uuid %} class="button">COMMENT</a>
+<a href={% url "like-page" userId post.uuid %} class="button button1">LIKE</a>
+<a href={% url "share-page" userId post.uuid %} class="button button2">SHARE</a>
+<a href={% url "comment-page" userId post.uuid %} class="button button3">COMMENT</a>
+
