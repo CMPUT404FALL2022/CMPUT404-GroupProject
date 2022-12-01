@@ -120,6 +120,7 @@ def create_comment(request,userId,postId):
 def create_like(request,userId,postId):
     #like = get_object_or_404(Like, id=request.POST.get("like_id"))
     po = Post.objects.get(uuid = postId).id
+    po_uuid = Post.objects.get(uuid = postId).uuid
     #all_likes = Like.objects.filter(object=object)
     #author = single_author.objects.get(uuid = userId)
     # item_type = "like"
@@ -130,8 +131,8 @@ def create_like(request,userId,postId):
     summary = author_name + " Likes your post"
     #inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
     #inboxitem.save()
-    if not Like.objects.filter(author=currentAuthor, summary=summary, object=po).exists():
-        like = Like.objects.create(author=currentAuthor, summary=summary, object=po)
+    if not Like.objects.filter(author=currentAuthor, summary=summary, object=po, postId = po_uuid).exists():
+        like = Like.objects.create(author=currentAuthor, summary=summary, object=po, postId = po_uuid)
         like.save()
         if not Liked.objects.filter(post=po).exists():
             print("fffffffffffffffffff")
