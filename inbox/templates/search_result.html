@@ -13,9 +13,8 @@ function myFunction(){
     {% if searched %}
         {% if searchResult%}
             <h1> You searched for {{searched}}</h1><br/>
-            <h2> Click to add the user!</h2><br/>
             {% for user in searchResult%}
-                <a href="#" onclick="myFunction()">Display name: {{user.display_name}}</a><br/>
+                <text>Display name: {{user.display_name}}</text><br/>
                 <text> Host: {{user.host}}</text><br/>
                 <text> URL: {{user.url}}</text><br/>
                 <text> GitHub account: {{user.github}}</text><br/>
