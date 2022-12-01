@@ -157,6 +157,12 @@ def getAllPublicPosts(request):
             authorUsername = data['author']
             author = single_author.objects.get(username=authorUsername)
             serializeAuthor = AuthorSerializer(author)
+            author_dict = {}
+
+            for k,v in serializeAuthor.data.items():
+                author_dict[k] = v
+            author_dict['displayName'] = serializeAuthor.data['username']
+            author_dict.pop("username")
             categories = data['Categories']
             catList = categories.split(' ')
             postsId = data['uuid']
@@ -165,7 +171,7 @@ def getAllPublicPosts(request):
             commentURL = data['id']+'/comments'
             dict.pop('Categories')
             dict['categories'] = catList
-            dict['author'] = serializeAuthor.data
+            dict['author'] = author_dict
             dict['comments'] = commentURL
             dict['count'] = count
             item_list.append(dict)
