@@ -84,13 +84,14 @@ class Comment(models.Model):
 
 
 class Like(models.Model):
-    type = models.CharField(default='like', max_length=200)
+    type = models.CharField(default='Like', max_length=200)
     summary = models.TextField(max_length=256, null=True, blank=True)
     # sender
     author = models.ForeignKey(single_author, on_delete=models.CASCADE, blank=True, null=True)
-    object = models.CharField(max_length=200, null=True)
+    object = models.CharField(max_length=200,null = True, blank=True)
+    postId = models.CharField(max_length=200,null = True, blank=True)
 
-
+    
 class Liked(models.Model): 
     type = models.CharField(default='liked', max_length=200)
     items = models.ManyToManyField(Like,blank=True)
