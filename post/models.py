@@ -83,6 +83,7 @@ class Comment(models.Model):
 
 
 class Node(models.Model):
+    name = models.IntegerField(default=0)
     host = models.CharField(primary_key=True, max_length=255, null=False)
     api = models.CharField(max_length=255, null=False)
     authorization = models.CharField(max_length=255, null=False)
@@ -101,7 +102,3 @@ class Liked(models.Model):
     items = models.ManyToManyField(Like,blank=True)
     post = models.CharField(default='liked', max_length=200)
 
-class Node(models.Model):
-    host = models.CharField(primary_key=True, max_length=255, null=False)
-    api = models.CharField(max_length=255, null=False)
-    authorization = models.CharField(max_length=255, null=False)

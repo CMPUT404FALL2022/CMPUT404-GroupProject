@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from .post_forms import post_form, Comment_form
-from .models import Post,Comment,Like,Liked
+from .models import Post,Comment,Like,Liked,Node
 from authors.models import single_author,Followers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,8 @@ import uuid
 from django.db.models import Q
 #from inbox.models import InboxItem
 from inbox.models import Inbox
-
+import requests
+from requests.auth import HTTPBasicAuth
 
 
 
@@ -199,11 +200,74 @@ def share_post(request,userId,postId):
 
 @login_required(login_url='/login/')
 def get_node(request,userId):
-    
+    all_nodes = Node.objects.all()
+    all_posts = []
+
+    for node in all_nodes:
+        if node.name == 16:
+            TeamUrl = f"{node.host}{node.api}"
+            
+            res = requests.get(TeamUrl)
+            teamPosts = res.json().get("items")
+            
+            for post in teamPosts:
+                if len(post['content']) <= 200:
+                    image_url = f"{post['id']}/image"
+                    res = requests.get(image_url)
+                    if res.status_code == 200:
+                        post['image'] = image_url
+                    else:
+                        post['image'] = None
+                    comment_url = post['comments']
+                    res = requests.get(comment_url)
+                    comments = res.json().get("items")
+                    post['comment'] = comments
+                    all_posts.append(post)
+                
+        # elif node.name == 5:
+        #     TeamUrl = f"{node.host}{node.api}"
+        #     res = requests.get(TeamUrl)
+        #     teamPosts = res.json().get("items")
+        #     for each_user in teamPosts:
+        #         authorUrl = f"{each_user['id']}/posts"
+        #         res = requests.get(authorUrl)
+        #         print(res)
+        #         # if res.status_code == 200:
+        #         #     teamPosts = res.json()
+        #         #     print(teamPosts)
+
+        elif node.name == 11:
+            TeamUrl = f"{node.host}{node.api}"
+            res = requests.get(TeamUrl, auth = HTTPBasicAuth('11fifteen', '11fifteen'))
+            teamPosts = res.json().get("results")
+            print(teamPosts[0])
+            for post in teamPosts:
+                if len(post['content']) <= 200:
+                    image_url = f"{post['id']}/image"
+                    res = requests.get(image_url)
+                    if res.status_code == 200:
+                        post['image'] = image_url
+                    else:
+                        post['image'] = None
+                    comment_url = post['comments']
+                    res = requests.get(comment_url)
+                    if res.status_code == 200:
+                        comments = res.json().get("items")
+                        post['comment'] = comments
+                    all_posts.append(post)
 
 
+
+
+        elif node.name == 18:
+            TeamUrl = f"{node.host}{node.api}"
+            res = requests.get(TeamUrl, auth = HTTPBasicAuth('t18user1', 'Password123!'))
+            teamPosts = res.json().get("items")
+            
+            
 
 
     return render(request,"post/node.html",{
-            'userId':userId
+            'userId':userId,
+            'all_posts':all_posts,
         })

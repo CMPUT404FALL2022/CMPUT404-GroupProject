@@ -38,7 +38,7 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
-{%endif%}
+
 <div class="container I_followed">
   <div class="row">
     <div
@@ -53,33 +53,33 @@
       "
     >
       
-    {% comment %} <ul class = "list-unstyled">
-      {% for post,comment in post_comments_dict.items %}
+    <ul class = "list-unstyled">
+      {% for post in all_posts %}
           <li>Title: </li>
           <li>{{ post.title }}</li>
           <li>Content: </li>
           <li>{{ post.content }}</li>
           <li>Description: </li>
           <li>{{ post.description }}</li>
-          {% if post.post_image.url is not None %}
-            <img src="{{post.post_image.url }}" width="600px">
+         {% if post.image is not None %}
+            <img src="{{post.image }}" width="600px">
           {% endif %}
-          <li>Posted by: {{ post.author.display_name }}</li>
-          <div class = "container">{% include "post/button.html" %}</div>
+          <li>Posted by: {{ post.author.displayName }}</li>
+          
           </br>
           </br>
           <li>comment: </li>
-          {% for each_comment in comment %}
+          {% for each_comment in post.comment %}
             <li>{{ each_comment.comment}}</li>
           {% endfor %}
           <br/>
           <hr style="height:2px;border-width:0;color:black;background-color:black">
 
       {% endfor %}
-      </ul>  {% endcomment %}
+      </ul>  
       
     </div>
-    {% comment %} <div
+     <div
       class="col-xs-2 col-sm-2 col-md-3 col-md-offset-2 col-sm-offset-2 col-xs-offset-2"
       style="
         background-color: #fec5bb;
@@ -91,9 +91,9 @@
       "
     >
       
-      <p>{% lorem 9 b random %}</p>
+      <p>{{form}}</p>
     </div>
   </div>
-</div> {% endcomment %}
+</div> 
 
 {% endblock %}
