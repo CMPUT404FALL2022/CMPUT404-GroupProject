@@ -22,8 +22,9 @@ def my_inbox(request,userId):
     for liked in likeds:
         for like in liked.items.all():
             if Post.objects.filter(id=like.object,author=currentAuthor).exists():
+                postTitle = Post.objects.get(uuid = like.postId).title
                 #print(like.summary)
-                message = like.summary + ", post id: " + like.object
+                message = f"{like.author.username}{like.summary} | Post: {postTitle}"
                 text.append(message)
 
     
