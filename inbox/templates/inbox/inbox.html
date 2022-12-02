@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %} {% load posts_markdown %}
 {%block title%} My Profile {%endblock%} 
 {% block header%}
 {% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
@@ -57,11 +57,11 @@
                     
 
                     {% for item in Inbox_new_post.all %}
-                        <h1>{{ item.author.display_name }}'s new post: </h1>
+                        <h1>{{ item.author.username }}'s new post: </h1>
                         <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 100px;">
                                               Title: {{ item.title }}<br/>
-                                              Description: {{ item.description }}<br/>
-                                              content: {{ item.content }}<br/>
+                                              Description: {{ item.description|convert_markdown|safe }}<br/>
+                                              content: {{ item.content|convert_markdown|safe }}<br/>
                                               </a>
                     {% endfor %}
 
