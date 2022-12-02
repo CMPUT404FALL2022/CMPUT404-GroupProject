@@ -12,6 +12,10 @@ from authors.models import single_author, Followers
 from post.models import Post, Comment, Like
 from django.db.models import Q
 
+import base64
+from PIL import Image
+from io import BytesIO
+
 def getURLId(url):
     return url.split('/')[-1]
 
@@ -372,7 +376,8 @@ def getImage(request,pk,postsId):
             return Response(status=404)
         
         img = open(imagePath, 'rb')
-
+        # data = base64.b64encode(img.read())
+        # dict = {"image":data}
     return FileResponse(img)
 
 @api_view(['GET','POST'])
