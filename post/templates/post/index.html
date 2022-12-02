@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load static %}
+{% extends 'base.html' %} {% load static %} {% load posts_markdown %}
 {%block title%} My Post {%endblock%} 
 {% block header%}
 {% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
@@ -64,9 +64,9 @@
           <li>Title: </li>
           <li>{{ post.title }}</li>
           <li>Content: </li>
-          <li>{{ post.content }}</li>
+          <li>{{ post.content|convert_markdown|safe }}</li>
           <li>Description: </li>
-          <li>{{ post.description }}</li>
+          <li>{{ post.description|convert_markdown|safe }}</li>
           {% if post.post_image.url is not None %}
             <img src="{{post.post_image.url }}" width="600px">
           {% endif %}
