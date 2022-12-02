@@ -99,6 +99,4 @@ class Like(models.Model):
 class Liked(models.Model): 
     type = models.CharField(default='liked', max_length=200)
     items = models.ManyToManyField(Like,blank=True)
-    post = models.CharField(default='liked', max_length=200)
-
-
+    postId = models.CharField(max_length=200,null = True, blank=True)

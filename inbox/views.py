@@ -15,13 +15,17 @@ def my_inbox(request,userId):
     #print(Inbox_new_post)
 
     # get data from liked model --- M
-    my_posts = Post.objects.filter(author=currentAuthor)
+    my_posts_id_list = Post.objects.filter(author=currentAuthor).values_list('id')
     likeds = Liked.objects.all()
     text = []
-    for post in my_posts:
-        for liked in likeds:
-            if post.id == liked.post:
-                text.append(Like.objects.values('summary'))
+    likeds = Liked.objects.filter(type="liked")
+    for liked in likeds:
+        for like in liked.items.all():
+            if Post.objects.filter(id=like.object,author=currentAuthor).exists():
+                postTitle = Post.objects.get(uuid = like.postId).title
+                #print(like.summary)
+                message = f"{like.author.username}{like.summary} | Post: {postTitle}"
+                text.append(message)
 
     
 
