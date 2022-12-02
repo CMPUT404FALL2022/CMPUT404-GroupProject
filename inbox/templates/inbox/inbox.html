@@ -49,10 +49,10 @@
                   <h2>Inbox</h2>
                   <div style="overflow:scroll; width:600px; height:600px;">
                     
-                    {% for sum1 in text%}
-                      {% for sum2 in sum1%}
-                        <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 50px;">{{ sum2.summary }}</a>
-                      {% endfor %}
+                    {% for text in text%}
+         
+                        <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 80px;">{{ text }}</a>
+  
                     {% endfor %}
                     
 

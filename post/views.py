@@ -131,11 +131,8 @@ def create_comment(request,userId,postId):
 
 @login_required(login_url='/login/')
 def create_like(request,userId,postId):
-    #like = get_object_or_404(Like, id=request.POST.get("like_id"))
     po = Post.objects.get(uuid = postId).id
     po_uuid = Post.objects.get(uuid = postId).uuid
-    #all_likes = Like.objects.filter(object=object)
-    #author = single_author.objects.get(uuid = userId)
     # item_type = "like"
     # item_id = "1"
     # item = postId
@@ -147,10 +144,10 @@ def create_like(request,userId,postId):
     if not Like.objects.filter(author=currentAuthor, summary=summary, object=po, postId = po_uuid).exists():
         like = Like.objects.create(author=currentAuthor, summary=summary, object=po, postId = po_uuid)
         like.save()
-        if not Liked.objects.filter(post=po).exists():
+        if not Liked.objects.filter(postId=po).exists():
             print("fffffffffffffffffff")
-            receiver_liked = Liked.objects.create(post=po)       
-        receiver_liked = Liked.objects.get(post=po)
+            receiver_liked = Liked.objects.create(postId=po)       
+        receiver_liked = Liked.objects.get(postId=po)
         receiver_liked.items.add(like)
     # count like might be done in part 3
     #like_count = Like.objects.filter(object=object).count()
