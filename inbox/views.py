@@ -3,7 +3,7 @@ from authors.models import single_author
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 #from .models import InboxItem
-from post.models import Liked, Like, Post
+from post.models import Liked, Like, Post, Comment
 from .models import Inbox
 
 
@@ -11,10 +11,11 @@ from .models import Inbox
 def my_inbox(request,userId):
     currentAuthor=single_author.objects.filter(uuid=userId).first()
     currentAuthorInbox = Inbox.objects.filter(author=currentAuthor).first()
+    
+    # inbox followers new post message --- M
     Inbox_new_post = currentAuthorInbox.items
-    #print(Inbox_new_post)
 
-    # get data from liked model --- M
+    # inbox like message --- M
     my_posts_id_list = Post.objects.filter(author=currentAuthor).values_list('id')
     likeds = Liked.objects.all()
     text = []
@@ -27,13 +28,25 @@ def my_inbox(request,userId):
                 message = f"{like.author.username}{like.summary} | Post: {postTitle}"
                 text.append(message)
 
+    # inbox Comment message --- M
+    comments = Comment.objects.all()
+    comment_msg = []
+    author_posts = Post.objects.filter(author=currentAuthor)
+    for author_post in author_posts:
+        if Comment.objects.filter(post=author_post).exists():
+            for com in Comment.objects.filter(post=author_post):
+                who_comment = com.author
+                name = who_comment.display_name
+                post_title = author_post.title
+                comment_msg.append(name + " comments your post: " + post_title + ", with comment " + '"' + com.comment + '"' )
     
 
     return render(request, 'inbox/inbox.html',{
         "currentAuthorInbox": currentAuthorInbox,
         "userId": userId,
         "text": text,
-        "Inbox_new_post": Inbox_new_post
+        "Inbox_new_post": Inbox_new_post,
+        "comment_msg": comment_msg,
     })
 
 @login_required(login_url='/login/')

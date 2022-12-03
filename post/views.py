@@ -184,14 +184,6 @@ def share_post(request,userId,postId):
                                         count=new_count, visibility=new_visibility, unlisted=new_unlisted,
                                         textType=new_textType, post_image=new_post_image)
         shared_post.save()   
-    # old_post.pk = None
-    # shared_post = old_post
-    # print(type(shared_post))
-    #shared_post = Post.objects.update(id=new_id, source=new_source,origin=new_origin,author=new_author,count=new_count)
-    # print(type(shared_post))
-    # shared_post.save()
-    # old_post = Post.objects.update(id=id, source=source,origin=origin,author=author)
-    # old_post.save()
     return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
