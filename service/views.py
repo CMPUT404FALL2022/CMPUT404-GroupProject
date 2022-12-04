@@ -129,15 +129,29 @@ def singleAuthor(request,pk):
 
     #Update
     if request.method == 'POST':
-        author = single_author.objects.get(uuid = pk)
-        serializer = AuthorSerializer(instance = author, data=request.data, partial=True)
+        # print(request.data['id'])
+        # postAuthor = request.data
+        print(request.data)
+        # if request.data['id'] != pk:
+        #     return Response(status=404)
+        author = single_author.objects.filter(uuid = pk).first()
+        if author != None:
+            # author.id = request.data['id']
+            author.url = request.data['url']
+            # author.username = request.data['displayName']
+            author.github = request.data['github']
+            author.profileImage = request.data['profileImage']
+            author.host = request.data['host']
+            # author.type = request.data['type']
+            author.save(update_fields=['github','profileImage','host','url'])
+        # serializer = AuthorSerializer(instance = author, data=request.data, partial=True)
+            return Response(status=200)
+        # if serializer.is_valid():
+        #     serializer.save()
+        else:
+            return Response(status=400)
 
-        if serializer.is_valid():
-            serializer.save()
-
-        return Response(serializer.data)
-
-    return Response(serializer.data)
+    # return Response(serializer.data)
 
 """
 Posts

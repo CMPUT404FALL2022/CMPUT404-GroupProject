@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load static %}
+{% extends 'base.html' %} {% load static %}{% load posts_markdown %}
 {%block title%} My Post {%endblock%} 
 {% block header%}
 {% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
@@ -58,9 +58,9 @@
           <li>Title: </li>
           <li>{{ post.title }}</li>
           <li>Content: </li>
-          <li>{{ post.content }}</li>
+          <li>{{ post.content|convert_markdown|safe }}</li>
           <li>Description: </li>
-          <li>{{ post.description }}</li>
+          <li>{{ post.description|convert_markdown|safe }}</li>
          {% if post.image is not None %}
             <img src="{{post.image }}" width="600px">
           {% endif %}
@@ -91,7 +91,17 @@
       "
     >
       
-      <p>{{form}}</p>
+      <form method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="form-outline form-white mb-4">{{ ExternalForm }}</div>
+        <button
+        type="submit"
+        class="btn btn-primary"
+        style="background-color: rgb(243, 182, 97)"
+        >
+        Post
+        </button>
+      </form>
     </div>
   </div>
 </div> 
