@@ -68,7 +68,7 @@
           <li>Description: </li>
           <li>{{ post.description|convert_markdown|safe }}</li>
           {% if post.post_image.url is not None %}
-            <img src="{{post.post_image.url }}" width="600px">
+            <img src="{{post.post_image.url }}" width="40%">
           {% endif %}
           <li>Posted by: {{ post.author.display_name }}</li>
           <div class = "container">{% include "post/button.html" %}</div>
@@ -79,8 +79,7 @@
             <li>{{ each_comment.comment}}</li>
           {% endfor %}
           <br/>
-          <hr style="height:2px;border-width:0;color:black;background-color:black">
-
+          <hr style="height:1px;border-width:0;color:rgba(24, 23, 22, 0.812);background-color:black;width:90%">
       {% endfor %}
       </ul> 
       
