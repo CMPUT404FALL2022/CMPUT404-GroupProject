@@ -11,6 +11,7 @@ urlpatterns = [
     path('authors/<str:pk>/posts/<str:postsId>/',views.getPost,name="getPosts"),
     path('authors/<str:pk>/posts/<str:postsId>/image',views.getImage,name="getImagePosts"),
     path('authors/<str:pk>/posts/<str:postsId>/comments',views.getComments,name="getComments"),
+    path('authors/<str:pk>/posts/<str:postsId>/comments/<str:commentId>',views.getOneComment,name="getOneComment"),
     path('authors/<str:pk>/followers/',views.getFollowers,name="getFollowers"),
     path('authors/<str:pk>/followers/<str:foreignPk>',views.oneFollower,name="oneFollower"),
     path('authors/<str:pk>/liked',views.getLiked,name="getLiked"),
