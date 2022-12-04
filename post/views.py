@@ -12,7 +12,7 @@ from django.db.models import Q
 from inbox.models import Inbox
 import requests
 from requests.auth import HTTPBasicAuth
-
+from authors.models import FollowRequest
 
 
 # Create your views here.
@@ -49,6 +49,20 @@ def home_page(request,userId):
                 my_follower.author = single_author.objects.get(uuid=userId)
                 my_follower.follower = single_author.objects.get(username=searched)
                 my_follower.save()
+
+                # create friend request
+                if not FollowRequest.objects.filter(actor=my_follower.author,object=my_follower.follower).exists():
+                    actor_name = my_follower.author.display_name
+                    #object_name = my_follower.follower.display_name
+                    summary = actor_name + " followed you!"
+                    re = FollowRequest.objects.create(summary=summary,actor=my_follower.author,object=my_follower.follower)
+                    
+                    # request added to inbox
+                    object_inbox = Inbox.objects.get(author=my_follower.follower)
+                    object_inbox.followRequests.add(re)
+
+
+
             return HttpResponseRedirect(reverse("search-result",args=[userId,searched]))
         else:
             booleanOfalert == True
