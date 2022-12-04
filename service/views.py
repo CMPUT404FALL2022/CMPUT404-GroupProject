@@ -11,7 +11,7 @@ from .serializers import commentSerializer
 from authors.models import single_author, Followers
 from post.models import Post, Comment, Like
 from django.db.models import Q
-
+import uuid
 import base64
 from PIL import Image
 from io import BytesIO
@@ -130,7 +130,7 @@ def singleAuthor(request,pk):
     if request.method == 'POST':
         # print(request.data['id'])
         # postAuthor = request.data
-        print(request.data)
+        # print(request.data)
         # if request.data['id'] != pk:
         #     return Response(status=404)
         author = single_author.objects.filter(uuid = pk).first()
@@ -289,14 +289,24 @@ def Posts(request,pk):
 
     #Create new posts
     if request.method == 'POST':
-        serializer = PostsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        # serializer = PostsSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
 
-        else:
-            return Response(status=400)
-
-
+    #     else:
+    #         return Response(status=400)
+        print(request.data)
+        currentAuthor = single_author.objects.filter(uuid = pk).first()
+        new_post = request.data
+        new_postId = uuid.uuid4()
+        id = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(new_postId)}"
+        newPost = Post.objects.create(title=new_post['title'], uuid=new_postId, id=id, source=new_post['source'], origin=new_post['origin'],
+                                        description=new_post['description'], contentType=new_post['contentType'],
+                                        content=new_post['content'], author=currentAuthor, Categories=new_post['categories'],
+                                        count=0, visibility=new_post['visibility'], unlisted=new_post['unlisted'],textType=new_post['contentType']
+                                        )
+        newPost.save()
+        return Response(status=200)
     return Response(serializer.data)
 
 """
@@ -346,13 +356,31 @@ def getPost(request,pk,postsId):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse("login"),status=303)
 
-        posts = Post.objects.get(Q(author = author) & Q(uuid = postsId))
-        serializer = PostsSerializer(instance = posts, data=request.data, partial=True)
+        posts = Post.objects.filter(Q(author = author) & Q(uuid = postsId)).first()
+        # serializer = PostsSerializer(instance = posts, data=request.data, partial=True)
 
-        if serializer.is_valid():
-            serializer.save()
+        # if serializer.is_valid():
+        #     serializer.save()
 
-        return Response(serializer.data)
+        # return Response(serializer.data)
+        if posts != None:
+            # author.id = request.data['id']
+            posts.title = request.data['title']
+            # author.username = request.data['displayName']
+            posts.source = request.data['source']
+            posts.description = request.data['description']
+            posts.contentType = request.data['contentType']
+            posts.content = request.data['content']
+            posts.origin = request.data['origin']
+            posts.published = request.data['published']
+            posts.visibility = request.data['visibility']
+            posts.unlisted = request.data['unlisted']
+            posts.Categories = request.data['categories']
+            # author.type = request.data['type']
+            posts.save(update_fields=['title','source','description','contentType','content','origin','published','visibility','unlisted','Categories'])
+        else:
+            return Response(status=400)
+        return Response(status=200)
 
     #Delete the post
     elif request.method == 'DELETE':
@@ -364,13 +392,23 @@ def getPost(request,pk,postsId):
 
     #Create a new post
     elif request.method == 'PUT':
-        if not Post.objects.filter(uuid = postsId).exists():
-            serializer = PostsSerializer(data=request.data)
+        
+            # serializer = PostsSerializer(data=request.data)
 
-            if serializer.is_valid():
-                serializer.save()
+            # if serializer.is_valid():
+            #     serializer.save()
+        currentAuthor = single_author.objects.filter(uuid = pk).first()
+        new_post = request.data
+        new_postId = uuid.uuid4()
+        id = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(new_postId)}"
+        newPost = Post.objects.create(title=new_post['title'], uuid=new_postId, id=id, source=new_post['source'], origin=new_post['origin'],
+                                    description=new_post['description'], contentType=new_post['contentType'],
+                                    content=new_post['content'], author=currentAuthor, Categories=new_post['categories'],
+                                    count=0, visibility=new_post['visibility'], unlisted=new_post['unlisted'],textType=new_post['contentType']
+                                    )
+        newPost.save()
 
-            return Response(serializer.data,status=200)
+        return Response(status=200)
 
 """
 Image Posts
@@ -456,16 +494,26 @@ def getComments(request,pk,postsId):
 
     elif request.method == 'POST':
 
-        serializer = commentSerializer(data=request.data)
+        # serializer = commentSerializer(data=request.data)
 
-        if serializer.is_valid():
-            post = Post.objects.get(uuid=postsId)
-            serializer.save(post=post)
+        # if serializer.is_valid():
+        #     post = Post.objects.get(uuid=postsId)
+        #     serializer.save(post=post)
 
-        else:
-            return Response(status=400)
+        # else:
+        #     return Response(status=400)
+        currentAuthor = single_author.objects.filter(uuid = pk).first()
+        currentPost = Post.objects.filter(uuid=postsId).first()
+        new_comment = request.data
+        new_COMM_UUId = uuid.uuid4()
+        commentId = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(postsId)}/comments/{str(new_COMM_UUId)}"
+        newComment = Comment.objects.create(uuid=new_COMM_UUId, id=commentId, post=currentPost, author=currentAuthor,
+                                    comment = new_comment['comment'], contentType = new_comment['contentType']
+                                    )
+        newComment.save()
 
-        return Response(serializer.data,status=200)
+        return Response(status=200)
+
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
@@ -587,7 +635,8 @@ def getPostLikes(request,pk,postsId):
             "items":itemList,
         }
 
-    return Response(responseDict,status=200)
+        return Response(responseDict,status=200)
+    # if request.method == "Post":
 
 
 
