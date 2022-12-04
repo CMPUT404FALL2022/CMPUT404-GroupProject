@@ -101,9 +101,10 @@ def create_post(request,userId):
             #print(current_author_followers)
             if current_author_followers.count() != 0:
                 for item in current_author_followers:
+                    
+                    # new post added to inbox
                     follower = item.author
                     follower_inbox = Inbox.objects.get(author=follower)
-
                     follower_inbox.items.add(newPost)
 
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
@@ -133,6 +134,13 @@ def create_comment(request,userId,postId):
             newComment.post = currentPost
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")
+
+
+            # comment added to inbox
+            post_author = Post.objects.get(uuid=postId).author
+            post_author_inbox = Inbox.objects.get(author=post_author)
+            post_author_inbox.comments.add(newComment)
+
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
@@ -147,14 +155,9 @@ def create_comment(request,userId,postId):
 def create_like(request,userId,postId):
     po = Post.objects.get(uuid = postId).id
     po_uuid = Post.objects.get(uuid = postId).uuid
-    # item_type = "like"
-    # item_id = "1"
-    # item = postId
     currentAuthor = single_author.objects.get(uuid = userId)
     author_name = currentAuthor.display_name
     summary = author_name + " Likes your post"
-    #inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
-    #inboxitem.save()
     if not Like.objects.filter(author=currentAuthor, summary=summary, object=po, postId = po_uuid).exists():
         like = Like.objects.create(author=currentAuthor, summary=summary, object=po, postId = po_uuid)
         like.save()
@@ -163,10 +166,14 @@ def create_like(request,userId,postId):
             receiver_liked = Liked.objects.create(postId=po)       
         receiver_liked = Liked.objects.get(postId=po)
         receiver_liked.items.add(like)
+
+        # Liked added to inbox
+        post_author = Post.objects.get(uuid=postId).author
+        post_author_inbox = Inbox.objects.get(author=post_author)
+        post_author_inbox.likes.add(receiver_liked)
+
     # count like might be done in part 3
     #like_count = Like.objects.filter(object=object).count()
-    #response = HttpResponse('Like created')
-    #response.status_code = 201
     return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
