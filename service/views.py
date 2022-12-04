@@ -469,6 +469,40 @@ def getComments(request,pk,postsId):
         return Response(serializer.data,status=200)
 
 @api_view(['GET'])
+def getOneComment(request,pk,postsId,commentId):
+
+    if request.method == "GET":
+        comment = Comment.objects.get(uuid = commentId)
+
+        itemList = []
+
+        serializeComment = commentSerializer(comment).data
+
+        dict = {}
+        for k,v in serializeComment.items():
+            dict[k]=v
+        
+        author = single_author.objects.get(username = serializeComment['author'])
+        serializeAuthor = AuthorSerializer(author).data
+
+        author = {}
+        for k,v in serializeAuthor.items():
+            author[k] = v
+        author['displayName'] = author['username']
+        author.pop('username')
+
+        dict['author'] = author
+        
+        itemList.append(dict)
+
+        responseData = {
+            "type":"comment",
+            "items":itemList
+        }
+    
+        return Response(responseData,status=200)
+
+@api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 @authentication_classes([authentication.BasicAuthentication])
 def getFollowers(request,pk):
