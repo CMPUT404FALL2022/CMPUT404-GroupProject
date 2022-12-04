@@ -10,6 +10,7 @@ from .serializers import AuthorSerializer, PostsSerializer, likedSerializer
 from .serializers import commentSerializer
 from authors.models import single_author, Followers
 from post.models import Post, Comment, Like
+from inbox.models import Inbox
 from django.db.models import Q
 
 import base64
@@ -628,3 +629,54 @@ def getLiked(request,pk):
 
 
     return Response(responseDict, status=200)
+
+@api_view(['GET','DELETE'])
+def getInbox(request,pk):
+    if request.method == 'GET':
+        inbox = Inbox.objects.get(author__uuid = pk)
+        authorID = single_author.objects.get(uuid = pk).id
+        itemList = []
+
+        allPost = inbox.items.all()
+
+        for post in allPost:
+            postDict = {}
+            authorDict = {}
+            serializePost = PostsSerializer(post)
+            for k,v in serializePost.data.items():
+                postDict[k] = v
+
+            author = single_author.objects.get(username = postDict['author'])
+            serializeAuthor = AuthorSerializer(author).data
+            
+            for k,v in serializeAuthor.items():
+                authorDict[k] = v
+            authorDict['displayName'] = serializeAuthor['username']
+            authorDict.pop("username")
+
+            print(authorDict)
+
+            categories = serializePost.data['Categories']
+            catList = categories.split(' ')
+            postsId = serializePost.data['uuid']
+            comment = Comment.objects.filter(post__uuid = postsId)
+            count = len(comment)
+            commentURL = serializePost.data['id']+'/comments'
+            postDict.pop('Categories')
+            postDict['categories'] = catList
+            postDict['author'] = authorDict
+            postDict['comments'] = commentURL
+            postDict['count'] = count
+            
+            itemList.append(postDict)
+
+        responseData = {
+            "type":"inbox",
+            "author":authorID,
+            "items":itemList,
+        }
+        
+        return Response(responseData,status=200)
+
+    elif request.method == 'DELETE':
+        pass

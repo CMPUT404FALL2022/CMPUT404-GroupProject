@@ -15,4 +15,5 @@ urlpatterns = [
     path('authors/<str:pk>/followers/<str:foreignPk>',views.oneFollower,name="oneFollower"),
     path('authors/<str:pk>/liked',views.getLiked,name="getLiked"),
     path('authors/<str:pk>/posts/<str:postsId>/likes',views.getPostLikes,name="getPostsLikes"),
+    path('authors/<str:pk>/inbox',views.getInbox,name="onesInbox"),
 ]
