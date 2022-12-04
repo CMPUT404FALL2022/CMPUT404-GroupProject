@@ -39,3 +39,6 @@ class likedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ('type','summary','author','object')
+
+
+

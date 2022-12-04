@@ -38,37 +38,47 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
+<style>
+  .row {
+  display: flex;
+}
+
+  .column {
+  flex: 50%;
+  padding: 10px;
+}
+</style>
 
             
-          <div class="container">
-              <div class="row">
-            
-              
-            
-                <div class="form-group">
-                  <h2>Inbox</h2>
-                  <div style="overflow:scroll; width:600px; height:600px;">
-                    
-                    {% for text in text%}
-         
-                        <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 80px;">{{ text }}</a>
-  
-                    {% endfor %}
-                    
+<div class="container">
+  <h1>Inbox</h1>
+  <div class="row">
+      
+      <div class="column">
+        <h2>Your Liked and Comment Messages</h2>
+        <div style="overflow:scroll; width:500px; height:500px;">
+          {% for text in text%}
+              <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 80px;">{{ text }}</a>
+          {% endfor %}
 
-                    {% for item in Inbox_new_post.all %}
-                        <h1>{{ item.author.username }}'s new post: </h1>
-                        <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 100px;">
-                                              Title: {{ item.title }}<br/>
-                                              Description: {{ item.description|convert_markdown|safe }}<br/>
-                                              content: {{ item.content|convert_markdown|safe }}<br/>
-                                              </a>
-                    {% endfor %}
+          {% for comment in comment_msg%}
+          <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 80px;">{{ comment }}</a>
+          {% endfor %}
+        </div>
+      </div>
 
-
-
-                </div>
-              </div>
+      <div class="column">
+        <h2>New posts from your friends</h2>
+        <div style="overflow:scroll; width:500px; height:500px;">
+          {% for item in Inbox_new_post.all %}
+          <h3>{{ item.author.username }}'s new post: </h3>
+          <a href="#" class="list-group-item list-group-item-action"style="width:500px;height: 100px;">
+                                Title: {{ item.title }}<br/>
+                                Description: {{ item.description|convert_markdown|safe }}<br/>
+                                content: {{ item.content|convert_markdown|safe }}<br/></a>
+          {% endfor %}
+        </div>
+      </div>
           
           <div class="col-1"></div> 
 
