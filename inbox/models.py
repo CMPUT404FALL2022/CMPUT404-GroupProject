@@ -2,6 +2,7 @@ from django.db import models
 from uuid import uuid4
 from authors.models import single_author
 from post.models import Post, Comment, Liked
+from authors.models import FollowRequest
 
 # # Create your models here.
 # class InboxItem(models.Model):
@@ -25,5 +26,5 @@ class Inbox(models.Model):
     # Post stuff
     items = models.ManyToManyField(Post, blank=True)
     comments = models.ManyToManyField(Comment, blank=True, symmetrical=False)
-    #followRequests = models.ManyToManyField(FollowRequest, blank=True, symmetrical=False)
+    followRequests = models.ManyToManyField(FollowRequest, blank=True, symmetrical=False)
     likes = models.ManyToManyField(Liked, blank=True, symmetrical=False)
