@@ -643,18 +643,19 @@ def getInbox(request,pk):
             postDict = {}
             authorDict = {}
             serializePost = PostsSerializer(post)
+
+            #jsonify post and edit it
             for k,v in serializePost.data.items():
                 postDict[k] = v
 
             author = single_author.objects.get(username = postDict['author'])
             serializeAuthor = AuthorSerializer(author).data
             
+            #jsonify author
             for k,v in serializeAuthor.items():
                 authorDict[k] = v
             authorDict['displayName'] = serializeAuthor['username']
             authorDict.pop("username")
-
-            print(authorDict)
 
             categories = serializePost.data['Categories']
             catList = categories.split(' ')
@@ -679,4 +680,10 @@ def getInbox(request,pk):
         return Response(responseData,status=200)
 
     elif request.method == 'DELETE':
-        pass
+        """
+        Clear all posts in the inbox
+        """
+        inbox = Inbox.objects.get(author__uuid = pk)
+        inbox.items.clear()
+
+        return Response(status=200)
