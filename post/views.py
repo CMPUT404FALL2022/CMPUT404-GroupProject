@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from .post_forms import post_form, Comment_form, ExternalForm
+from .post_forms import post_form, Comment_form, ExternalForm, UserSelectionForm
 from .models import Post,Comment,Like,Liked,Node
 from authors.models import single_author,Followers
 from django.urls import reverse
@@ -25,6 +25,7 @@ def home_page(request,userId):
     # all_posts = Post.objects.all()
     all_posts = Post.objects.filter(unlisted=False, visibility="PUBLIC")
     post_comments_dict = {}
+    userSelectionForm = UserSelectionForm(userId=userId)
     
     #get comments
     for post in all_posts:
@@ -59,6 +60,7 @@ def home_page(request,userId):
         "post_comments_dict": post_comments_dict,
         "all_posts": all_posts,
         "userId": userId,
+        "userSelectionForm":userSelectionForm,
     })
     
 # def posts(request):
@@ -70,6 +72,7 @@ def home_page(request,userId):
 def create_post(request,userId):
     if request.method == 'POST':
         form = post_form(request.POST,request.FILES)
+        userSelectionForm = UserSelectionForm(userId = userId)
         if form.is_valid():
             newPost = form.save(commit=False)
             newPost.id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(newPost.uuid)}"
@@ -81,9 +84,17 @@ def create_post(request,userId):
             # newPost.content = form.cleaned_data['content']
             # newPost.description = form.cleaned_data['description']
             # newPost = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
-
             newPost.save()
             #print(f"This is hehahahahaa{newPost.__str__()}")
+
+            #send to a specific friend
+            if newPost.visibility == 'FRIENDS':
+                sendTo = request.POST.get('Send_To')
+                print(sendTo)
+                
+                inbox = Inbox.objects.get(author__username = sendTo)
+
+                inbox.items.add(newPost)
 
             # I tell all my followers that I have a new post
             current_author_followers = Followers.objects.filter(follower=currentAuthor)
@@ -100,9 +111,11 @@ def create_post(request,userId):
 
     else:
         form = post_form()
+        userSelectionForm = UserSelectionForm(userId = userId)
         return render(request,"post/create_new_post.html",{
             'form':form,
-            'userId':userId
+            'userId':userId,
+            'userSelectionForm':userSelectionForm,
         })
 
 
@@ -158,33 +171,54 @@ def create_like(request,userId,postId):
 
 
 def share_post(request,userId,postId):
-    old_post = Post.objects.filter(uuid=postId).first()
+    
     currentAuthor = single_author.objects.filter(uuid = userId).first()
-    # my own post cannot shared by myself, but can share same post many times *
-    if old_post.author.uuid != currentAuthor.uuid:
-        new_title = old_post.title
-        new_postId = uuid.uuid4()
-        new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
-        new_source = id
-        new_origin = id
-        new_description = old_post.description
-        new_content_type = old_post.contentType
-        new_content = old_post.content
+    selectedPost = Post.objects.get(uuid=postId)
+    
+    if request.method == 'POST':
+        sendTo = request.POST.get('Send_To')
         
-        new_author = currentAuthor
-        new_categories = old_post.Categories
-        new_count = 0
-        new_visibility = old_post.visibility
-        new_unlisted = old_post.unlisted
-        new_textType = old_post.textType
-        new_post_image = old_post.post_image
-        shared_post = Post.objects.create(title=new_title, uuid=new_postId, id=new_id, source=new_source, origin=new_origin,
-                                        description=new_description, contentType=new_content_type,
-                                        content=new_content, author=new_author, Categories=new_categories,
-                                        count=new_count, visibility=new_visibility, unlisted=new_unlisted,
-                                        textType=new_textType, post_image=new_post_image)
-        shared_post.save()   
-    return HttpResponseRedirect(reverse("home-page",args=[userId]))
+        inbox = Inbox.objects.get(author__username = sendTo)
+
+        inbox.items.add(selectedPost)
+
+
+        return HttpResponseRedirect(reverse("home-page",args=[userId]))
+
+
+    # my own post cannot shared by myself, but can share same post many times *
+    # if old_post.author.uuid != currentAuthor.uuid:
+    #     new_title = old_post.title
+    #     new_postId = uuid.uuid4()
+    #     new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
+    #     new_source = id
+    #     new_origin = id
+    #     new_description = old_post.description
+    #     new_content_type = old_post.contentType
+    #     new_content = old_post.content
+        
+    #     new_author = currentAuthor
+    #     new_categories = old_post.Categories
+    #     new_count = 0
+    #     new_visibility = old_post.visibility
+    #     new_unlisted = old_post.unlisted
+    #     new_textType = old_post.textType
+    #     new_post_image = old_post.post_image
+    #     shared_post = Post.objects.create(title=new_title, uuid=new_postId, id=new_id, source=new_source, origin=new_origin,
+    #                                     description=new_description, contentType=new_content_type,
+    #                                     content=new_content, author=new_author, Categories=new_categories,
+    #                                     count=new_count, visibility=new_visibility, unlisted=new_unlisted,
+    #                                     textType=new_textType, post_image=new_post_image)
+    #     shared_post.save() 
+    
+    else:
+        userSelectionForm = UserSelectionForm(userId = userId)
+        return render(request,"post/share_posts.html",{
+                'userSelectionForm':userSelectionForm,
+                'userId':userId,
+                'post':selectedPost,
+            })
+
 
 
 @login_required(login_url='/login/')

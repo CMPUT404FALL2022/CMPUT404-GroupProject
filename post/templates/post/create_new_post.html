@@ -3,7 +3,7 @@
 <h1>Create new post</h1>
 <form method="post" enctype="multipart/form-data">
   {%csrf_token%}
-  <div class="form-outline form-white mb-4">{{ form }}</div>
+  <div class="form-outline form-white mb-4">{{ form }} {{userSelectionForm}}</div>
   {% comment %}
   <div class="create_post">
     <label for="create_post">Write you new post</label>

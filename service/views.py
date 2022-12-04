@@ -720,4 +720,4 @@ def getInbox(request,pk):
         inbox = Inbox.objects.get(author__uuid = pk)
         inbox.items.clear()
 
-        return Response(status=200)
+        return Response(status=200) 
