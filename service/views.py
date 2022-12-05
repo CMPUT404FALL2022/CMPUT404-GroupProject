@@ -7,7 +7,7 @@ from rest_framework import permissions,authentication
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
 from .serializers import AuthorSerializer, PostsSerializer, likedSerializer
-from .serializers import commentSerializer
+from .serializers import commentSerializer, followReqeustSerializer
 from authors.models import single_author, Followers
 from post.models import Post, Comment, Like
 from inbox.models import Inbox
@@ -721,6 +721,9 @@ def getInbox(request,pk):
         itemList = []
 
         allPost = inbox.items.all()
+        allComment = inbox.comments.all()
+        allFollowRequest = inbox.followRequests.all()
+        allLikes = inbox.likes.all()
 
         for post in allPost:
             postDict = {}
@@ -754,6 +757,93 @@ def getInbox(request,pk):
             
             itemList.append(postDict)
 
+        for comment in allComment:
+            """
+            Put every comment object in the display list
+            """
+
+            serializeComment = commentSerializer(comment).data
+
+            dict = {}
+            for k,v in serializeComment.items():
+                dict[k]=v
+            
+            author = single_author.objects.get(username = serializeComment['author'])
+            serializeAuthor = AuthorSerializer(author).data
+
+            author = {}
+            for k,v in serializeAuthor.items():
+                author[k] = v
+            author['displayName'] = author['username']
+            author.pop('username')
+
+            dict['author'] = author
+
+            itemList.append(dict)
+
+        for request in allFollowRequest:
+            """
+            Put every followRequest object in the display list
+            """
+            requestDict = {"type":"Follow"}
+            serializeData = followReqeustSerializer(request).data
+
+            actor = single_author.objects.get(username = serializeData['actor'])
+            object = single_author.objects.get(username = serializeData['object'])
+
+            serializeActor = AuthorSerializer(actor).data
+            serializeObject = AuthorSerializer(object).data
+            summary = serializeData['summary']
+
+            actorDict = {}
+            objectDict = {}
+
+            for k,v in serializeActor.items():
+                actorDict[k] = v
+
+            print(actorDict)
+
+            actorDict["displayName"] = serializeActor["username"]
+            actorDict.pop("username")
+
+            for k,v in serializeObject.items():
+                objectDict[k] = v
+            
+            objectDict["displayName"] = serializeObject["username"]
+            objectDict.pop("username")
+
+            requestDict["summary"] = summary
+            requestDict["actor"] = actorDict
+            requestDict["object"] = objectDict
+
+            itemList.append(requestDict)
+
+        for like in allLikes:
+            """
+            Put every like object in the display list
+            """
+            authorDict = {}
+            likedDict = {"@context":"https://eclass.srv.ualberta.ca/portal/"}
+            serializer = likedSerializer(like)
+
+            author = single_author.objects.get(uuid = pk)
+
+            serializeAuthor = AuthorSerializer(author)
+
+            for k,v in serializeAuthor.data.items():
+                authorDict[k] = v
+
+            authorDict["displayName"] = serializeAuthor.data["username"]
+            authorDict.pop("username")
+
+            for k,v in serializer.data.items():
+                likedDict[k] = v
+            
+            likedDict["author"] = authorDict
+
+            itemList.append(likedDict)
+
+
         responseData = {
             "type":"inbox",
             "author":authorID,
@@ -768,5 +858,8 @@ def getInbox(request,pk):
         """
         inbox = Inbox.objects.get(author__uuid = pk)
         inbox.items.clear()
+        inbox.comments.clear()
+        inbox.followRequests.clear()
+        inbox.likes.clear()
 
-        return Response(status=200) 
+        return Response(status=200)
