@@ -9,25 +9,39 @@
 {% endblock %}
 
 {% block content %}
-<body style="background-color: rgb(185, 226, 246);">
+
+
+
+<body style="background-color: lavenderblush;">
 <div class="block">
+    
     <div class="block">
-        <h2 class="title is-2">Edit your profile</p>
+        <h1 class="title is-2" style="text-align: center; color:darkcyan; margin-top: 10%;">Edit your profile</h1>
     </div>
-    <div class="block">
+    
+    <div class="block" style="text-align: center; color:darkcyan">
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button class="button is-success is-fullwidth is-medium mt-5"
+            
+            <button class="btn btn-primary"
                     type="submit"
+                    style="background-color: transparent; color:darkcyan"
                     onClick="alert('You new info is saved!');">
                     Save
+            
             </button>
-            <button type="button" class="btn btn-primary" style="background-color: white;">
-                <a href= {% url 'information-page' userId%}>Back</a>
+            
+            <button type="button" 
+                    class="btn btn-primary" 
+                    style="background-color: transparent;">
+                    <a href= {% url 'information-page' userId%}>Back</a>
             </button>
+        
         </form>
     </div>
+
 </div>
 </body>
+
 {% endblock %}
