@@ -11,12 +11,9 @@ from .forms import EditForm
 from django.contrib.auth.decorators import login_required
 import sqlite3
 from django.db.models import Q
-<<<<<<< HEAD
 from requests.auth import HTTPBasicAuth
 import requests
-=======
 from authors.models import FollowRequest
->>>>>>> main
 # Create your views here.
 
 # def my_page(request, userId):
@@ -92,9 +89,13 @@ def my_profile(request, userId):
                         newExternalAuthor = ExternalFollowers.objects.create(author = me,external_username = author['displayName'], external_id = author['id'], groupNumber = 16)
                         newExternalAuthor.save()
                     break
+
+
+
+
         elif searchedGroup == '18':
             TeamUrl = f"{node.host}"
-        print(TeamUrl)
+            print(TeamUrl)
 
 
     return render(request,'my_profile.html',{
@@ -150,6 +151,31 @@ def myinfo(request, userId):
 
 @login_required(login_url='/login/')
 def myinfoedit(request, userId):
+    # all_info = single_author.objects.get(uuid = userId)
+#     if request.method == "POST":
+#         form = EditForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('')
+#             # conflict with login
+#             #password = form.cleaned_data['password']
+#             #display_name = form.cleaned_data['display_name']
+#             #github = form.cleaned_data['github']
+            
+# #             #--------------sql query to update the database----------------
+#     #         conn = sqlite3.connect('./db.sqlite3')
+#     #         c = conn.cursor()
+#     #         #c.execute('UPDATE authors_single_author SET password = ?, display_name = ? , github = ? WHERE id = ?;',(password,display_name,github,userId))
+#     #         c.execute('UPDATE authors_single_author SET display_name = ? , github = ? WHERE id = ?;',(display_name,github,userId))
+#     #         conn.commit()
+#     #         conn.close()
+#     form = EditForm()
+#     return render(request, 'editmyinfo.html',{
+#         "all_info": all_info,
+#         "userId": userId,
+#         "form": form
+
+#     })
     author = single_author.objects.get(uuid = userId)
     form = EditForm(request.POST or None, instance=author)
     if form.is_valid():
