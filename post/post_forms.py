@@ -1,5 +1,7 @@
 from django import forms
 from .models import Post, Comment
+from authors.models import Followers
+from django.db.models import Q
 
 
 class post_form(forms.ModelForm):
@@ -113,3 +115,31 @@ class ExternalForm(forms.Form):
 
         })
     )
+
+class UserSelectionForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        userId = kwargs.pop('userId')
+        super(UserSelectionForm, self).__init__(*args, **kwargs)
+        befriend_list = Followers.objects.filter(author__uuid = userId)
+        true_friend_list = []
+        true_friend_list_id_name = []
+        for befriend in befriend_list:
+        # if befriend.follower.uuid != userId:
+            who_followed_me = Followers.objects.filter(Q(author__uuid = befriend.follower.uuid)& Q(follower__uuid = userId))
+
+            if who_followed_me.count() > 0:
+                true_friend_list.append(who_followed_me)
+
+        for friend in true_friend_list:
+            true_friend_list_id_name.append(friend[0].author.username)
+
+        friendChoices = [("","")]
+
+        for i in true_friend_list_id_name:
+            temp = (i,i)
+            friendChoices.append(temp)
+
+        self.fields['Send_To'].choices = friendChoices
+
+    Send_To = forms.ChoiceField()

@@ -32,8 +32,8 @@ class Post(models.Model):
     author = models.ForeignKey(single_author,related_name='posts',on_delete=models.CASCADE,blank=True, null=True)
     count = models.IntegerField(default=0)
     published = models.DateTimeField(auto_now_add=True, null=True)
-    VISIBILITY_CHOICES = [("PUBLIC", "Public"), ("FRIENDS", "Friends"),
-                          ("PRIVATE", "Specific friend")]
+    VISIBILITY_CHOICES = [("PUBLIC", "Public"), ("FRIENDS", "Friends")
+                          ]
     visibility = models.CharField(max_length=7,
                                   choices=VISIBILITY_CHOICES,
                                   default="PUBLIC")
