@@ -38,47 +38,71 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
+<style>
+
+p{
+  font-family:Arial, Helvetica, sans-serif;
+}
+.tab{
+  display: inline-block;
+    margin-left: 50px;
+}
+.tab1{
+  display: inline-block;
+}
+
+</style>
 
 <body  style="background-color:lavender">
     <div class="My homepage py-4">
-        <div class="container">
+        <div class="container" >
           <div class="row">
             <div class="col-lg-4">
-              <div class="card shadow-sm">
-                  <h3>My infomation</h3>
+              
+              <div class="card shadow-sm" style="font-family:Gautami; font-size:large">
+                  <h1>My infomation</h1>
                 <div class="card-body">
-                  <p class="mb-0"><strong class="pr-1">User ID: </strong> {{ all_info.uuid}}</p>
-                  <p class="mb-0"><strong class="pr-1">Username:</strong>{{ all_info.username }}</p>
-                  <p class="mb-0"><strong class="pr-1">Password:</strong>{{ all_info.password}}</p>
-                  <p class="mb-0"><strong class="pr-1">Display Name:</strong>{{ all_info.display_name }}</p>
-                  <p class="mb-0"><strong class="pr-1">GitHub Account:</strong>{{ all_info.github }}</p>
+                  <br/>
+                  <p class="mb-0"><strong class="pr-1" style="font-family:Gautami; font-size:large">User ID: </strong> 
+                      <div class="tab" style="font-family:'Courier New', Courier, monospace">
+                        <span class="tab1">{{ all_info.uuid}}</span>
+                      </div>
+                  </p>
+
+                  <p class="mb-0"><strong class="pr-1" style="font-family:Gautami; font-size:large">Username:</strong>
+                    <div style="font-family:'Courier New', Courier, monospace">
+                      <span class="tab">{{ all_info.username }}</span>
+                    </div>
+                  </p>
+
+                  <p class="mb-0"><strong class="pr-1" style="font-family:Gautami; font-size:large">Password:</strong>
+                    <div style="font-family:'Courier New', Courier, monospace">
+                    <span class="tab">{{ all_info.password}}</span>
+                    </div>
+                  </p>
+                  
+                  <p class="mb-0"><strong class="pr-1" style="font-family:Gautami; font-size:large">Display Name:</strong>
+                    <div style="font-family:'Courier New', Courier, monospace">
+                    <span class="tab">{{ all_info.display_name }}</span>
+                    </div>
+                  </p>
+                  
+                  <p class="mb-0"><strong class="pr-1" style="font-family:Gautami; font-size:large">GitHub Account:</strong>
+                    <div style="font-family:'Courier New', Courier, monospace">
+                    {{ all_info.github }}
+                    </div>
+                  </p>
+                
                 </div>
               </div>
-            </div>
-            <div class="col-lg-8">
-              <div class="card shadow-sm">
-                <div class="card-header bg-transparent border-0">
-
-         <button type="button" class="btn btn-primary" style="background-color:white;border:0"> <a href= {% url 'informationedit-page' userId%}>Edit</a></button>
-                  <!-- <h3 class="mb-0"><i class="far fa-clone pr-1"></i>General Information</h3>
-                </div>
-                <div class="card-body pt-0">
-                  <table class="table table-bordered">
-                    <tr>
-                      <th width="30%">My Posts</th>
-                      <td width="30%">23</td>
-                    </tr>
-                    <tr>
-                      <th width="30%">My Followers	</th>
-                      <td width="30%">100000000</td>
-                    </tr>
-                  </table>
-                </div>
-              </div> -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </body>
+            </div>  
+</div>
+          <br/>
+          <button type="button" class="btn btn-primary" 
+                  style="background-color:white;border:0"> 
+          <a href= {% url 'informationedit-page' userId%}>Edit</a>
+          </button>
+    
+</body>
 
 {% endblock %}
