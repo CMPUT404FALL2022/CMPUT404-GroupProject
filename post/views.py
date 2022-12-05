@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from .post_forms import post_form, Comment_form, ExternalForm, UserSelectionForm
 from .models import Post,Comment,Like,Liked,Node
-from authors.models import single_author,Followers
+from authors.models import single_author,Followers,ExternalFollowers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
@@ -13,6 +13,7 @@ from inbox.models import Inbox
 import requests
 from requests.auth import HTTPBasicAuth
 from authors.models import FollowRequest
+import json
 
 
 # Create your views here.
@@ -247,27 +248,41 @@ def get_node(request,userId):
     if request.method == 'POST':
         currentAuthor = single_author.objects.filter(uuid = userId).first()
         form = post_form(request.POST,request.FILES)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            content = form.cleaned_data['content']
-            # textType = form.cleaned_data['textType']
-            contentType = form.cleaned_data['contentType']
-            description = form.cleaned_data['description']
-            Categories = form.cleaned_data['Categories']
-            visibility = form.cleaned_data['visibility']
-            post_image = form.cleaned_data['post_image']
-            group = form.cleaned_data['group']
-            unlisted = form.cleaned_data['unlisted']
-            new_postId = uuid.uuid4()
-            new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
-            new_source = id
-            new_origin = id
-            new_count = 0
-            author = currentAuthor.values()
+        print(f"{form.data['friend']} not in validation")
+        print(f"{form.data['content']} not in validation")
+        print(f"{form.data['contentType']} not in validation")
+        print(f"{form.data['title']} not in validation")
+        print(f"{form.data['description']} not in validation")
+        groupNumber = ExternalFollowers.objects.filter(external_id = form.data['friend']).first().groupNumber
+
+        if groupNumber == 5:
+            Url = f"{form.data['friend']}/posts"
+            jsonFile = {
+                "type": "post",
+                "title": "cccc",
+                "id": "f",
+                "origin": "asd",
+                "description": "fdsfsdf",
+                "contentType": "text/plain",
+                "content": "fasdfds",
+                "author": "https://fallprojback.herokuapp.com/authors/ce20e705cbca4085955ff9f915854e43",
+                "published": "2022-11-26T06:47:51.402782Z",
+                "count": 0,
+                "visibility": "PUBLIC"
+            }
+            print(jsonFile)
+            # jsonFile = json.dumps(jsonFile)
+            
+            x = requests.post(Url, data = jsonFile, auth = ('admin', 'admin'))
+            print(x.status_code)
+        # if form.is_valid():
+        #    userId = form.cleaned_data['friend']
+        #    print(f"{userId} in the validation process")
 
         return HttpResponseRedirect(reverse("home-page",args=[userId]))
     else:
-        form = ExternalForm()
+        
+        form = ExternalForm(userId = userId)
         all_nodes = Node.objects.all()
         all_posts = []
 
@@ -351,5 +366,5 @@ def get_node(request,userId):
         return render(request,"post/node.html",{
             'userId':userId,
             'all_posts':all_posts,
-            'ExternalForm':ExternalForm,
+            'ExternalForm':form,
         })
