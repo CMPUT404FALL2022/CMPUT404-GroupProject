@@ -308,7 +308,7 @@ def get_node(request,userId):
                 TeamUrl = f"{node.host}{node.api}"
                 res = requests.get(TeamUrl, auth = HTTPBasicAuth('11fifteen', '11fifteen'))
                 teamPosts = res.json().get("results")
-                print(teamPosts[0])
+                
                 for post in teamPosts:
                     if len(post['content']) <= 200:
                         image_url = f"{post['id']}/image"
@@ -327,11 +327,24 @@ def get_node(request,userId):
 
 
 
-            elif node.name == 18:
-                TeamUrl = f"{node.host}{node.api}"
-                res = requests.get(TeamUrl, auth = HTTPBasicAuth('t18user1', 'Password123!'))
-                teamPosts = res.json().get("items")
-                
+            # elif node.name == 18:
+                # TeamUrl = f"{node.host}{node.api}"
+                # res = requests.get(TeamUrl, auth = HTTPBasicAuth('t18user1', 'Password123!'))
+                # teamPosts = res.json().get("items")
+                # for post in teamPosts:
+                #     if len(post['content']) <= 200:
+                #         # image_url = f"{post['id']}/image"
+                #         # res = requests.get(image_url)
+                #         # if res.status_code == 200:
+                #         #     post['image'] = image_url
+                #         # else:
+                #         post['image'] = None
+                #         comment_url = post['comments']
+                #         res = requests.get(comment_url)
+                #         if res.status_code == 200:
+                #             comments = res.json().get("items")
+                #             post['comment'] = comments
+                #         all_posts.append(post)
             
 
 

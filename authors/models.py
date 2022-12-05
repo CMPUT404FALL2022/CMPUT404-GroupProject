@@ -39,3 +39,11 @@ class Followers(models.Model):
     type = "followers"
     author = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="all_authors")
     follower = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="all_followers")
+
+
+class ExternalFollowers(models.Model):
+    author = models.ForeignKey(single_author, on_delete=models.CASCADE, related_name="externalAuthors")
+    groupNumber = models.IntegerField(default=0)
+    external_username = models.CharField(max_length=255, blank=True)
+    external_id = models.CharField(max_length=255,blank=False,null=False)
+
