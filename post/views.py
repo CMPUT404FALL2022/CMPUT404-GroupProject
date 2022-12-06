@@ -248,36 +248,30 @@ def get_node(request,userId):
     if request.method == 'POST':
         currentAuthor = single_author.objects.filter(uuid = userId).first()
         form = post_form(request.POST,request.FILES)
-        print(f"{form.data['friend']} not in validation")
-        print(f"{form.data['content']} not in validation")
-        print(f"{form.data['contentType']} not in validation")
-        print(f"{form.data['title']} not in validation")
-        print(f"{form.data['description']} not in validation")
         groupNumber = ExternalFollowers.objects.filter(external_id = form.data['friend']).first().groupNumber
 
         if groupNumber == 5:
-            Url = f"{form.data['friend']}/posts"
+            Url = f"{form.data['friend']}/posts/"
+            print(Url)
             jsonFile = {
                 "type": "post",
-                "title": "cccc",
-                "id": "f",
-                "origin": "asd",
-                "description": "fdsfsdf",
-                "contentType": "text/plain",
-                "content": "fasdfds",
-                "author": "https://fallprojback.herokuapp.com/authors/ce20e705cbca4085955ff9f915854e43",
-                "published": "2022-11-26T06:47:51.402782Z",
+                "title": f"{form.data['title']}",
+                "origin": f"{form.data['friend']}",
+                "description": f"{form.data['description']}",
+                "contentType": f"{form.data['contentType']}",
+                "content": f"{form.data['content']}",
+                "author": f"{form.data['friend']}",
                 "count": 0,
                 "visibility": "PUBLIC"
             }
-            print(jsonFile)
-            # jsonFile = json.dumps(jsonFile)
             
-            x = requests.post(Url, data = jsonFile, auth = ('admin', 'admin'))
-            print(x.status_code)
-        # if form.is_valid():
-        #    userId = form.cleaned_data['friend']
-        #    print(f"{userId} in the validation process")
+            x = requests.post(Url, data = jsonFile, auth = HTTPBasicAuth('admin', 'admin'))
+
+        elif groupNumber == 16:
+            pass
+
+        elif groupNumber == 11:
+            pass
 
         return HttpResponseRedirect(reverse("home-page",args=[userId]))
     else:
@@ -307,17 +301,29 @@ def get_node(request,userId):
                         post['comment'] = comments
                         all_posts.append(post)
                     
-            # elif node.name == 5:
-            #     TeamUrl = f"{node.host}{node.api}"
-            #     res = requests.get(TeamUrl)
-            #     teamPosts = res.json().get("items")
-            #     for each_user in teamPosts:
-            #         authorUrl = f"{each_user['id']}/posts"
-            #         res = requests.get(authorUrl)
-            #         print(res)
-            #         # if res.status_code == 200:
-            #         #     teamPosts = res.json()
-            #         #     print(teamPosts)
+            elif node.name == 5:
+                TeamUrl = f"{node.host}{node.api}/posts_all"
+                res = requests.get(TeamUrl, auth = HTTPBasicAuth('admin', 'admin'))
+                teamPosts = res.json().get("items")
+                for post in teamPosts:
+                    substr = "localhost"
+                
+                    if substr not in f"{post['id']}":
+                        image_url = f"{post['id']}/image"
+                        res = requests.get(image_url)
+                        if res.status_code == 200:
+                            post['image'] = image_url
+                        else:
+                            post['image'] = None
+                        comment_url = post['comments']
+                        res = requests.get(comment_url)
+                        if res.status_code == 200:
+                            comments = res.json().get("comments")
+                            post['comment'] = comments
+                        all_posts.append(post)
+                        # if res.status_code == 200:
+                        #     teamPosts = res.json()
+                        #     print(teamPosts)
 
             elif node.name == 11:
                 TeamUrl = f"{node.host}{node.api}"
