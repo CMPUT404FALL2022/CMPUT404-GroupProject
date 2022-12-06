@@ -46,15 +46,27 @@
   .column {
   flex: 50%;
   padding: 10px;
+
 }
+
+  h1,h2{
+    text-align:center; 
+    font-family: Ink Free;
+
+  }
+
+  a{
+    font-family:Gautami;
+  }
+
 </style>
 
-            
-<div class="container">
+ <body>         
+<div class="container" style="background-color: #e7e7e7; border: solid 1px rgba(255, 255, 255, 0.5); border-radius: 20px;">
   <h1>Inbox</h1>
   <div class="row">
       
-      <div class="column">
+      <div class="column" style="background-color: #767191; border-radius: 20px;">
         <h2>Your Liked and Comment Messages</h2>
         <div style="overflow:scroll; width:350px; height:500px;">
           {% for text in text%}
@@ -67,7 +79,7 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column" style="background-color: #d5cfa8; border-radius: 20px;">
         <h2>New posts from your friends</h2>
         <div style="overflow:scroll; width:350px; height:500px;">
           {% for item in Inbox_new_post.all %}
@@ -80,7 +92,7 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column" style="background-color: #658aa1; border-radius: 20px;">
         <h2>Your New Followers</h2>
         <div style="overflow:scroll; width:350px; height:500px;">
           {% for request in requests %}
@@ -116,7 +128,7 @@
       -->
       </div>
     </div> 
-
+  </body>  
  
         {% endblock %}
   
