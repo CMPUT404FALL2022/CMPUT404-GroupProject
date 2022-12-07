@@ -1,17 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from .post_forms import post_form, Comment_form
-from .models import Post,Comment,Like,Liked
-from authors.models import single_author,Followers
+from .post_forms import post_form, Comment_form, ExternalForm, UserSelectionForm
+from .models import Post,Comment,Like,Liked,Node
+from authors.models import single_author,Followers,ExternalFollowers
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import uuid
 from django.db.models import Q
 #from inbox.models import InboxItem
 from inbox.models import Inbox
-
-
+import requests
+from requests.auth import HTTPBasicAuth
+from authors.models import FollowRequest
+import json
 
 
 # Create your views here.
@@ -24,6 +26,7 @@ def home_page(request,userId):
     # all_posts = Post.objects.all()
     all_posts = Post.objects.filter(unlisted=False, visibility="PUBLIC")
     post_comments_dict = {}
+    userSelectionForm = UserSelectionForm(userId=userId)
     
     #get comments
     for post in all_posts:
@@ -47,6 +50,20 @@ def home_page(request,userId):
                 my_follower.author = single_author.objects.get(uuid=userId)
                 my_follower.follower = single_author.objects.get(username=searched)
                 my_follower.save()
+
+                # create friend request
+                if not FollowRequest.objects.filter(actor=my_follower.author,object=my_follower.follower).exists():
+                    actor_name = my_follower.author.display_name
+                    #object_name = my_follower.follower.display_name
+                    summary = actor_name + " wants to follow you!"
+                    re = FollowRequest.objects.create(summary=summary,actor=my_follower.author,object=my_follower.follower)
+                    
+                    # request added to inbox
+                    object_inbox = Inbox.objects.get(author=my_follower.follower)
+                    object_inbox.followRequests.add(re)
+
+
+
             return HttpResponseRedirect(reverse("search-result",args=[userId,searched]))
         else:
             booleanOfalert == True
@@ -58,6 +75,7 @@ def home_page(request,userId):
         "post_comments_dict": post_comments_dict,
         "all_posts": all_posts,
         "userId": userId,
+        "userSelectionForm":userSelectionForm,
     })
     
 # def posts(request):
@@ -69,6 +87,7 @@ def home_page(request,userId):
 def create_post(request,userId):
     if request.method == 'POST':
         form = post_form(request.POST,request.FILES)
+        userSelectionForm = UserSelectionForm(userId = userId)
         if form.is_valid():
             newPost = form.save(commit=False)
             newPost.id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(newPost.uuid)}"
@@ -80,18 +99,27 @@ def create_post(request,userId):
             # newPost.content = form.cleaned_data['content']
             # newPost.description = form.cleaned_data['description']
             # newPost = Post(title = form.cleaned_data['title'],description = form.cleaned_data['description'],content = form.cleaned_data['content'],Categories = form.cleaned_data['Categories'],visibility = form.cleaned_data['visibility'],textType = form.cleaned_data['textType'])
-
             newPost.save()
             #print(f"This is hehahahahaa{newPost.__str__()}")
+
+            #send to a specific friend
+            if newPost.visibility == 'FRIENDS':
+                sendTo = request.POST.get('Send_To')
+                print(sendTo)
+                
+                inbox = Inbox.objects.get(author__username = sendTo)
+
+                inbox.items.add(newPost)
 
             # I tell all my followers that I have a new post
             current_author_followers = Followers.objects.filter(follower=currentAuthor)
             #print(current_author_followers)
             if current_author_followers.count() != 0:
                 for item in current_author_followers:
+                    
+                    # new post added to inbox
                     follower = item.author
                     follower_inbox = Inbox.objects.get(author=follower)
-
                     follower_inbox.items.add(newPost)
 
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
@@ -99,9 +127,11 @@ def create_post(request,userId):
 
     else:
         form = post_form()
+        userSelectionForm = UserSelectionForm(userId = userId)
         return render(request,"post/create_new_post.html",{
             'form':form,
-            'userId':userId
+            'userId':userId,
+            'userSelectionForm':userSelectionForm,
         })
 
 
@@ -119,6 +149,13 @@ def create_comment(request,userId,postId):
             newComment.post = currentPost
             newComment.save()
             print(f"This is hehahahahaa{newComment.__str__()}")
+
+
+            # comment added to inbox
+            post_author = Post.objects.get(uuid=postId).author
+            post_author_inbox = Inbox.objects.get(author=post_author)
+            post_author_inbox.comments.add(newComment)
+
             return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
@@ -131,67 +168,216 @@ def create_comment(request,userId,postId):
 
 @login_required(login_url='/login/')
 def create_like(request,userId,postId):
-    #like = get_object_or_404(Like, id=request.POST.get("like_id"))
     po = Post.objects.get(uuid = postId).id
     po_uuid = Post.objects.get(uuid = postId).uuid
-    #all_likes = Like.objects.filter(object=object)
-    #author = single_author.objects.get(uuid = userId)
-    # item_type = "like"
-    # item_id = "1"
-    # item = postId
     currentAuthor = single_author.objects.get(uuid = userId)
     author_name = currentAuthor.display_name
     summary = author_name + " Likes your post"
-    #inboxitem = InboxItem.objects.create(item_type = item_type, item_id = item_id, item = item, author = currentAuthor)
-    #inboxitem.save()
     if not Like.objects.filter(author=currentAuthor, summary=summary, object=po, postId = po_uuid).exists():
         like = Like.objects.create(author=currentAuthor, summary=summary, object=po, postId = po_uuid)
         like.save()
-        if not Liked.objects.filter(post=po).exists():
+        if not Liked.objects.filter(postId=po).exists():
             print("fffffffffffffffffff")
-            receiver_liked = Liked.objects.create(post=po)       
-        receiver_liked = Liked.objects.get(post=po)
+            receiver_liked = Liked.objects.create(postId=po)       
+        receiver_liked = Liked.objects.get(postId=po)
         receiver_liked.items.add(like)
+
+        # Liked added to inbox
+        post_author = Post.objects.get(uuid=postId).author
+        post_author_inbox = Inbox.objects.get(author=post_author)
+        post_author_inbox.likes.add(receiver_liked)
+
     # count like might be done in part 3
     #like_count = Like.objects.filter(object=object).count()
-    #response = HttpResponse('Like created')
-    #response.status_code = 201
     return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
 def share_post(request,userId,postId):
-    old_post = Post.objects.filter(uuid=postId).first()
+    
     currentAuthor = single_author.objects.filter(uuid = userId).first()
-    # my own post cannot shared by myself, but can share same post many times *
-    if old_post.author.uuid != currentAuthor.uuid:
-        new_title = old_post.title
-        new_postId = uuid.uuid4()
-        new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
-        new_source = id
-        new_origin = id
-        new_description = old_post.description
-        new_content_type = old_post.contentType
-        new_content = old_post.content
+    selectedPost = Post.objects.get(uuid=postId)
+    
+    if request.method == 'POST':
+        sendTo = request.POST.get('Send_To')
         
-        new_author = currentAuthor
-        new_categories = old_post.Categories
-        new_count = 0
-        new_visibility = old_post.visibility
-        new_unlisted = old_post.unlisted
-        new_textType = old_post.textType
-        new_post_image = old_post.post_image
-        shared_post = Post.objects.create(title=new_title, uuid=new_postId, id=new_id, source=new_source, origin=new_origin,
-                                        description=new_description, contentType=new_content_type,
-                                        content=new_content, author=new_author, Categories=new_categories,
-                                        count=new_count, visibility=new_visibility, unlisted=new_unlisted,
-                                        textType=new_textType, post_image=new_post_image)
-        shared_post.save()   
-    # old_post.pk = None
-    # shared_post = old_post
-    # print(type(shared_post))
-    #shared_post = Post.objects.update(id=new_id, source=new_source,origin=new_origin,author=new_author,count=new_count)
-    # print(type(shared_post))
-    # shared_post.save()
-    # old_post = Post.objects.update(id=id, source=source,origin=origin,author=author)
-    # old_post.save()
-    return HttpResponseRedirect(reverse("home-page",args=[userId]))
+        inbox = Inbox.objects.get(author__username = sendTo)
+
+        inbox.items.add(selectedPost)
+
+
+        return HttpResponseRedirect(reverse("home-page",args=[userId]))
+
+
+    # my own post cannot shared by myself, but can share same post many times *
+    # if old_post.author.uuid != currentAuthor.uuid:
+    #     new_title = old_post.title
+    #     new_postId = uuid.uuid4()
+    #     new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
+    #     new_source = id
+    #     new_origin = id
+    #     new_description = old_post.description
+    #     new_content_type = old_post.contentType
+    #     new_content = old_post.content
+        
+    #     new_author = currentAuthor
+    #     new_categories = old_post.Categories
+    #     new_count = 0
+    #     new_visibility = old_post.visibility
+    #     new_unlisted = old_post.unlisted
+    #     new_textType = old_post.textType
+    #     new_post_image = old_post.post_image
+    #     shared_post = Post.objects.create(title=new_title, uuid=new_postId, id=new_id, source=new_source, origin=new_origin,
+    #                                     description=new_description, contentType=new_content_type,
+    #                                     content=new_content, author=new_author, Categories=new_categories,
+    #                                     count=new_count, visibility=new_visibility, unlisted=new_unlisted,
+    #                                     textType=new_textType, post_image=new_post_image)
+    #     shared_post.save() 
+    
+    else:
+        userSelectionForm = UserSelectionForm(userId = userId)
+        return render(request,"post/share_posts.html",{
+                'userSelectionForm':userSelectionForm,
+                'userId':userId,
+                'post':selectedPost,
+            })
+
+
+
+@login_required(login_url='/login/')
+def get_node(request,userId):
+    if request.method == 'POST':
+        currentAuthor = single_author.objects.filter(uuid = userId).first()
+        form = post_form(request.POST,request.FILES)
+        groupNumber = ExternalFollowers.objects.filter(external_id = form.data['friend']).first().groupNumber
+
+        if groupNumber == 5:
+            Url = f"{form.data['friend']}/posts/"
+            print(Url)
+            jsonFile = {
+                "type": "post",
+                "title": f"{form.data['title']}",
+                "origin": f"{form.data['friend']}",
+                "description": f"{form.data['description']}",
+                "contentType": f"{form.data['contentType']}",
+                "content": f"{form.data['content']}",
+                "author": f"{form.data['friend']}",
+                "count": 0,
+                "visibility": "PUBLIC"
+            }
+            
+            x = requests.post(Url, data = jsonFile, auth = HTTPBasicAuth('admin', 'admin'))
+
+        elif groupNumber == 16:
+            pass
+
+        elif groupNumber == 11:
+            pass
+
+        return HttpResponseRedirect(reverse("home-page",args=[userId]))
+    else:
+        
+        form = ExternalForm(userId = userId)
+        all_nodes = Node.objects.all()
+        all_posts = []
+
+        for node in all_nodes:
+            if node.name == 16:
+                TeamUrl = f"{node.host}{node.api}"
+                
+                res = requests.get(TeamUrl)
+                teamPosts = res.json().get("items")
+                
+                for post in teamPosts:
+                    if len(post['content']) <= 200:
+                        image_url = f"{post['id']}/image"
+                        res = requests.get(image_url)
+                        if res.status_code == 200:
+                            post['image'] = image_url
+                        else:
+                            post['image'] = None
+                        comment_url = post['comments']
+                        res = requests.get(comment_url)
+                        comments = res.json().get("items")
+                        post['comment'] = comments
+                        all_posts.append(post)
+                    
+            elif node.name == 5:
+                TeamUrl = f"{node.host}{node.api}/posts_all"
+                res = requests.get(TeamUrl, auth = HTTPBasicAuth('admin', 'admin'))
+                teamPosts = res.json().get("items")
+                for post in teamPosts:
+                    substr = "localhost"
+                
+                    if substr not in f"{post['id']}":
+                        try:
+                            image_url = f"{post['id']}/image"
+                            res = requests.get(image_url)
+
+                            if res.status_code == 200:
+                                post['image'] = image_url
+                            else:
+                                post['image'] = None
+                            comment_url = post['comments']
+                            
+                            res = requests.get(comment_url)
+
+                            if res.status_code == 200:
+                                comments = res.json().get("comments")
+                                post['comment'] = comments
+                            all_posts.append(post)
+                            # if res.status_code == 200:
+                            #     teamPosts = res.json()
+                            #     print(teamPosts)
+
+                        except:
+                            pass
+
+            elif node.name == 11:
+                TeamUrl = f"{node.host}{node.api}"
+                res = requests.get(TeamUrl, auth = HTTPBasicAuth('11fifteen', '11fifteen'))
+                teamPosts = res.json().get("results")
+                
+                for post in teamPosts:
+                    if len(post['content']) <= 200:
+                        image_url = f"{post['id']}/image"
+                        res = requests.get(image_url)
+                        if res.status_code == 200:
+                            post['image'] = image_url
+                        else:
+                            post['image'] = None
+                        comment_url = post['comments']
+                        res = requests.get(comment_url)
+                        if res.status_code == 200:
+                            comments = res.json().get("items")
+                            post['comment'] = comments
+                        all_posts.append(post)
+
+
+
+
+            # elif node.name == 18:
+                # TeamUrl = f"{node.host}{node.api}"
+                # res = requests.get(TeamUrl, auth = HTTPBasicAuth('t18user1', 'Password123!'))
+                # teamPosts = res.json().get("items")
+                # for post in teamPosts:
+                #     if len(post['content']) <= 200:
+                #         # image_url = f"{post['id']}/image"
+                #         # res = requests.get(image_url)
+                #         # if res.status_code == 200:
+                #         #     post['image'] = image_url
+                #         # else:
+                #         post['image'] = None
+                #         comment_url = post['comments']
+                #         res = requests.get(comment_url)
+                #         if res.status_code == 200:
+                #             comments = res.json().get("items")
+                #             post['comment'] = comments
+                #         all_posts.append(post)
+            
+
+
+        return render(request,"post/node.html",{
+            'userId':userId,
+            'all_posts':all_posts,
+            'ExternalForm':form,
+        })

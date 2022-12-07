@@ -14,7 +14,7 @@ Our project is about Django web development, and our group members are
 | Mengju Liao | mengju |
 | Xuantong Ma         | xuantong    |
 
-Project and Information are represent in WiKi
+Project and Information are represented in WiKi
 
 
 # API Reference
@@ -144,4 +144,58 @@ Project and Information are represent in WiKi
                                     }
 ```
 
+## Likes
 
+**GET** URL: //service/authors/{author_uuid}/posts/{post_uuid}/likes
+```likes
+  To get list of object of a post {post_uuid}
+  
+   Eg.     {
+            "type":"likes",
+            "items":[
+                        {
+                        "@context": "https://www.w3.org/ns/activitystreams",
+                        "summary": "Lara Croft Likes your post",         
+                        "type": "Like",
+                        "author":{
+                            "type":"author",
+                            "id":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e",
+                            "host":"http://127.0.0.1:5454/",
+                            "displayName":"Lara Croft",
+                            "url":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e",
+                            "github":"http://github.com/laracroft",
+                            "profileImage": "https://i.imgur.com/k7XVwpB.jpeg"
+                        },
+                        "object":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e/posts/764efa883dda1e11db47671c4a3bbd9e"
+                        }
+                    ]
+          }
+```
+
+## Liked
+
+**GET** URL: //service/authors/{author_uuid}/liked
+```liked
+  To get list of object of a author{author_uuid} liked
+  
+  Eg.     {
+            "type":"liked",
+            "items":[
+                        {
+                        "@context": "https://www.w3.org/ns/activitystreams",
+                        "summary": "Lara Croft Likes your post",         
+                        "type": "Like",
+                        "author":{
+                            "type":"author",
+                            "id":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e",
+                            "host":"http://127.0.0.1:5454/",
+                            "displayName":"Lara Croft",
+                            "url":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e",
+                            "github":"http://github.com/laracroft",
+                            "profileImage": "https://i.imgur.com/k7XVwpB.jpeg"
+                        },
+                        "object":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e/posts/764efa883dda1e11db47671c4a3bbd9e"
+                        }
+                    ]
+          }
+```

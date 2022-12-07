@@ -7,10 +7,15 @@ from rest_framework import permissions,authentication
 from rest_framework.decorators import api_view,permission_classes,authentication_classes
 
 from .serializers import AuthorSerializer, PostsSerializer, likedSerializer
-from .serializers import commentSerializer
-from authors.models import single_author, Followers
-from post.models import Post, Comment, Like
+from .serializers import commentSerializer, followReqeustSerializer
+from authors.models import single_author, Followers, FollowRequest
+from post.models import Post, Comment, Like,Liked
+from inbox.models import Inbox
 from django.db.models import Q
+import uuid
+import base64
+from PIL import Image
+from io import BytesIO
 
 def getURLId(url):
     return url.split('/')[-1]
@@ -124,15 +129,29 @@ def singleAuthor(request,pk):
 
     #Update
     if request.method == 'POST':
-        author = single_author.objects.get(uuid = pk)
-        serializer = AuthorSerializer(instance = author, data=request.data, partial=True)
+        # print(request.data['id'])
+        # postAuthor = request.data
+        # print(request.data)
+        # if request.data['id'] != pk:
+        #     return Response(status=404)
+        author = single_author.objects.filter(uuid = pk).first()
+        if author != None:
+            # author.id = request.data['id']
+            author.url = request.data['url']
+            # author.username = request.data['displayName']
+            author.github = request.data['github']
+            author.profileImage = request.data['profileImage']
+            author.host = request.data['host']
+            # author.type = request.data['type']
+            author.save(update_fields=['github','profileImage','host','url'])
+        # serializer = AuthorSerializer(instance = author, data=request.data, partial=True)
+            return Response(status=200)
+        # if serializer.is_valid():
+        #     serializer.save()
+        else:
+            return Response(status=400)
 
-        if serializer.is_valid():
-            serializer.save()
-
-        return Response(serializer.data)
-
-    return Response(serializer.data)
+    # return Response(serializer.data)
 
 """
 Posts
@@ -271,14 +290,24 @@ def Posts(request,pk):
 
     #Create new posts
     if request.method == 'POST':
-        serializer = PostsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        # serializer = PostsSerializer(data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
 
-        else:
-            return Response(status=400)
-
-
+    #     else:
+    #         return Response(status=400)
+        print(request.data)
+        currentAuthor = single_author.objects.filter(uuid = pk).first()
+        new_post = request.data
+        new_postId = uuid.uuid4()
+        id = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(new_postId)}"
+        newPost = Post.objects.create(title=new_post['title'], uuid=new_postId, id=id, source=new_post['source'], origin=new_post['origin'],
+                                        description=new_post['description'], contentType=new_post['contentType'],
+                                        content=new_post['content'], author=currentAuthor, Categories=new_post['categories'],
+                                        count=0, visibility=new_post['visibility'], unlisted=new_post['unlisted'],textType=new_post['contentType']
+                                        )
+        newPost.save()
+        return Response(status=200)
     return Response(serializer.data)
 
 """
@@ -328,13 +357,31 @@ def getPost(request,pk,postsId):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse("login"),status=303)
 
-        posts = Post.objects.get(Q(author = author) & Q(uuid = postsId))
-        serializer = PostsSerializer(instance = posts, data=request.data, partial=True)
+        posts = Post.objects.filter(Q(author = author) & Q(uuid = postsId)).first()
+        # serializer = PostsSerializer(instance = posts, data=request.data, partial=True)
 
-        if serializer.is_valid():
-            serializer.save()
+        # if serializer.is_valid():
+        #     serializer.save()
 
-        return Response(serializer.data)
+        # return Response(serializer.data)
+        if posts != None:
+            # author.id = request.data['id']
+            posts.title = request.data['title']
+            # author.username = request.data['displayName']
+            posts.source = request.data['source']
+            posts.description = request.data['description']
+            posts.contentType = request.data['contentType']
+            posts.content = request.data['content']
+            posts.origin = request.data['origin']
+            posts.published = request.data['published']
+            posts.visibility = request.data['visibility']
+            posts.unlisted = request.data['unlisted']
+            posts.Categories = request.data['categories']
+            # author.type = request.data['type']
+            posts.save(update_fields=['title','source','description','contentType','content','origin','published','visibility','unlisted','Categories'])
+        else:
+            return Response(status=400)
+        return Response(status=200)
 
     #Delete the post
     elif request.method == 'DELETE':
@@ -346,13 +393,23 @@ def getPost(request,pk,postsId):
 
     #Create a new post
     elif request.method == 'PUT':
-        if not Post.objects.filter(uuid = postsId).exists():
-            serializer = PostsSerializer(data=request.data)
+        
+            # serializer = PostsSerializer(data=request.data)
 
-            if serializer.is_valid():
-                serializer.save()
+            # if serializer.is_valid():
+            #     serializer.save()
+        currentAuthor = single_author.objects.filter(uuid = pk).first()
+        new_post = request.data
+        new_postId = uuid.uuid4()
+        id = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(new_postId)}"
+        newPost = Post.objects.create(title=new_post['title'], uuid=new_postId, id=id, source=new_post['source'], origin=new_post['origin'],
+                                    description=new_post['description'], contentType=new_post['contentType'],
+                                    content=new_post['content'], author=currentAuthor, Categories=new_post['categories'],
+                                    count=0, visibility=new_post['visibility'], unlisted=new_post['unlisted'],textType=new_post['contentType']
+                                    )
+        newPost.save()
 
-            return Response(serializer.data,status=200)
+        return Response(status=200)
 
 """
 Image Posts
@@ -372,7 +429,8 @@ def getImage(request,pk,postsId):
             return Response(status=404)
         
         img = open(imagePath, 'rb')
-
+        # data = base64.b64encode(img.read())
+        # dict = {"image":data}
     return FileResponse(img)
 
 @api_view(['GET','POST'])
@@ -437,16 +495,60 @@ def getComments(request,pk,postsId):
 
     elif request.method == 'POST':
 
-        serializer = commentSerializer(data=request.data)
+        # serializer = commentSerializer(data=request.data)
 
-        if serializer.is_valid():
-            post = Post.objects.get(uuid=postsId)
-            serializer.save(post=post)
+        # if serializer.is_valid():
+        #     post = Post.objects.get(uuid=postsId)
+        #     serializer.save(post=post)
 
-        else:
-            return Response(status=400)
+        # else:
+        #     return Response(status=400)
+        currentAuthor = single_author.objects.filter(uuid = pk).first()
+        currentPost = Post.objects.filter(uuid=postsId).first()
+        new_comment = request.data
+        new_COMM_UUId = uuid.uuid4()
+        commentId = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(postsId)}/comments/{str(new_COMM_UUId)}"
+        newComment = Comment.objects.create(uuid=new_COMM_UUId, id=commentId, post=currentPost, author=currentAuthor,
+                                    comment = new_comment['comment'], contentType = new_comment['contentType']
+                                    )
+        newComment.save()
 
-        return Response(serializer.data,status=200)
+        return Response(status=200)
+
+
+@api_view(['GET'])
+def getOneComment(request,pk,postsId,commentId):
+
+    if request.method == "GET":
+        comment = Comment.objects.get(uuid = commentId)
+
+        itemList = []
+
+        serializeComment = commentSerializer(comment).data
+
+        dict = {}
+        for k,v in serializeComment.items():
+            dict[k]=v
+        
+        author = single_author.objects.get(username = serializeComment['author'])
+        serializeAuthor = AuthorSerializer(author).data
+
+        author = {}
+        for k,v in serializeAuthor.items():
+            author[k] = v
+        author['displayName'] = author['username']
+        author.pop('username')
+
+        dict['author'] = author
+        
+        itemList.append(dict)
+
+        responseData = {
+            "type":"comment",
+            "items":itemList
+        }
+    
+        return Response(responseData,status=200)
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
@@ -568,7 +670,8 @@ def getPostLikes(request,pk,postsId):
             "items":itemList,
         }
 
-    return Response(responseDict,status=200)
+        return Response(responseDict,status=200)
+    # if request.method == "Post":
 
 
 
@@ -609,3 +712,270 @@ def getLiked(request,pk):
 
 
     return Response(responseDict, status=200)
+
+@api_view(['GET','DELETE','POST'])
+def getInbox(request,pk):
+    if request.method == 'GET':
+        inbox = Inbox.objects.get(author__uuid = pk)
+        authorID = single_author.objects.get(uuid = pk).id
+        itemList = []
+
+        allPost = inbox.items.all()
+        allComment = inbox.comments.all()
+        allFollowRequest = inbox.followRequests.all()
+        allLikes = inbox.likes.all()
+
+        for post in allPost:
+            postDict = {}
+            authorDict = {}
+            serializePost = PostsSerializer(post)
+
+            #jsonify post and edit it
+            for k,v in serializePost.data.items():
+                postDict[k] = v
+
+            author = single_author.objects.get(username = postDict['author'])
+            serializeAuthor = AuthorSerializer(author).data
+            
+            #jsonify author
+            for k,v in serializeAuthor.items():
+                authorDict[k] = v
+            authorDict['displayName'] = serializeAuthor['username']
+            authorDict.pop("username")
+
+            categories = serializePost.data['Categories']
+            catList = categories.split(' ')
+            postsId = serializePost.data['uuid']
+            comment = Comment.objects.filter(post__uuid = postsId)
+            count = len(comment)
+            commentURL = serializePost.data['id']+'/comments'
+            postDict.pop('Categories')
+            postDict['categories'] = catList
+            postDict['author'] = authorDict
+            postDict['comments'] = commentURL
+            postDict['count'] = count
+            
+            itemList.append(postDict)
+
+        for comment in allComment:
+            """
+            Put every comment object in the display list
+            """
+
+            serializeComment = commentSerializer(comment).data
+
+            dict = {}
+            for k,v in serializeComment.items():
+                dict[k]=v
+            
+            author = single_author.objects.get(username = serializeComment['author'])
+            serializeAuthor = AuthorSerializer(author).data
+
+            author = {}
+            for k,v in serializeAuthor.items():
+                author[k] = v
+            author['displayName'] = author['username']
+            author.pop('username')
+
+            dict['author'] = author
+
+            itemList.append(dict)
+
+        for request in allFollowRequest:
+            """
+            Put every followRequest object in the display list
+            """
+            requestDict = {"type":"Follow"}
+            serializeData = followReqeustSerializer(request).data
+
+            actor = single_author.objects.get(username = serializeData['actor'])
+            object = single_author.objects.get(username = serializeData['object'])
+
+            serializeActor = AuthorSerializer(actor).data
+            serializeObject = AuthorSerializer(object).data
+            summary = serializeData['summary']
+
+            actorDict = {}
+            objectDict = {}
+
+            for k,v in serializeActor.items():
+                actorDict[k] = v
+
+            print(actorDict)
+
+            actorDict["displayName"] = serializeActor["username"]
+            actorDict.pop("username")
+
+            for k,v in serializeObject.items():
+                objectDict[k] = v
+            
+            objectDict["displayName"] = serializeObject["username"]
+            objectDict.pop("username")
+
+            requestDict["summary"] = summary
+            requestDict["actor"] = actorDict
+            requestDict["object"] = objectDict
+
+            itemList.append(requestDict)
+
+        for like in allLikes:
+            """
+            Put every like object in the display list
+            """
+            authorDict = {}
+            likedDict = {"@context":"https://eclass.srv.ualberta.ca/portal/"}
+            serializer = likedSerializer(like)
+
+            author = single_author.objects.get(uuid = pk)
+
+            serializeAuthor = AuthorSerializer(author)
+
+            for k,v in serializeAuthor.data.items():
+                authorDict[k] = v
+
+            authorDict["displayName"] = serializeAuthor.data["username"]
+            authorDict.pop("username")
+
+            for k,v in serializer.data.items():
+                likedDict[k] = v
+            
+            likedDict["author"] = authorDict
+
+            itemList.append(likedDict)
+
+
+        responseData = {
+            "type":"inbox",
+            "author":authorID,
+            "items":itemList,
+        }
+        
+        return Response(responseData,status=200)
+
+    elif request.method == 'POST':
+        data = request.data
+        inbox = Inbox.objects.get(author__uuid = pk)
+
+        if data['type'] == 'post':
+            """ Required Format
+            {
+                    "type":"post",
+                    "title":"A post title about a post about web dev",
+                    "source":"http://lastplaceigotthisfrom.com/posts/yyyyy",
+                    "origin":"http://whereitcamefrom.com/posts/zzzzz",
+                    "description":"This post discusses stuff -- brief",
+                    "contentType":"text/plain",
+                    "content":"Þā wæs on burgum Bēowulf Scyldinga, lēof lēod-cyning, longe þrāge folcum gefrǣge (fæder ellor hwearf, aldor of earde), oð þæt him eft onwōc hēah Healfdene; hēold þenden lifde, gamol and gūð-rēow, glæde Scyldingas. Þǣm fēower bearn forð-gerīmed in worold wōcun, weoroda rǣswan, Heorogār and Hrōðgār and Hālga til; hȳrde ic, þat Elan cwēn Ongenþēowes wæs Heaðoscilfinges heals-gebedde. Þā wæs Hrōðgāre here-spēd gyfen, wīges weorð-mynd, þæt him his wine-māgas georne hȳrdon, oð þæt sēo geogoð gewēox, mago-driht micel. Him on mōd bearn, þæt heal-reced hātan wolde, medo-ærn micel men gewyrcean, þone yldo bearn ǣfre gefrūnon, and þǣr on innan eall gedǣlan geongum and ealdum, swylc him god sealde, būton folc-scare and feorum gumena. Þā ic wīde gefrægn weorc gebannan manigre mǣgðe geond þisne middan-geard, folc-stede frætwan. Him on fyrste gelomp ǣdre mid yldum, þæt hit wearð eal gearo, heal-ærna mǣst; scōp him Heort naman, sē þe his wordes geweald wīde hæfde. Hē bēot ne ālēh, bēagas dǣlde, sinc æt symle. Sele hlīfade hēah and horn-gēap: heaðo-wylma bād, lāðan līges; ne wæs hit lenge þā gēn þæt se ecg-hete āðum-swerian 85 æfter wæl-nīðe wæcnan scolde. Þā se ellen-gǣst earfoðlīce þrāge geþolode, sē þe in þȳstrum bād, þæt hē dōgora gehwām drēam gehȳrde hlūdne in healle; þǣr wæs hearpan swēg, swutol sang scopes. Sægde sē þe cūðe frum-sceaft fīra feorran reccan",
+                    "author":{
+                        "displayName":"Lara Croft",
+                    },
+                    "categories":["web","tutorial"],
+                    "published":"2015-03-09T13:07:04+00:00",
+                    "visibility":"PUBLIC",
+                    "unlisted":false
+            }
+            """
+            new_postId = uuid.uuid4()
+            id = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(new_postId)}"
+            authorName = data['author']['displayName']
+            author = single_author.objects.get(username = authorName)
+            newPost = Post.objects.create(title=data['title'], uuid=new_postId, id=id, source=data['source'], origin=data['origin'],
+                                    description=data['description'], contentType=data['contentType'],
+                                    content=data['content'], author=author, Categories=data['categories'],
+                                    count=0, visibility=data['visibility'], unlisted=data['unlisted'],textType=data['contentType']
+                                    )
+            newPost.save()
+            inbox.items.add(newPost)
+
+            return Response(status=200)
+
+        elif data['type'] == 'Follow':
+            """ Required Format
+            {           
+                        "type":"Follow",
+                        "summary":"Greg wants to follow Lara",
+                        "actor":{
+                            "type":"author",
+                            "id":"http://127.0.0.1:5454/authors/1d698d25ff008f7538453c120f581471",
+                            "url":"http://127.0.0.1:5454/authors/1d698d25ff008f7538453c120f581471",
+                            "host":"http://127.0.0.1:5454/",
+                            "displayName":"Greg Johnson",
+                            "github": "http://github.com/gjohnson",
+                            "profileImage": "https://i.imgur.com/k7XVwpB.jpeg"
+                        },
+            }
+            """          
+            actorName = data['actor']['displayName']
+            summary = actorName + " followed you!" + data['summary']
+            actor = single_author.objects.get(username=actorName)
+            object = single_author.objects.get(uuid=pk)
+            newFriendRequest = FollowRequest.objects.create(summary=summary,actor=actor,object=object)
+            newFollow  = Followers(author = actor,follower = object)
+            newFriendRequest.save()
+            newFollow.save()
+
+            inbox.followRequests.add(newFriendRequest)
+
+            return Response(status=200)
+
+        elif data['type'] == 'like':
+            """ Required Format
+                {
+                    "summary": "Lara Croft Likes your post",         
+                    "type": "Like",
+                    "author":{
+                        "displayName":"Lara Croft",
+                    },
+                    "object":"http://127.0.0.1:5454/authors/9de17f29c12e8f97bcbbd34cc908f1baba40658e/posts/764efa883dda1e11db47671c4a3bbd9e"
+                }
+            """
+            authorName = data['author']['displayName']
+            author = single_author.objects.get(username=authorName)
+            postId = getURLId(data['object'])
+
+            newLike = Like.objects.create(type="Like",summary=data['summary'],author=author,object=data['object'],postId = postId)
+
+            newLike.save()
+            newLiked = Liked.objects.create(type="Liked",postsId = postId)
+            newLiked.save()
+            newLiked.items.add(newLike)
+            inbox.likes.add(newLiked)
+
+            return Response(status=200)
+
+        elif data['type'] == 'comment':
+            """
+            {
+                "type":"comment",
+                "author":{
+                    "displayName":"Greg Johnson",
+                }
+                "comment":"Sick Olde English",
+                "contentType":"text/markdown",
+            }
+            """
+            publishAuthor = single_author.objects.get(username = data['author']['displayName'])
+            currentPost = Post.objects.get(uuid=postsId)
+            new_comment = request.data
+            new_COMM_UUId = uuid.uuid4()
+            commentId = f"{request.build_absolute_uri('/')}service/authors/{str(pk)}/posts/{str(postsId)}/comments/{str(new_COMM_UUId)}"
+            newComment = Comment.objects.create(uuid=new_COMM_UUId, id=commentId, post=currentPost, author=publishAuthor,
+                                        comment = new_comment['comment'], contentType = new_comment['contentType']
+                                        )
+            newComment.save()
+
+            inbox.comments.add(newComment)
+
+            return Response(status=200)
+
+    elif request.method == 'DELETE':
+        """
+        Clear all posts in the inbox
+        """
+        inbox = Inbox.objects.get(author__uuid = pk)
+        inbox.items.clear()
+        inbox.comments.clear()
+        inbox.followRequests.clear()
+        inbox.likes.clear()
+
+        return Response(status=200)

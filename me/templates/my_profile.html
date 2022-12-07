@@ -79,7 +79,20 @@
       "
     >
     <!-- This form is used for sending follow request to another user -->
-
+    <form class="navbar-form navbar-left" method="POST" action={% url 'profile-page' userId%}>
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search Username" name="search-external"/>
+        <label for="group_choose">Choose a group:</label>
+        <select id="group" name="group">
+          <option value="5">5</option>
+          <option value="11">11</option>
+          <option value="16">16</option>
+          
+        </select>
+      </div>
+      <button type="submit" class="btn btn-default">Search</button>
+    </form>
     <p>Befriends</p>
     <ul class = "list-unstyled">
       {% for user in befriend_list %}
@@ -112,6 +125,21 @@
           <li>{{ username }}</li> 
           
           </br>
+          </br> 
+
+      {% endfor %}
+      </ul>  
+
+
+    </br>
+    </br> 
+
+    <p>External Friends</p>
+    <ul class = "list-styled">
+      {% for author in ExternalFriendList %}
+         
+          <li>{{ author.external_username }} by group {{author.groupNumber}}</li> 
+
           </br> 
 
       {% endfor %}

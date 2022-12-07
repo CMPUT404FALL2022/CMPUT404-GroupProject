@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% load static %}
+{% extends 'base.html' %} {% load static %} {% load posts_markdown %}
 {%block title%} My Post {%endblock%} 
 {% block header%}
 {% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
@@ -38,15 +38,6 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
-{%if booleanOfalert%}
-<script>
-  
-    alert("User does not exist")
-  
-</script>
-{%endif%}
-
-<body style = "background-color: lavenderblush;" >
 <div class="container I_followed">
   <div class="row">
     <div
@@ -63,35 +54,25 @@
       
     <ul class = "list-unstyled">
       {% for post,comment in post_comments_dict.items %}
-      <div style = 'column-count:3;'>
-          <li style = 'font-size:25px;margin-left: 7px;'>Title: </li>
-          <li style = 'font-size:20px;'><i>{{ post.title }}</i></li>
-          <li style = 'margin-left: 70px;'>Posted by: {{ post.author.display_name }}</li>
-
-          
-      </div>
-      <div style = 'column-count:3;'>
-          <li style = 'font-size:20px;margin-left: 7px;'>Content: </li>
-          <li style = 'font-size:15px'><i>{{ post.content }}</i></li>
-      </div>
-      <div style = column-count:3;>
-          <li style = 'font-size:20px;margin-left: 7px;'>Description: </li>
-          <li style = 'font-size:15px'><i>{{ post.description }}</i></li>
-        </div>
+          <li>Title: </li>
+          <li>{{ post.title }}</li>
+          <li>Content: </li>
+          <li>{{ post.content|convert_markdown|safe }}</li>
+          <li>Description: </li>
+          <li>{{ post.description|convert_markdown|safe }}</li>
           {% if post.post_image.url is not None %}
-            <img src="{{post.post_image.url }}" width="600px">
+            <img src="{{post.post_image.url }}" width="70%">
           {% endif %}
-          
+          <li>Posted by: {{ post.author.display_name }}</li>
           <div class = "container">{% include "post/button.html" %}</div>
           </br>
           </br>
-          <li style = 'font-size:20px;margin-left: 7px;'><b>comment: </b></li>
+          <li>comment: </li>
           {% for each_comment in comment %}
-            <li style = 'font-size:17px;margin-left: 7px;'>{{ each_comment.comment}}</li>
+            <li>{{ each_comment.comment}}</li>
           {% endfor %}
           <br/>
-          <hr style="height:2px;border-width:0;color:black;background-color:black">
-
+          <hr style="height:1px;border-width:0;color:rgba(24, 23, 22, 0.812);background-color:black;width:90%">
       {% endfor %}
       </ul> 
       
@@ -111,7 +92,6 @@
       <p>{% lorem 9 b random %}</p>
     </div>
   </div>
-</div> 
-</body>{% endcomment %}
+</div> {% endcomment %}
 
 {% endblock %}

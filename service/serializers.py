@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from authors.models import single_author, Followers
+from authors.models import single_author, Followers, FollowRequest
 from post.models import Post, Comment, Like
 import uuid
 
@@ -39,3 +39,8 @@ class likedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
         fields = ('type','summary','author','object')
+
+class followReqeustSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FollowRequest
+        fields = "__all__"

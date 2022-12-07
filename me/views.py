@@ -1,7 +1,7 @@
 from django.shortcuts import render
 # from SocialDistribution import post
-from authors.models import single_author
-from post.models import Post
+from authors.models import single_author,ExternalFollowers
+from post.models import Post, Node
 from post.post_forms import post_form
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -11,6 +11,9 @@ from .forms import EditForm
 from django.contrib.auth.decorators import login_required
 import sqlite3
 from django.db.models import Q
+from requests.auth import HTTPBasicAuth
+import requests
+from authors.models import FollowRequest
 # Create your views here.
 
 # def my_page(request, userId):
@@ -24,13 +27,16 @@ def my_profile(request, userId):
     if request.method == 'POST' and 'delete' in request.POST:
         user_id = request.POST['delete']
         Followers.objects.get(Q(author__uuid = userId)&Q(follower__uuid = user_id)).delete()
+        # deleted_request_actor = single_author.objects.get(uuid=userId)
+        # deleted_request_object = single_author.objects.get(uuid=user_id)
+        # FollowRequest.objects.get(Q(actor = deleted_request_actor)&Q(object = deleted_request_object)).delete()
         return HttpResponseRedirect(reverse("profile-page",args=[userId]))
     
 
     
     all_posts = Post.objects.filter(author__uuid = userId)
     befriend_list = Followers.objects.filter(author__uuid = userId)
-    
+    ExternalFriendList = ExternalFollowers.objects.filter(author__uuid = userId)
     true_friend_list = []
     true_friend_list_id_name = {}
     for befriend in befriend_list:
@@ -44,12 +50,79 @@ def my_profile(request, userId):
     for friend in true_friend_list:
         
         true_friend_list_id_name[friend[0].author.uuid] = friend[0].author.username
+    
+
+
+    if request.method == 'POST' and 'search-external' in request.POST:
+        
+        searchedFor = request.POST['search-external']
+        searchedGroup = request.POST.get('group')
+        node = Node.objects.filter(name = searchedGroup).first()
+        if searchedGroup == '11':
+            TeamUrl = f"{node.host}"
+            res = requests.get(TeamUrl, auth = HTTPBasicAuth('11fifteen', '11fifteen'))
+            teamAuthors = res.json().get("results")
+            for author in teamAuthors:
+                if author['displayName'] == searchedFor:
+                    #在这里发好友邀请到inbox
+                    me = single_author.objects.filter(uuid = userId).first()
+                    #create a new external follower for this user
+                    #if not exists
+                    if len(ExternalFollowers.objects.filter(external_username = author['displayName'])) == 0:
+                        newExternalAuthor = ExternalFollowers.objects.create(author = me,external_username = author['displayName'], external_id = author['id'], groupNumber = 11)
+                        newExternalAuthor.save()
+                    break
+
+        elif searchedGroup == '5':
+            TeamUrl = f"{node.host}authors"
+            print(TeamUrl)
+            res = requests.get(TeamUrl)
+            teamAuthors = res.json().get("items")
+            for author in teamAuthors:
+                if author['displayName'] == searchedFor:
+                    #在这里发好友邀请到inbox
+                    me = single_author.objects.filter(uuid = userId).first()
+                    #create a new external follower for this user
+                    #if not exists
+                    if len(ExternalFollowers.objects.filter(external_username = author['displayName'])) == 0:
+                        newExternalAuthor = ExternalFollowers.objects.create(author = me,external_username = author['displayName'], external_id = author['id'], groupNumber = 5)
+                        newExternalAuthor.save()
+                    break
+
+
+        elif searchedGroup == '16':
+            TeamUrl = f"{node.host}authors"
+            print(TeamUrl)
+            res = requests.get(TeamUrl)
+            teamAuthors = res.json().get("items")
+            for author in teamAuthors:
+                if author['displayName'] == searchedFor:
+                    #在这里发好友邀请到inbox
+                    me = single_author.objects.filter(uuid = userId).first()
+                    #create a new external follower for this user
+                    #if not exists
+                    if len(ExternalFollowers.objects.filter(external_username = author['displayName'])) == 0:
+                        newExternalAuthor = ExternalFollowers.objects.create(author = me,external_username = author['displayName'], external_id = author['id'], groupNumber = 16)
+                        newExternalAuthor.save()
+                    break
+
+
+
+
+        # elif searchedGroup == '18':
+        #     TeamUrl = f"{node.host}"
+        #     res = requests.get(TeamUrl, auth = HTTPBasicAuth('t18user1', 'Password123!'))
+        #     teamAuthors = res.json().get("results")
+        #     print(teamAuthors[0])
+
+
 
     return render(request,'my_profile.html',{
         "all_posts": all_posts,
         "userId": userId,
         "befriend_list":befriend_list,
-        "true_friend_list_id_name":true_friend_list_id_name
+        "true_friend_list_id_name":true_friend_list_id_name,
+        "ExternalFriendList" : ExternalFriendList
     })
 
 

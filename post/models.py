@@ -32,8 +32,8 @@ class Post(models.Model):
     author = models.ForeignKey(single_author,related_name='posts',on_delete=models.CASCADE,blank=True, null=True)
     count = models.IntegerField(default=0)
     published = models.DateTimeField(auto_now_add=True, null=True)
-    VISIBILITY_CHOICES = [("PUBLIC", "Public"), ("FRIENDS", "Friends"),
-                          ("PRIVATE", "Specific friend")]
+    VISIBILITY_CHOICES = [("PUBLIC", "Public"), ("FRIENDS", "Friends")
+                          ]
     visibility = models.CharField(max_length=7,
                                   choices=VISIBILITY_CHOICES,
                                   default="PUBLIC")
@@ -82,6 +82,11 @@ class Comment(models.Model):
         return f"{self.comment} + {self.contentType} + {self.id}"
 
 
+class Node(models.Model):
+    name = models.IntegerField(default=0)
+    host = models.CharField(primary_key=True, max_length=255, null=False)
+    api = models.CharField(max_length=255, null=False)
+    authorization = models.CharField(max_length=255, null=False)
 
 class Like(models.Model):
     type = models.CharField(default='Like', max_length=200)
@@ -95,4 +100,4 @@ class Like(models.Model):
 class Liked(models.Model): 
     type = models.CharField(default='liked', max_length=200)
     items = models.ManyToManyField(Like,blank=True)
-    post = models.CharField(default='liked', max_length=200)
+    postId = models.CharField(max_length=200,null = True, blank=True)
