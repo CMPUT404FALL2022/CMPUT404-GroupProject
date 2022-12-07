@@ -309,8 +309,12 @@ def get_node(request,userId):
                     substr = "localhost"
                 
                     if substr not in f"{post['id']}":
-                        image_url = f"{post['id']}/image"
-                        res = requests.get(image_url)
+                        try:
+                            image_url = f"{post['id']}/image"
+                            res = requests.get(image_url)
+                        except:
+                            pass
+                        
                         if res.status_code == 200:
                             post['image'] = image_url
                         else:
