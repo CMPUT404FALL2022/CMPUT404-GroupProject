@@ -14,7 +14,7 @@ Our project is about Django web development, and our group members are
 | Mengju Liao | mengju |
 | Xuantong Ma         | xuantong    |
 
-Project and Information are represent in WiKi
+Project and Information are represented in WiKi
 
 
 # API Reference

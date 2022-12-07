@@ -55,7 +55,7 @@ def home_page(request,userId):
                 if not FollowRequest.objects.filter(actor=my_follower.author,object=my_follower.follower).exists():
                     actor_name = my_follower.author.display_name
                     #object_name = my_follower.follower.display_name
-                    summary = actor_name + " followed you!"
+                    summary = actor_name + " wants to follow you!"
                     re = FollowRequest.objects.create(summary=summary,actor=my_follower.author,object=my_follower.follower)
                     
                     # request added to inbox
