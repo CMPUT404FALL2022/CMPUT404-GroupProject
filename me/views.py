@@ -27,9 +27,9 @@ def my_profile(request, userId):
     if request.method == 'POST' and 'delete' in request.POST:
         user_id = request.POST['delete']
         Followers.objects.get(Q(author__uuid = userId)&Q(follower__uuid = user_id)).delete()
-        deleted_request_actor = single_author.objects.get(uuid=userId)
-        deleted_request_object = single_author.objects.get(uuid=user_id)
-        FollowRequest.objects.get(Q(actor = deleted_request_actor)&Q(object = deleted_request_object)).delete()
+        # deleted_request_actor = single_author.objects.get(uuid=userId)
+        # deleted_request_object = single_author.objects.get(uuid=user_id)
+        # FollowRequest.objects.get(Q(actor = deleted_request_actor)&Q(object = deleted_request_object)).delete()
         return HttpResponseRedirect(reverse("profile-page",args=[userId]))
     
 

@@ -5,6 +5,8 @@ from django.http import HttpResponse
 #from .models import InboxItem
 from post.models import Liked, Like, Post, Comment
 from .models import Inbox
+from authors.models import FollowRequest
+from django.db.models import Q
 
 
 @login_required(login_url='/login/')
@@ -43,7 +45,14 @@ def my_inbox(request,userId):
     # inbox Request message
     re = currentAuthorInbox.followRequests.all()
 
+    # accept the follow request
+    if request.method == 'POST' and 'delete' in request.POST:
+        deleted_request_actor_id = request.POST['delete']
+        deleted_request_actor = single_author.objects.get(id= deleted_request_actor_id)
+        deleted_request_object = single_author.objects.get(uuid=userId)
+        FollowRequest.objects.get(Q(actor = deleted_request_actor)&Q(object = deleted_request_object)).delete()
 
+            
     return render(request, 'inbox/inbox.html',{
         "currentAuthorInbox": currentAuthorInbox,
         "userId": userId,
