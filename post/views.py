@@ -312,25 +312,25 @@ def get_node(request,userId):
                         try:
                             image_url = f"{post['id']}/image"
                             res = requests.get(image_url)
-                        except:
-                            pass
 
-                        if res.status_code == 200:
-                            post['image'] = image_url
-                        else:
-                            post['image'] = None
-                        comment_url = post['comments']
-                        try:
+                            if res.status_code == 200:
+                                post['image'] = image_url
+                            else:
+                                post['image'] = None
+                            comment_url = post['comments']
+                            
                             res = requests.get(comment_url)
+
+                            if res.status_code == 200:
+                                comments = res.json().get("comments")
+                                post['comment'] = comments
+                            all_posts.append(post)
+                            # if res.status_code == 200:
+                            #     teamPosts = res.json()
+                            #     print(teamPosts)
+
                         except:
                             pass
-                        if res.status_code == 200:
-                            comments = res.json().get("comments")
-                            post['comment'] = comments
-                        all_posts.append(post)
-                        # if res.status_code == 200:
-                        #     teamPosts = res.json()
-                        #     print(teamPosts)
 
             elif node.name == 11:
                 TeamUrl = f"{node.host}{node.api}"
