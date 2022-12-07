@@ -314,13 +314,16 @@ def get_node(request,userId):
                             res = requests.get(image_url)
                         except:
                             pass
-                        
+
                         if res.status_code == 200:
                             post['image'] = image_url
                         else:
                             post['image'] = None
                         comment_url = post['comments']
-                        res = requests.get(comment_url)
+                        try:
+                            res = requests.get(comment_url)
+                        except:
+                            pass
                         if res.status_code == 200:
                             comments = res.json().get("comments")
                             post['comment'] = comments
