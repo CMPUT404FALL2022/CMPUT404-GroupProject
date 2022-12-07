@@ -1,0 +1,13 @@
+<style>
+    a{ background-color: transparent;}
+    a {width:fit-content; height:fit-content; margin:10px;}
+    div.buttongroup{
+        display:flex;
+        flex-direction: row;
+    }
+</style>
+<div class="col-xs-6 col-sm-6 col-md-7 border-3 buttongroup">
+    <a href={% url "like-page" userId post.uuid %} class="btn btn-success">LIKE</a>
+    <a href={% url "share-page" userId post.uuid %} class="btn btn-warning">SHARE</a>
+    <a href={% url "comment-page" userId post.uuid %} class="btn btn-info">COMMENT</a>
+</div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+function myFunction(){
+	alert("The request sent successfully!");}
+</script>
+
+</head>
+<body style = 'background-color: lightblue'>
+    
+    {% if searched %}
+        {% if searchResult%}
+            <h1> You searched for {{searched}}</h1><br/>
+            {% for user in searchResult%}
+                <text>Display name: {{user.display_name}}</text><br/>
+                <text> Host: {{user.host}}</text><br/>
+                <text> URL: {{user.url}}</text><br/>
+                <text> GitHub account: {{user.github}}</text><br/>
+            {% endfor %}
+        {% else %}
+            <h1> You searched for {{searched}}</h1><br/>
+            <h2> No user found!</h2><br/>
+        {% endif %}
+    {% endif %}
+    
+    <button type="button" class="btn btn-primary" style="background-color: white; border: 0;">
+        <a href= {% url 'home-page' userId%}>Back</a>
+    </button>
+
+</body>
+</html>

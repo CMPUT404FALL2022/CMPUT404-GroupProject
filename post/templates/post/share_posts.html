@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block header%} {% include "navbar.html" %} {% load posts_markdown %}
+{%endblock %} {% block content %}
+<h1>Share Posts</h1>
+
+<ul class = "list-unstyled">
+      <li>Title: </li>
+      <li>{{ post.title }}</li>
+      <li>Content: </li>
+      <li>{{ post.content|convert_markdown|safe }}</li>
+      <li>Description: </li>
+      <li>{{ post.description|convert_markdown|safe }}</li>
+      {% if post.post_image.url is not None %}
+        <img src="{{post.post_image.url }}" width="40%">
+      {% endif %}
+      <li>Posted by: {{ post.author.display_name }}</li>
+      <br>
+      <br>
+  </ul>
+
+<form method="post" enctype="multipart/form-data">
+  {%csrf_token%}
+  {{userSelectionForm}}
+  <button type="submit" class="btn btn-warning">Share</button>
+
+</form>
+
+{% endblock %}

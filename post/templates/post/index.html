@@ -1,0 +1,97 @@
+{% extends 'base.html' %} {% load static %} {% load posts_markdown %}
+{%block title%} My Post {%endblock%} 
+{% block header%}
+{% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
+  <!-- Navbar content -->
+  <div class="container-fluid" style="margin-top: 7px">
+    <form
+      class="form-inline my-2 my-lg-0 col-xs-2 col-sm-3 col-md-3 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+
+    <div class="col-xs-6 col-sm-6 col-md-1 col-md-offset-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    
+</nav> {% endcomment %}
+{% include "navbar.html" %}
+{% endblock %} {% block content %}
+
+<div class="container I_followed">
+  <div class="row">
+    <div
+      class="col-xs-6 col-sm-6 col-md-7 border-3"
+      style="
+        background-color: #ffe5d9;
+        box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;
+        margin-top: 25px;
+        border: 2px solid grey;
+        border-style: outset;
+        border-radius: 10px;
+      "
+    >
+      
+    <ul class = "list-unstyled">
+      {% for post,comment in post_comments_dict.items %}
+          <li>Title: </li>
+          <li>{{ post.title }}</li>
+          <li>Content: </li>
+          <li>{{ post.content|convert_markdown|safe }}</li>
+          <li>Description: </li>
+          <li>{{ post.description|convert_markdown|safe }}</li>
+          {% if post.post_image.url is not None %}
+            <img src="{{post.post_image.url }}" width="70%">
+          {% endif %}
+          <li>Posted by: {{ post.author.display_name }}</li>
+          <div class = "container">{% include "post/button.html" %}</div>
+          </br>
+          </br>
+          <li>comment: </li>
+          {% for each_comment in comment %}
+            <li>{{ each_comment.comment}}</li>
+          {% endfor %}
+          <br/>
+          <hr style="height:1px;border-width:0;color:rgba(24, 23, 22, 0.812);background-color:black;width:90%">
+      {% endfor %}
+      </ul> 
+      
+    </div>
+    {% comment %} <div
+      class="col-xs-2 col-sm-2 col-md-3 col-md-offset-2 col-sm-offset-2 col-xs-offset-2"
+      style="
+        background-color: #fec5bb;
+        box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;
+        margin-top: 25px;
+        border: 2px solid grey;
+        border-style: outset;
+        border-radius: 10px;
+      "
+    >
+      
+      <p>{% lorem 9 b random %}</p>
+    </div>
+  </div>
+</div> {% endcomment %}
+
+{% endblock %}

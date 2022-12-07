@@ -1,0 +1,115 @@
+{% extends 'base.html' %} {% load static %}{% load posts_markdown %}
+{%block title%} My Post {%endblock%} 
+{% block header%}
+{% comment %} <nav class="navbar navbar-light" style="background-color: #ffd7ba">
+  <!-- Navbar content -->
+  <div class="container-fluid" style="margin-top: 7px">
+    <form
+      class="form-inline my-2 my-lg-0 col-xs-2 col-sm-3 col-md-3 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"
+    >
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </form>
+
+    <div class="col-xs-6 col-sm-6 col-md-1 col-md-offset-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+        Search
+      </button>
+    </div>
+    
+</nav> {% endcomment %}
+{% include "navbar.html" %}
+{% endblock %} {% block content %}
+
+
+<div class="container I_followed">
+  <div class="row">
+    <div
+      class="col-xs-6 col-sm-6 col-md-7 border-3"
+      style="
+        background-color: #ffe5d9;
+        box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;
+        margin-top: 25px;
+        border: 2px solid grey;
+        border-style: outset;
+        border-radius: 10px;
+      "
+    >
+      
+    <ul class = "list-unstyled">
+      {% for post in all_posts %}
+          <li>Title: </li>
+          <li>{{ post.title }}</li>
+          <li>Content: </li>
+          <li>{{ post.content|convert_markdown|safe }}</li>
+          <li>Description: </li>
+          <li>{{ post.description|convert_markdown|safe }}</li>
+          {% if post.image is not None %}
+           
+            <img
+            src={post.image}
+            width=70%
+            />
+            
+  
+          {% endif %}
+          <li>Posted by: {{ post.author.displayName }}</li>
+          
+          </br>
+          </br>
+          <li>comment: </li>
+          {% for each_comment in post.comment %}
+            <li>{{ each_comment.comment}}</li>
+          {% endfor %}
+          <br/>
+          <hr style="height:2px;border-width:0;color:black;background-color:black">
+
+      {% endfor %}
+      </ul>  
+      
+    </div>
+     <div
+      class="col-xs-2 col-sm-2 col-md-3 col-md-offset-2 col-sm-offset-2 col-xs-offset-2"
+      style="
+        background-color: #fec5bb;
+        box-shadow: inset 1px -1px 1px #444, inset -1px 1px 1px #444;
+        margin-top: 25px;
+        border: 2px solid grey;
+        border-style: outset;
+        border-radius: 10px;
+      "
+    >
+      
+      <form method="post" enctype="multipart/form-data">
+        {%csrf_token%}
+        <div class="form-outline form-white mb-4">{{ ExternalForm }}</div>
+        <button
+        type="submit"
+        class="btn btn-primary"
+        style="background-color: rgb(243, 182, 97)"
+        >
+        Post
+        </button>
+      </form>
+    </div>
+  </div>
+</div> 
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %} {% load static %} {%block title%} Log In {%endblock%}
+{%block css_files%} <link rel="stylesheet" href="{% static "login/login.css"%}">{%endblock%} {% block header %} {% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-center">
+  
+  <body class="vh-100 gradient-custom">
+    <div class="container">
+      <div
+        class="row d-flex justify-content-center align-items-center h-100"
+        style="
+          border: solid 1px rgba(255, 255, 255, 0.5);
+          border-radius: 20px;
+          width: 40%;
+        "
+      >
+        <div class="col-xl-5">
+          <div
+            class="card bg-dark text-white"
+            style="border-radius: 1rem; text-align: center"
+          >
+            <div class="card-body p-5 text-center">
+              <div class="mb-md-5 mt-md-4 pb-5">
+                <h1 class="fw-bold mb-2">Welcome to SocialDistribution!</h1>
+                <p class="text-white-50 mb-5">
+                  Please enter your username and password!
+                </p>
+
+                {% if display %}
+                <p>This account is not approved to be activated, please contact admin.</p>
+                {% endif %}
+
+                <form method="post">
+                  {%csrf_token%}
+
+                  <!-- add this new code for the login input-->
+                  <div class="login_info">
+                    <label for="Username">Username:</label>
+                    <input
+                      type="username"
+                      class="form-control"
+                      placeholder="Enter username"
+                      name="username"
+                      style="
+                        background-color: transparent;
+                        border: 0;
+                        width: 90%;
+                        margin-left: 5%;
+                      "
+                    />
+                    <label for="Password">Password:</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      placeholder="Enter password"
+                      name="password"
+                      style="
+                        background-color: transparent;
+                        border: 0;
+                        width: 90%;
+                        margin-left: 5%;
+                      "
+                    />
+                  </div>
+
+                  <!--deleted this codes
+                        <div class="form-outline form-white mb-4" style = "font-family: 'Lucida Console';">
+                            {{ form }}
+                        </div>
+                      -->
+
+                  <button
+                    class="btn btn-outline-light btn-lg px-5"
+                    type="submit"
+                    style="
+                      background-color: transparent;
+                      border: solid 1px rgb(255, 255, 255);
+                    "
+                  >
+                    Login
+                  </button>
+                </form>
+              </div>
+
+              <div>
+                <p class="mb-0">
+                  Don't have an account?
+                  <a href={% url "signup" %} class="text-white-50 fw-bold"
+                    >Sign Up Here</a>
+                  
+                </p>
+              </div>
+              <button onclick="darkMode()">Darkmode</button>
+              <button onclick="lightMode()">LightMode</button>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+      function darkMode() {
+        var element = document.body;
+       
+        element.className = "dark-mode";
+       
+      }
+      function lightMode() {
+        var element = document.body;
+      
+        element.className = "gradient-custom";
+        
+      }
+    </script>
+</div>
+{% endblock %}
