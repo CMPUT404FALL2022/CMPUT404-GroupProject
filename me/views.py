@@ -73,7 +73,21 @@ def my_profile(request, userId):
                         newExternalAuthor.save()
                     break
 
-
+        elif searchedGroup == '5':
+            TeamUrl = f"{node.host}authors"
+            print(TeamUrl)
+            res = requests.get(TeamUrl)
+            teamAuthors = res.json().get("items")
+            for author in teamAuthors:
+                if author['displayName'] == searchedFor:
+                    #在这里发好友邀请到inbox
+                    me = single_author.objects.filter(uuid = userId).first()
+                    #create a new external follower for this user
+                    #if not exists
+                    if len(ExternalFollowers.objects.filter(external_username = author['displayName'])) == 0:
+                        newExternalAuthor = ExternalFollowers.objects.create(author = me,external_username = author['displayName'], external_id = author['id'], groupNumber = 5)
+                        newExternalAuthor.save()
+                    break
 
 
         elif searchedGroup == '16':
@@ -95,9 +109,12 @@ def my_profile(request, userId):
 
 
 
-        elif searchedGroup == '18':
-            TeamUrl = f"{node.host}"
-            print(TeamUrl)
+        # elif searchedGroup == '18':
+        #     TeamUrl = f"{node.host}"
+        #     res = requests.get(TeamUrl, auth = HTTPBasicAuth('t18user1', 'Password123!'))
+        #     teamAuthors = res.json().get("results")
+        #     print(teamAuthors[0])
+
 
 
     return render(request,'my_profile.html',{

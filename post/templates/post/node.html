@@ -61,8 +61,14 @@
           <li>{{ post.content|convert_markdown|safe }}</li>
           <li>Description: </li>
           <li>{{ post.description|convert_markdown|safe }}</li>
-         {% if post.image is not None %}
-            <img src="{{post.image }}" width="600px">
+          {% if post.image is not None %}
+           
+            <img
+            src={post.image}
+            style="width: 70%"
+            />
+            
+  
           {% endif %}
           <li>Posted by: {{ post.author.displayName }}</li>
           

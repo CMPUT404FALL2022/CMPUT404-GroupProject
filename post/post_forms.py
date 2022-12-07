@@ -2,6 +2,8 @@ from django import forms
 from .models import Post, Comment
 from authors.models import Followers
 from django.db.models import Q
+from .models import Node
+from authors.models import ExternalFollowers
 
 
 class post_form(forms.ModelForm):
@@ -59,7 +61,16 @@ class Comment_form(forms.ModelForm):
 
 
 class ExternalForm(forms.Form):
-    
+    def __init__(self, *args, **kwargs):
+        userId = kwargs.pop('userId')
+        super(ExternalForm, self).__init__(*args, **kwargs)
+        extern_friends = ExternalFollowers.objects.filter(author__uuid = userId)
+        friend_list = []
+        for user in extern_friends:
+            friend_list.append((user.external_id ,user.external_username))
+        self.fields['friend'].choices = friend_list
+
+
     title = forms.CharField(label='Title', 
         required = False,
         widget=forms.Textarea(attrs={
@@ -89,21 +100,12 @@ class ExternalForm(forms.Form):
 
         })
     )
-    post_image = forms.ImageField()
-
-    VISIBILITY_CHOICES = (("PUBLIC", "Public"), ("FRIENDS", "Friends"),("PRIVATE", "Specific friend"))
-    visibility = forms.ChoiceField(choices=VISIBILITY_CHOICES)
+    post_image = forms.ImageField(required = False)
 
     
-    unlisted = forms.BooleanField()
 
-
-    group_CHOICES =(
-    (11, "11"),
-    (16, "16"),
-    (18, "18"),
-    )
-    group = forms.ChoiceField(choices = group_CHOICES)
+   
+    friend = forms.ChoiceField()
 
 
 
