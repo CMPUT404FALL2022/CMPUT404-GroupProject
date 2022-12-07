@@ -144,4 +144,4 @@ class UserSelectionForm(forms.Form):
 
         self.fields['Send_To'].choices = friendChoices
 
-    Send_To = forms.ChoiceField()
+    Send_To = forms.ChoiceField(required=False)
