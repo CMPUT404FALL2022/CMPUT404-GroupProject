@@ -38,13 +38,6 @@
 {% include "navbar.html" %}
 {% endblock %} {% block content %}
 
-{%if booleanOfalert%}
-<script>
-  
-    alert("User does not exist")
-  
-</script>
-{%endif%}
 <div class="container I_followed">
   <div class="row">
     <div
@@ -68,7 +61,7 @@
           <li>Description: </li>
           <li>{{ post.description|convert_markdown|safe }}</li>
           {% if post.post_image.url is not None %}
-            <img src="{{post.post_image.url }}" width="40%">
+            <img src="{{post.post_image.url }}" width="70%">
           {% endif %}
           <li>Posted by: {{ post.author.display_name }}</li>
           <div class = "container">{% include "post/button.html" %}</div>
