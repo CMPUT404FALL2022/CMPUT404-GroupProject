@@ -30,7 +30,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/mengjuliao/Desktop/CMPUT404-GroupProject/env"
+set -gx VIRTUAL_ENV "/Users/mengjuliao/Desktop/new main/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

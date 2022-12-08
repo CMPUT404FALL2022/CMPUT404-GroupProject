@@ -83,9 +83,7 @@ def home_page(request,userId):
 #         'posts': Post.objects.all()
 #     })
 
-
 @login_required(login_url='/login/')
-
 def create_post(request,userId):
     if request.method == 'POST':
         form = post_form(request.POST,request.FILES)

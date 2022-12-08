@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-
 @login_required(login_url='/login/')
 def search(request,userId):
     if request.method == 'POST':

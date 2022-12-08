@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     # path("", views.authors, name="authors"),
     path('posts/',views.getAllPublicPosts,name="all-posts-list"),

@@ -1,4 +1,6 @@
-#!/Users/mengjuliao/Desktop/CMPUT404-GroupProject/env/bin/python3.10
+#!/bin/sh
+'''exec' "/Users/mengjuliao/Desktop/new main/env/bin/python3.10" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

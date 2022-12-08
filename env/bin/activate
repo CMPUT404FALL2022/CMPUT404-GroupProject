@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/mengjuliao/Desktop/CMPUT404-GroupProject/env"
+VIRTUAL_ENV="/Users/mengjuliao/Desktop/new main/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
