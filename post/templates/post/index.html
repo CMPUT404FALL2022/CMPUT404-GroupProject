@@ -69,7 +69,10 @@
           </br>
           <li>comment: </li>
           {% for each_comment in comment %}
-            <li>{{ each_comment.comment}}</li>
+            <li>{{ each_comment.comment}}       
+              <a href={% url "like-comment-page" userId post.uuid each_comment.uuid %} class="btn btn-danger">LIKE</a>
+            </li>
+            
           {% endfor %}
           <br/>
           <hr style="height:1px;border-width:0;color:rgba(24, 23, 22, 0.812);background-color:black;width:90%">
