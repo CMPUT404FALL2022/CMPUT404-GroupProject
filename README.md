@@ -16,6 +16,8 @@ Our project is about Django web development, and our group members are
 
 Project and Information are represented in WiKi
 
+# Basic Functionalites Present
+- https://youtu.be/BD249iXeU2E
 
 # API Reference
 
