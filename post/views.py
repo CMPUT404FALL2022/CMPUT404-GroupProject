@@ -21,9 +21,7 @@ import json
 @login_required(login_url='/login/')
 def home_page(request,userId):
     booleanOfalert = False
-    #这里要加判定
-    # print(f"11111111111111111111{request.user}")
-    # all_posts = Post.objects.all()
+
     all_posts = Post.objects.filter(unlisted=False, visibility="PUBLIC")
     post_comments_dict = {}
     userSelectionForm = UserSelectionForm(userId=userId)
@@ -78,10 +76,7 @@ def home_page(request,userId):
         "userSelectionForm":userSelectionForm,
     })
     
-# def posts(request):
-#     return render(request, 'post/post_in_div.html', {
-#         'posts': Post.objects.all()
-#     })
+
 
 @login_required(login_url='/login/')
 def create_post(request,userId):
@@ -187,8 +182,6 @@ def create_like(request,userId,postId):
         post_author_inbox = Inbox.objects.get(author=post_author)
         post_author_inbox.likes.add(receiver_liked)
 
-    # count like might be done in part 3
-    #like_count = Like.objects.filter(object=object).count()
     return HttpResponseRedirect(reverse("home-page",args=[userId]))
 
 
@@ -206,32 +199,6 @@ def share_post(request,userId,postId):
 
 
         return HttpResponseRedirect(reverse("home-page",args=[userId]))
-
-
-    # my own post cannot shared by myself, but can share same post many times *
-    # if old_post.author.uuid != currentAuthor.uuid:
-    #     new_title = old_post.title
-    #     new_postId = uuid.uuid4()
-    #     new_id = f"{request.build_absolute_uri('/')}service/authors/{str(userId)}/posts/{str(new_postId)}"
-    #     new_source = id
-    #     new_origin = id
-    #     new_description = old_post.description
-    #     new_content_type = old_post.contentType
-    #     new_content = old_post.content
-        
-    #     new_author = currentAuthor
-    #     new_categories = old_post.Categories
-    #     new_count = 0
-    #     new_visibility = old_post.visibility
-    #     new_unlisted = old_post.unlisted
-    #     new_textType = old_post.textType
-    #     new_post_image = old_post.post_image
-    #     shared_post = Post.objects.create(title=new_title, uuid=new_postId, id=new_id, source=new_source, origin=new_origin,
-    #                                     description=new_description, contentType=new_content_type,
-    #                                     content=new_content, author=new_author, Categories=new_categories,
-    #                                     count=new_count, visibility=new_visibility, unlisted=new_unlisted,
-    #                                     textType=new_textType, post_image=new_post_image)
-    #     shared_post.save() 
     
     else:
         userSelectionForm = UserSelectionForm(userId = userId)
@@ -381,3 +348,28 @@ def get_node(request,userId):
             'all_posts':all_posts,
             'ExternalForm':form,
         })
+
+
+
+def create_like_comment(request,userId,postId,commentId):
+    comment = Comment.objects.get(uuid=commentId)
+    comment_author = comment.author
+    currentAuthor = single_author.objects.get(uuid = userId)
+    
+    sum = currentAuthor.display_name + " likes your comment"
+    obj = commentId
+    commId = comment.id
+    
+    if not Like.objects.filter(author=currentAuthor, summary=sum, object=obj, postId = commId).exists():
+        like = Like.objects.create(author=currentAuthor, summary=sum, object=obj, postId = commId)
+        like.save()
+        if not Liked.objects.filter(postId=commId).exists():
+            receiver_liked = Liked.objects.create(postId=commId)       
+        receiver_liked = Liked.objects.get(postId=commId)
+        receiver_liked.items.add(like)
+
+        # Liked added to inbox
+        post_author_inbox = Inbox.objects.get(author=comment_author)
+        post_author_inbox.likes.add(receiver_liked)
+
+    return HttpResponseRedirect(reverse("home-page",args=[userId]))

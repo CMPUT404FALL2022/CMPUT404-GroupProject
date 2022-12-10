@@ -11,5 +11,7 @@ urlpatterns = [
     path("authors/<str:userId>/like/<str:postId>", views.create_like,name="like-page"),
     path("authors/<str:userId>/share/<str:postId>",views.share_post,name="share-page"),
     path("authors/<str:userId>/node",views.get_node,name='get-node-page'),
+
+    path("authors/<str:userId>/posts/<str:postId>/comments/<str:commentId>/likes",views.create_like_comment,name="like-comment-page"),
     
 ]

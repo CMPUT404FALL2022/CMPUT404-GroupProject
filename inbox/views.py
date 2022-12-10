@@ -14,23 +14,30 @@ def my_inbox(request,userId):
     currentAuthor=single_author.objects.filter(uuid=userId).first()
     currentAuthorInbox = Inbox.objects.filter(author=currentAuthor).first()
     
-    # inbox followers new post message
+    # inbox followers new post messages
     Inbox_new_post = currentAuthorInbox.items
 
-    # inbox like message
-    my_posts_id_list = Post.objects.filter(author=currentAuthor).values_list('id')
-    likeds = Liked.objects.all()
+    
+    # my_posts_id_list = Post.objects.filter(author=currentAuthor).values_list('id')
+    # likeds = Liked.objects.all()
+    # likeds = Liked.objects.filter(type="liked")
+    # for liked in likeds:
+    #     for like in liked.items.all():
+    #         if Post.objects.filter(id=like.object,author=currentAuthor).exists():
+    #             postTitle = Post.objects.get(uuid = like.postId).title
+    #             #print(like.summary)
+    #             message = f"{like.author.username}{like.summary} | Post: {postTitle}"
+    #             text.append(message)
+    
+    # inbox like messages
     text = []
-    likeds = Liked.objects.filter(type="liked")
+    likeds = currentAuthorInbox.likes.all()
     for liked in likeds:
-        for like in liked.items.all():
-            if Post.objects.filter(id=like.object,author=currentAuthor).exists():
-                postTitle = Post.objects.get(uuid = like.postId).title
-                #print(like.summary)
-                message = f"{like.author.username}{like.summary} | Post: {postTitle}"
-                text.append(message)
+        likes = liked.items.all()
+        for like in likes:
+            text.append(like.summary)
 
-    # inbox Comment message
+    # inbox Comment messages
     comments = Comment.objects.all()
     comment_msg = []
     author_posts = Post.objects.filter(author=currentAuthor)
@@ -42,10 +49,10 @@ def my_inbox(request,userId):
                 post_title = author_post.title
                 comment_msg.append(name + " comments your post: " + post_title + ", with comment " + '"' + com.comment + '"' )
     
-    # inbox Request message
+    # inbox Request messages
     re = currentAuthorInbox.followRequests.all()
 
-    # accept the follow request
+    # accept the follow requests
     if request.method == 'POST' and 'delete' in request.POST:
         deleted_request_actor_id = request.POST['delete']
         deleted_request_actor = single_author.objects.get(id= deleted_request_actor_id)
